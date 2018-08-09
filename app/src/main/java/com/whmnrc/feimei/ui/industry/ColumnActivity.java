@@ -55,8 +55,8 @@ public class ColumnActivity extends BaseActivity {
                     mSearchContent = view.getText().toString().trim();
 
                     if (!TextUtils.isEmpty(mSearchContent)) {
+                        SearchActivity.start(view.getContext(),mSearchContent,SearchActivity.SEARCH_COLUMN);
                         mTvSearch.setText("");
-                        SearchActivity.start(view.getContext());
                         return true;
                     }
                 }

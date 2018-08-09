@@ -34,7 +34,7 @@ public class AssociatedPositionActivity extends BaseActivity implements GetRecru
         isShowDialog(true);
         String otherId = getIntent().getStringExtra("otherId");
         mGetRecruitPresenter = new GetRecruitPresenter(this);
-        mGetRecruitPresenter.getRecruit(true, "", "", "", otherId, "", "");
+        mGetRecruitPresenter.getRecruit(true, "", "", "", otherId, "", "", "");
 
         setTitle("关联岗位");
         mRvBusinessList.setLayoutManager(new LinearLayoutManager(this));

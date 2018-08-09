@@ -161,7 +161,7 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
                 EventBus.getDefault().post(new HomeTableChangeEvent().setEventType(HomeTableChangeEvent.TO_SPECIAL_INFORMATION));
                 break;
             case R.id.tv_search:
-                SearchActivity.start(v.getContext());
+                SearchActivity.start(v.getContext(),"",SearchActivity.SEARCH_ALL);
                 break;
             case R.id.iv_user_info:
                 if (!UserManager.getIsLogin(getActivity())) {

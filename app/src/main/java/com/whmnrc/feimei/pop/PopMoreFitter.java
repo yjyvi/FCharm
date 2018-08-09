@@ -39,7 +39,7 @@ public class PopMoreFitter {
     public PopupWindow mPopupWindow;
     private MoreFitterListener mMoreFitterListener;
     private List<String> oneList = new ArrayList<>();
-    private int oneSelect = 0;
+    private int oneSelect = -1;
     private int twoSelect = -1;
     private int mTowPosition;
     private List<SalaryListBean.ResultdataBean> twoList;
@@ -174,7 +174,9 @@ public class PopMoreFitter {
     public void show() {
         mPopupWindow.showAsDropDown(showView);
         if (mMoreFitterListener != null && twoList == null || twoList.size() == 0) {
+            oneSelect = 0;
             mMoreFitterListener.onSelectFitter(0, 0, 0);
+            oneAdapter.notifyDataSetChanged();
         }
     }
 

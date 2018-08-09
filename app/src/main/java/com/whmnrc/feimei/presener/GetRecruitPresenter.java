@@ -26,10 +26,10 @@ public class GetRecruitPresenter extends PresenterBase {
 
     }
 
-    public void getRecruit(final boolean isRefresh, String name, String provincial, String city, String enterpriseId, String qualificationsId, String salaryId) {
+    public void getRecruit(final boolean isRefresh, String name, String provincial, String city, String enterpriseId, String qualificationsId, String salaryId,String createTime) {
 
         HashMap<String, Object> params = new HashMap<>(7);
-        HashMap<String, String> conditionJson = new HashMap<>(3);
+        HashMap<String, String> conditionJson = new HashMap<>(7);
 
         if (!TextUtils.isEmpty(name)) {
             conditionJson.put("Name", name);
@@ -45,6 +45,10 @@ public class GetRecruitPresenter extends PresenterBase {
 
         if (!TextUtils.isEmpty(enterpriseId)) {
             conditionJson.put("Enterprise_ID", enterpriseId);
+        }
+
+        if (!TextUtils.isEmpty(createTime)) {
+            conditionJson.put("CreateTime", createTime);
         }
 
 

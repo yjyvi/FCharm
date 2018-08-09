@@ -6,8 +6,12 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -42,6 +46,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 /**
  * @author yjyvi
  * @date 2018/1/30
@@ -65,8 +71,8 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
 
     @BindView(R.id.refresh)
     SmartRefreshLayout mRefresh;
-    @BindView(R.id.tv_search)
-    TextView mTvSearch;
+    @BindView(R.id.et_search)
+    EditText mEtSearch;
 
     @BindView(R.id.nsv_layout)
     NestedScrollView mNestedScrollView;
@@ -99,6 +105,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     public ArrayList<SalaryListBean.ResultdataBean> mBeans = new ArrayList<>();
     private String mEnterpriseId;
     private String mQualificationsId;
+    private String mCrateTime;
 
 
     @Override
@@ -124,6 +131,30 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
         mSpecialInformationListAdapter = new SpecialInformationListAdapter(getActivity(), R.layout.item_recruitment_list);
 
         mRvProductList.setAdapter(mSpecialInformationListAdapter);
+
+
+        mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int keyCode, KeyEvent event) {
+                if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
+                    // 先隐藏键盘
+                    ((InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(getActivity().getCurrentFocus()
+                                    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    mSearchContent = view.getText().toString().trim();
+
+                    if (!TextUtils.isEmpty(mSearchContent)) {
+                        SearchActivity.start(view.getContext(), mSearchContent, SearchActivity.SEARCH_SPECIAL);
+                        mEtSearch.setText("");
+                        mSearchContent = "";
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
     }
 
 
@@ -149,7 +180,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
         refreshLayout.finishLoadMore();
-        mGetRecruitPresenter.getRecruit(false, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID);
+        mGetRecruitPresenter.getRecruit(false, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID,mCrateTime);
     }
 
     @Override
@@ -171,7 +202,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     }
 
 
-    @OnClick({R.id.iv_user_info, R.id.ll_city, R.id.ll_price, R.id.ll_more, R.id.tv_search})
+    @OnClick({R.id.iv_user_info, R.id.ll_city, R.id.ll_price, R.id.ll_more})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_user_info:
@@ -243,10 +274,6 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 });
                 mIvMore.setRotation(180);
                 isViewSelect(mTvMore, true);
-                break;
-
-            case R.id.tv_search:
-                SearchActivity.start(view.getContext());
                 break;
             default:
                 break;
@@ -363,15 +390,15 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
         } else {
             if (parentPosition == 0) {
                 if (position == -1) {
-                    mEnterpriseId = "";
+                    mCrateTime = "";
                 } else {
-                    mEnterpriseId = mFitterData.get(position).getID();
+                    mCrateTime = mBeans.get(position).getID();
                 }
             } else if (parentPosition == 1) {
                 if (position == -1) {
                     mQualificationsId = "";
                 } else {
-                    mQualificationsId = mFitterData.get(position).getID();
+                    mQualificationsId = mBeans.get(position).getID();
                 }
             }
             loadData();
@@ -380,7 +407,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     }
 
     private void loadData() {
-        mGetRecruitPresenter.getRecruit(true, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID);
+        mGetRecruitPresenter.getRecruit(true, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID,mCrateTime);
     }
 
 

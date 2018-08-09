@@ -1,6 +1,7 @@
 package com.whmnrc.feimei.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,12 @@ public abstract class BaseFragment extends Fragment {
         backGone();
         initViewData();
         return view;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
     }
 
     protected abstract int contentViewLayoutID();

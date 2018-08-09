@@ -3,7 +3,9 @@ package com.whmnrc.feimei.pop;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,23 +72,34 @@ public class PopShare implements View.OnClickListener {
         mPopupWindow.setAnimationStyle(R.style.PopupWindow);
         // 设置PopupWindow以外部分的背景颜色  有一种变暗的效果
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        PopUtils.setBackgroundAlpha((Activity) mContext, 0.5f);
+
         // 使其聚集
         mPopupWindow.setFocusable(true);
         mPopupWindow.setTouchable(true);
 
         mWxShareUtils = WxShareUtils.getInstance(context.getApplicationContext());
         //通过Glide加载封面图片URL --获取图片
-        Glide.with(context).asBitmap().load(coverImgUrl).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                sBitmap = resource;
-            }
-        });
+        if (!TextUtils.isEmpty(coverImgUrl)) {
+
+            Glide.with(context).asBitmap().load(coverImgUrl).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    sBitmap = resource;
+                }
+            });
+        }else {
+            sBitmap = BitmapFactory.decodeResource(mContext.getResources(),R.mipmap.ic_launcher);
+        }
+
+
+        if (TextUtils.isEmpty(mDesc)) {
+            mDesc = "更多招聘信息尽在菲魅App";
+        }
 
     }
 
     public void show() {
+        PopUtils.setBackgroundAlpha((Activity) mContext, 0.5f);
         // 设置弹出位置
         mPopupWindow.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         // 刷新状态
@@ -104,19 +117,21 @@ public class PopShare implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_wechat:
-                if (!WxShareUtils.isApplicationAvilible(mContext,"com.tencent.mm")) {
+                if (!WxShareUtils.isApplicationAvilible(mContext, "com.tencent.mm")) {
+                    ToastUtils.showToast("没有安装微信");
                     return;
                 }
                 ToastUtils.showToast("分享到微信好友");
-                mWxShareUtils.shareUrl(mUrl,mTitle,sBitmap,mDesc, SendMessageToWX.Req.WXSceneSession);
+                mWxShareUtils.shareUrl(mUrl, mTitle, sBitmap, mDesc, SendMessageToWX.Req.WXSceneSession);
                 dismiss();
                 break;
             case R.id.iv_circle:
-                if (!WxShareUtils.isApplicationAvilible(mContext,"com.tencent.mm")) {
+                if (!WxShareUtils.isApplicationAvilible(mContext, "com.tencent.mm")) {
+                    ToastUtils.showToast("没有安装微信");
                     return;
                 }
                 ToastUtils.showToast("分享到朋友圈");
-                mWxShareUtils.shareUrl(mUrl,mTitle,sBitmap,mDesc, SendMessageToWX.Req.WXSceneTimeline);
+                mWxShareUtils.shareUrl(mUrl, mTitle, sBitmap, mDesc, SendMessageToWX.Req.WXSceneTimeline);
                 dismiss();
                 break;
             case R.id.iv_cancel:
@@ -146,6 +161,9 @@ public class PopShare implements View.OnClickListener {
      */
     public void dismiss() {
         mPopupWindow.dismiss();
+        if (sBitmap != null) {
+            sBitmap.recycle();
+        }
     }
 
 

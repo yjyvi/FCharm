@@ -38,6 +38,8 @@ public class SpecialInformationListAdapter extends CommonAdapter<GetRecruitBean.
 
         if (position == getDatas().size() - 1) {
             holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
+        }else {
+            holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
         }
     }
 }

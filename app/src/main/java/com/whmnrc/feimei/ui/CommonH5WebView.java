@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.pop.PopShare;
 
 import butterknife.BindView;
 
@@ -26,19 +27,20 @@ import butterknife.BindView;
 public class CommonH5WebView extends BaseActivity {
 
     @BindView(R.id.wb_content)
-    WebView wb_content;
+    WebView mWbContent;
 
     @BindView(R.id.pb_loading)
-    ProgressBar pb_loading;
+    ProgressBar mPbLoading;
 
     public String mTitle;
     public String mH5Url;
+    public PopShare mPopShare;
 
 
     @Override
     protected void back() {
-        if (wb_content.canGoBack()) {
-            wb_content.goBack();
+        if (mWbContent.canGoBack()) {
+            mWbContent.goBack();
         } else {
             finish();
         }
@@ -59,26 +61,40 @@ public class CommonH5WebView extends BaseActivity {
     @Override
     public void initViewData() {
 
+        rightVisible(R.mipmap.icon_share);
+
+
         mTitle = getIntent().getStringExtra("title");
         mH5Url = getIntent().getStringExtra("h5Url");
 
+        findViewById(R.id.rl_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPopShare == null) {
+                    mPopShare = new PopShare(CommonH5WebView.this, mTitle, "", mH5Url, "");
+                }
+                mPopShare.show();
+            }
+        });
+
         setTitle(mTitle);
-        wb_content.post(new Runnable() {
+        mWbContent.post(new Runnable() {
             @Override
             public void run() {
-                wb_content.loadUrl(mH5Url);
-                WebSettings settings = wb_content.getSettings();
+                mWbContent.loadUrl(mH5Url);
+                WebSettings settings = mWbContent.getSettings();
                 settings.setFixedFontFamily("monospace");
                 settings.setJavaScriptEnabled(true);
                 settings.setUseWideViewPort(true);
+                settings.setDefaultTextEncodingName("utf-8");
                 settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
                 settings.setLoadWithOverviewMode(true);
 
 
                 //去除WebView的焦点事件
-                wb_content.setFocusableInTouchMode(false);
+                mWbContent.setFocusableInTouchMode(false);
 
-                wb_content.setOnTouchListener(new View.OnTouchListener() {
+                mWbContent.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         return false;
@@ -86,7 +102,7 @@ public class CommonH5WebView extends BaseActivity {
                 });
 
                 //去掉超连接事件
-                wb_content.setWebViewClient(new WebViewClient() {
+                mWbContent.setWebViewClient(new WebViewClient() {
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         return true;
@@ -94,14 +110,14 @@ public class CommonH5WebView extends BaseActivity {
                 });
 
                 //取消长按复制事件
-                wb_content.setOnLongClickListener(new View.OnLongClickListener() {
+                mWbContent.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         return true;
                     }
                 });
-                settings.setDefaultTextEncodingName("utf-8");
-                wb_content.setWebChromeClient(new WebChromeClient() {
+
+                mWbContent.setWebChromeClient(new WebChromeClient() {
 
                     @Override
                     public void onProgressChanged(WebView view, int newProgress) {
@@ -109,12 +125,12 @@ public class CommonH5WebView extends BaseActivity {
 
                         if (newProgress == 100) {
                             //加载完网页进度条消失
-                            pb_loading.setVisibility(View.GONE);
+                            mPbLoading.setVisibility(View.GONE);
                         } else {
                             //开始加载网页时显示进度条
-                            pb_loading.setVisibility(View.VISIBLE);
+                            mPbLoading.setVisibility(View.VISIBLE);
                             //设置进度值
-                            pb_loading.setProgress(newProgress);
+                            mPbLoading.setProgress(newProgress);
                         }
                     }
                 });
@@ -128,8 +144,8 @@ public class CommonH5WebView extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (wb_content.canGoBack()) {
-                wb_content.goBack();
+            if (mWbContent.canGoBack()) {
+                mWbContent.goBack();
             } else {
                 finish();
             }

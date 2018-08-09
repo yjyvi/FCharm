@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+    <include layout="@layout/common_title"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dm_110"
+        android:text="威海天力电源有限公司"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dm_15"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_marginTop="@dimen/dm_35"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dm_60"
+        android:paddingRight="@dimen/dm_60">
+
+
+        <TextView
+            android:drawablePadding="@dimen/dm_10"
+            android:id="@+id/tv_tel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/icon_about_2"
+            android:text="电话：15926318604"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_13"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_0.5"
+            android:layout_marginBottom="@dimen/dm_15"
+            android:layout_marginTop="@dimen/dm_15"
+            android:background="@color/common_line"/>
+
+        <TextView
+            android:drawablePadding="@dimen/dm_10"
+            android:drawableLeft="@mipmap/icon_about_1"
+            android:id="@+id/tv_qq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QQ：277485259"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_13"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_0.5"
+            android:layout_marginBottom="@dimen/dm_15"
+            android:layout_marginTop="@dimen/dm_15"
+            android:background="@color/common_line"/>
+
+        <TextView
+            android:drawablePadding="@dimen/dm_10"
+            android:drawableLeft="@mipmap/icon_about_4"
+            android:id="@+id/tv_mail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="邮箱：opcitvfen@126.com"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_13"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_0.5"
+            android:layout_marginBottom="@dimen/dm_15"
+            android:layout_marginTop="@dimen/dm_15"
+            android:background="@color/common_line"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:drawablePadding="@dimen/dm_10"
+                android:drawableLeft="@mipmap/icon_about_3"
+                android:text="地址："
+                android:textColor="@color/black"
+                android:textSize="@dimen/dm_13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+              android:lineSpacingExtra="@dimen/dm_8"
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="武汉市万科城市花园上东景园三区A6栋2单元1602室"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dm_13"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_0.5"
+            android:layout_marginBottom="@dimen/dm_15"
+            android:layout_marginTop="@dimen/dm_15"
+            android:background="@color/common_line"/>
+
+
+    </LinearLayout>
+</RelativeLayout>

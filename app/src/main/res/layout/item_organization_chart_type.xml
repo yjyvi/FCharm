@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:background="@color/white"
+                android:layout_height="@dimen/dm_70"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true">
+        <ImageView
+            android:id="@+id/iv_img"
+            android:src="@color/normal_gray"
+            android:layout_width="@dimen/dm_25"
+            android:layout_height="@dimen/dm_25" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:text="企业分类"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dm_12"
+            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/dm_5" />
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/xian"
+        android:layout_width="@dimen/dm_0.5"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="#DEDEDE"/>
+</RelativeLayout>

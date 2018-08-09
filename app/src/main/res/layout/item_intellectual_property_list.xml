@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:padding="@dimen/dm_15"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_type"
+        android:textSize="@dimen/dm_13"
+        android:textColor="@color/normal_blue_text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="高新技术企业"/>
+
+    <TextView
+        android:layout_marginTop="@dimen/dm_12"
+        android:textSize="@dimen/dm_12"
+        android:id="@+id/tv_number"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="许可证编号：GHJ58974526"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_marginTop="@dimen/dm_8"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/dm_12"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:text="发证日期：2014-5-28"/>
+
+    <TextView
+        android:id="@+id/tv_end_time"
+        android:layout_marginTop="@dimen/dm_8"
+        android:textSize="@dimen/dm_12"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="有效期至：未公开"/>
+
+</LinearLayout>

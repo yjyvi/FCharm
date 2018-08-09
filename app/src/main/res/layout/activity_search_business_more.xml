@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back_gray"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_search_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_69"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dm_5"
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingRight="@dimen/dm_15"
+        android:paddingTop="@dimen/dm_30">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/dm_8"
+            android:src="@mipmap/back"/>
+
+        <LinearLayout
+
+            android:id="@+id/ll_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_33"
+            android:layout_marginLeft="@dimen/dm_15"
+            android:layout_marginRight="@dimen/dm_15"
+            android:layout_weight="1"
+            android:background="@drawable/search_gray_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dm_15"
+                android:layout_marginRight="@dimen/dm_15"
+                android:background="@mipmap/home_serach"/>
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:layout_marginRight="@dimen/dm_15"
+                android:layout_height="match_parent"
+                android:lines="1"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="搜索你想要的商品"
+                android:textColorHint="@color/search_hint_text_bg"
+                android:textCursorDrawable="@color/black"
+                android:textSize="@dimen/dm_12"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_filter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_49"
+        android:layout_marginTop="@dimen/dm_70"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_city"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="城市"
+                android:textSize="@dimen/dm_14"/>
+
+            <ImageView
+                android:id="@+id/iv_city"
+                android:layout_width="@dimen/dm_10"
+                android:layout_height="@dimen/dm_17"
+                android:layout_marginLeft="@dimen/dm_5"
+                android:src="@mipmap/icon_type_more"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="@dimen/dm_1"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dm_15"
+            android:layout_marginTop="@dimen/dm_15"
+            android:background="@color/common_line"/>
+
+        <LinearLayout
+            android:id="@+id/ll_industry"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_industry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="行业"
+                android:textSize="@dimen/dm_14"/>
+
+            <ImageView
+                android:id="@+id/iv_industry"
+                android:layout_width="@dimen/dm_10"
+                android:layout_height="@dimen/dm_17"
+                android:layout_marginLeft="@dimen/dm_5"
+                android:src="@mipmap/icon_type_more"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--Limited time sale商品-->
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:layout_marginTop="@dimen/dm_120"
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+
+            <ViewStub
+                android:id="@+id/vs_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout="@layout/layout_empty"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_business_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/back_gray"/>
+        </LinearLayout>
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+    <ImageView
+        android:id="@+id/iv_vip_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/dm_10"
+        android:src="@mipmap/icon_go_vip"/>
+
+</FrameLayout>
+

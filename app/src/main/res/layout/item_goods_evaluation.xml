@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_name"
+    android:layout_width="wrap_content"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dm_2"
+    android:minWidth="@dimen/dm_30"
+    android:background="@drawable/item_goods_evaluation_selector"
+    android:gravity="center"
+    android:paddingTop="@dimen/dm_3"
+    android:paddingBottom="@dimen/dm_3"
+    android:paddingLeft="@dimen/dm_5"
+    android:paddingRight="@dimen/dm_5"
+    android:textColor="@drawable/item_buy_text_color"
+    android:textSize="@dimen/dm_13"/>

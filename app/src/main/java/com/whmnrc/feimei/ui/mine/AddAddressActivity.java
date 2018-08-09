@@ -1,0 +1,176 @@
+package com.whmnrc.feimei.ui.mine;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bigkoo.pickerview.OptionsPickerView;
+import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.beans.JsonBean;
+import com.whmnrc.feimei.ui.BaseActivity;
+import com.whmnrc.feimei.utils.GetCityUtils;
+import com.whmnrc.feimei.utils.evntBusBean.AddressEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+
+/**
+ * @author yjyvi
+ * @data 2018/5/22.
+ */
+
+public class AddAddressActivity extends BaseActivity {
+
+    @BindView(R.id.tv_name)
+    TextView mTvName;
+    @BindView(R.id.et_name)
+    EditText mEtName;
+    @BindView(R.id.et_tel)
+    EditText mEtTel;
+    @BindView(R.id.et_pro)
+    EditText mEtPro;
+    @BindView(R.id.et_city)
+    EditText mEtCity;
+    @BindView(R.id.et_area)
+    EditText mEtArea;
+    @BindView(R.id.et_des_address)
+    EditText mEtDesAddress;
+    @BindView(R.id.iv_is_default)
+    ImageView mIvIsDefault;
+    private ArrayList<JsonBean> options1Items = new ArrayList<>();
+    private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
+    private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();
+    private OptionsPickerView mPickerView;
+
+    @Override
+    protected void initViewData() {
+        setTitle("新增收货地址");
+        initJsonData();
+        initPickerView();
+    }
+
+    @Override
+    protected int setLayoutId() {
+        return R.layout.activity_add_address;
+    }
+
+    public static void start(Context context, String resultdataBeanJson, int size) {
+        Intent starter = new Intent(context, AddAddressActivity.class);
+        starter.putExtra("resultdataBeanJson", resultdataBeanJson);
+        starter.putExtra("size", size);
+        context.startActivity(starter);
+    }
+
+
+    /**
+     * 输入提示
+     *
+     * @return
+     */
+    private boolean inputVerification() {
+
+
+        return true;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+
+    }
+
+    @Subscribe
+    public void addressEvent(AddressEvent addressEvent) {
+
+    }
+
+
+    //城市json数据初始化
+    private void initJsonData() {
+        //解析数据
+        String jsonData = GetCityUtils.getJson(this, "province.json");
+        ArrayList<JsonBean> jsonBean = GetCityUtils.parseData(jsonData);
+        //添加省份数据
+        options1Items = jsonBean;
+        for (int i = 0; i < jsonBean.size(); i++) {
+            ArrayList<String> cityList = new ArrayList<>();
+            ArrayList<ArrayList<String>> provinceAreaList = new ArrayList<>();
+            for (int c = 0; c < jsonBean.get(i).getCityList().size(); c++) {
+                String cityName = jsonBean.get(i).getCityList().get(c).getName();
+                cityList.add(cityName);
+                ArrayList<String> cityAreaList = new ArrayList<>();
+                if (jsonBean.get(i).getCityList().get(c).getArea() == null
+                        || jsonBean.get(i).getCityList().get(c).getArea().size() == 0) {
+                    cityAreaList.add("");
+                } else {
+
+                    for (int d = 0; d < jsonBean.get(i).getCityList().get(c).getArea().size(); d++) {
+                        String areaName = jsonBean.get(i).getCityList().get(c).getArea().get(d);
+                        //添加该城市所有地区数据
+                        cityAreaList.add(areaName);
+                    }
+                }
+                //添加该省所有地区数据
+                provinceAreaList.add(cityAreaList);
+            }
+            //添加城市数据
+            options2Items.add(cityList);
+            //添加地区数据
+            options3Items.add(provinceAreaList);
+        }
+    }
+
+    //选择器初始化
+    private void initPickerView() {
+
+        mPickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                mEtPro.setText(options1Items.get(options1).getPickerViewText());
+                mEtCity.setText(options2Items.get(options1).get(options2));
+                mEtArea.setText(options3Items.get(options1).get(options2).get(options3));
+            }
+        })
+                .setTitleText("城市选择")
+                .setCyclic(false, false, false)
+                .setDividerColor(R.color.normal_gray)
+                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setContentTextSize(20)
+                .build();
+
+//        //三级选择器
+        mPickerView.setPicker(options1Items, options2Items, options3Items);
+    }
+
+
+
+    @OnClick({R.id.iv_is_default, R.id.ll_commit, R.id.et_pro, R.id.et_city, R.id.et_area})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_is_default:
+                break;
+            case R.id.ll_commit:
+                break;
+            case R.id.et_pro:
+            case R.id.et_city:
+            case R.id.et_area:
+                mPickerView.show();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+}

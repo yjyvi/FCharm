@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="@dimen/dm_95"
+          android:layout_height="@dimen/dm_38"
+          android:id="@+id/tv"
+          android:layout_margin="@dimen/dm_5"
+          android:gravity="center"
+          android:textSize="@dimen/dm_12"
+          android:background="@drawable/select_shape_more_fitter"
+          android:textColor="@drawable/select_more_fitter_text"
+          android:orientation="vertical"
+          android:text="所有">
+
+</TextView>

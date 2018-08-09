@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="match_parent"
+          android:id="@+id/tv_org_name"
+          android:layout_height="@dimen/dm_50"          android:gravity="center_vertical"
+          android:background="@color/white"
+          android:orientation="vertical"
+          android:paddingLeft="@dimen/dm_15"
+          android:paddingRight="@dimen/dm_15"
+          android:textSize="@dimen/dm_13"
+          android:textColor="@color/black"
+          android:text="扬州通信光科技有限公司">
+
+</TextView>

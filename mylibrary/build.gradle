@@ -1,0 +1,81 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        multiDexEnabled true
+    }
+    buildTypes {
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable false
+        }
+    }
+//    repositories {
+//        flatDir {
+//            dirs 'libs'
+//        }
+//    }
+//    sourceSets {
+//        main {
+//            jniLibs.srcDirs = ['libs']
+//        }
+//    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:support-annotations:27.0.2'
+    compile 'com.android.support:design:27.0.2'
+    compile 'com.android.support:support-v4:27.0.2'
+
+    //网络框架
+    compile 'com.zhy:okhttputils:2.6.2'
+    //Json解析
+    compile 'com.alibaba:fastjson:1.2.31'
+    //json
+    compile 'com.google.code.gson:gson:2.6.2'
+    //EventBus
+    compile 'org.greenrobot:eventbus:3.0.0'
+    //ViewPager 指示器
+    compile 'com.github.hackware1993:MagicIndicator:1.5.0'
+    //通用adapter
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27'
+    compile 'com.github.donkingliang:GroupedRecyclerViewAdapter:1.2.1'
+    //加载刷新
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
+//    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5.1'
+    //图片加载
+    compile 'com.github.bumptech.glide:glide:4.5.0'
+    //图片相册选择
+    compile project(':picture_library')
+    //侧滑
+    compile 'com.github.anzaizai:EasySwipeMenuLayout:1.1.2'
+
+    //rx
+    compile 'io.reactivex.rxjava2:rxjava:2.0.5'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    //轮播图
+    compile 'com.youth.banner:banner:1.4.10'
+    //流式布局
+    compile 'com.hyman:flowlayout-lib:1.1.2'
+    //时间选择
+    compile 'com.contrarywind:Android-PickerView:3.2.7'
+    //圆角头像
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+
+
+//    compile 'com.google.android.gms:play-services-wallet:8.4.0'
+
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/dm_35"
+        android:layout_marginRight="@dimen/dm_35"
+        android:background="@drawable/shape_home_order_back"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dm_30"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/tv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/dm_15"
+                android:src="@mipmap/icon_close2"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tv_msg"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:lineSpacingExtra="@dimen/dm_10"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dm_25"
+            android:layout_marginLeft="@dimen/dm_25"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_14"
+            />
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/dm_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="@dimen/dm_110"
+                android:layout_height="@dimen/dm_40"
+                android:background="@drawable/shape_pop_confirm_gray"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@color/normal_gray"
+                android:textSize="@dimen/dm_15"/>
+
+            <TextView
+                android:id="@+id/tv_confirm"
+                android:layout_width="@dimen/dm_110"
+                android:layout_height="@dimen/dm_40"
+                android:layout_marginLeft="@dimen/dm_25"
+                android:background="@drawable/shape_pop_confirm_blue"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dm_15"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

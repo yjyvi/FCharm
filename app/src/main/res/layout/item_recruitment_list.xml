@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:paddingLeft="@dimen/dm_15"
+                android:paddingRight="@dimen/dm_15"
+                android:paddingTop="@dimen/dm_15">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="APP开发工程师"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dm_12"/>
+
+    <TextView
+        android:id="@+id/tv_education"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_marginTop="@dimen/dm_8"
+        android:text="大专 | 5-7年"
+        android:textColor="@color/normal_gray"
+        android:textSize="@dimen/dm_11"/>
+
+    <TextView
+        android:id="@+id/tv_browse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_education"
+        android:layout_marginTop="@dimen/dm_8"
+        android:drawablePadding="@dimen/dm_5"
+        android:drawableLeft="@mipmap/icon_browse"
+        android:text="5128"
+        android:textColor="@color/normal_gray"
+        android:textSize="@dimen/dm_11"/>
+
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="0.8—1.2万/月"
+        android:textSize="@dimen/dm_12"
+        android:textColor="@color/normal_red"/>
+
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_price"
+        android:layout_marginTop="@dimen/dm_8"
+        android:text="武汉-洪山区"
+        android:textColor="@color/normal_gray"
+        android:textSize="@dimen/dm_11"/>
+
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_address"
+        android:layout_marginTop="@dimen/dm_8"
+        android:text="有效期：07.05-07.23"
+        android:textColor="@color/normal_gray"
+        android:textSize="@dimen/dm_11"/>
+
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_below="@id/tv_browse"
+        android:layout_marginTop="@dimen/dm_15"
+        android:layout_width="match_parent"
+        android:background="@color/common_line"
+        android:layout_height="@dimen/dm_0.5"/>
+</RelativeLayout>

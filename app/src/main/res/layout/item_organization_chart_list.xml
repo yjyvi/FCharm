@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:background="@color/white"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_marginTop="@dimen/dm_15"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingRight="@dimen/dm_15"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_label_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/normal_red"
+            android:paddingLeft="@dimen/dm_8"
+            android:paddingRight="@dimen/dm_8"
+            android:textSize="@dimen/dm_10"
+            android:paddingTop="@dimen/dm_2"
+            android:paddingBottom="@dimen/dm_2"
+            android:text="模块"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_more"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/normal_blue_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看更多"/>
+
+    </RelativeLayout>
+
+    <include
+        layout="@layout/item_enterprise_list"/>
+
+</LinearLayout>

@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    signingConfigs {
+        config {
+            keyAlias 'feimei'
+            keyPassword '123456'
+            storeFile file('C:/workProject/FCharm/feimei.jks')
+            storePassword '123456'
+        }
+
+        debug {
+            storeFile file('C:/workProject/FCharm/feimei.jks')
+            storePassword "123456"
+            keyAlias "feimei"
+            keyPassword "123456"
+        }
+    }
+
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.whmnrc.feimei"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0.0"
+        multiDexEnabled true
+
+        ndk {
+            //设置支持的SO库架构
+            abiFilters "x86", "armeabi"
+        }
+    }
+
+
+
+
+    buildTypes {
+        debug {
+            debuggable = true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        release {
+            minifyEnabled = false
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //控件依赖注解
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.android.support:multidex:1.0.3'
+    //检测内存泄漏工具
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    implementation project(':mylibrary')
+    implementation project(':push')
+
+
+    //友盟统计
+//    compile 'com.umeng.sdk:common:latest.integration'
+}

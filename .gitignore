@@ -1,0 +1,16 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+/app/app.iml
+/mylibrary/mylibrary.iml
+mylibrary/mylibrary.iml
+.idea/gradle.xml
+.idea/modules.xml
+lib-arl/lib-arl.iml
+release/app-release.apk
+*.iml
+*.iml

@@ -1,0 +1,250 @@
+[33mcommit 2c5bac8a59a7151773648db4c02a20763d4d817d[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Tue Feb 6 01:09:09 2018 +0800
+
+    提交
+
+[33mcommit b54ffb061d78a4481f1a243cfc3cda565b05519a[m
+Author: yiyi666321 <472411601@qq.com>
+Date:   Mon Feb 5 14:24:10 2018 +0800
+
+    修改
+
+[33mcommit 93689bae0e6668ce02873cdbe39f918ad57e9018[m
+Merge: 363cb91 3d2a8cc
+Author: yiyi666321 <472411601@qq.com>
+Date:   Mon Feb 5 13:43:55 2018 +0800
+
+    合并
+
+[33mcommit 363cb919fbcde951ccd73a8891647ec64a8abd2c[m
+Author: yiyi666321 <472411601@qq.com>
+Date:   Mon Feb 5 13:28:40 2018 +0800
+
+    订单列表接口对接完成
+
+[33mcommit 3d2a8ccf2b14032e81ac427f2f169993b305bbe9[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sun Feb 4 19:13:34 2018 +0800
+
+    分类模块接口调试完成
+
+[33mcommit 0c804a3c1cbc98aa2c7cb526883e81ba7a12568e[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sun Feb 4 15:01:31 2018 +0800
+
+    名称修改
+
+[33mcommit 6f9e9b092761ce9715244981e4acf7e9964e7377[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sun Feb 4 14:59:27 2018 +0800
+
+    名称修改
+
+[33mcommit 5c9e52c7f3b1f7493042686cbd9cafb1db1e3a7b[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sun Feb 4 14:58:03 2018 +0800
+
+    文件名称修改
+
+[33mcommit ab5c65287d051c3b5074f96f2197a8f1d8f8b2d8[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sun Feb 4 13:56:49 2018 +0800
+
+    调试商品详情接口
+
+[33mcommit 945fe4f89f383c5c9af156a6731595fa89bdfc10[m
+Merge: 034e090 26c76a7
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sat Feb 3 23:38:42 2018 +0800
+
+    Merge branch 'master' of https://github.com/yjyvi/wette
+
+[33mcommit 034e0909745e7e3d812496d0b6fa060fb66889dc[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sat Feb 3 23:38:37 2018 +0800
+
+    调试商品列表、搜索、分类接口
+
+[33mcommit 26c76a7c8bf8163397d8dd003e46a66fca7409f8[m
+Merge: 9eab8dc 8d5c6cf
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Sat Feb 3 23:32:44 2018 +0800
+
+    Merge branch 'master' of https://github.com/yjyvi/wette
+
+[33mcommit 9eab8dc0ab522cc88aef87113b46761acfa42b1f[m
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Sat Feb 3 23:32:10 2018 +0800
+
+    完成购物车界面
+
+[33mcommit 8d5c6cf143c2fc03b2e3c8ab146efc879da97792[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sat Feb 3 20:53:52 2018 +0800
+
+    分类分割线修改
+
+[33mcommit 868f84f9e4f4e56becc90504d6b5d7b3f3cf1dea[m
+Merge: 3eef005 23340ea
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Sat Feb 3 17:21:30 2018 +0800
+
+    Merge branch 'master' of https://github.com/yjyvi/wette
+
+[33mcommit 23340eaea871d8e70b9c5b31092e876eed3239ea[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sat Feb 3 13:25:50 2018 +0800
+
+    分类模块优化
+
+[33mcommit fbb3eb80534cc9066e607afa65721a6ec6d1f84d[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Sat Feb 3 10:54:15 2018 +0800
+
+    分类修改
+
+[33mcommit 775e0b2e46d13427d901973953bdcb2f8f49039d[m
+Merge: 5d50809 64d4896
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Fri Feb 2 18:12:22 2018 +0800
+
+    Merge branch 'master' of https://github.com/yjyvi/wette
+
+[33mcommit 5d508099319244ab4bdff83416a8291f80b31e4c[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Fri Feb 2 18:12:16 2018 +0800
+
+    分类模块功能调整
+
+[33mcommit 3eef00583b3ac9c51a004fb00af8dcf8acd6bd2a[m
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Fri Feb 2 17:39:05 2018 +0800
+
+    完成订单列表界面
+
+[33mcommit 64d4896d8876fcdfdfb19299920ed9f598407d7e[m
+Merge: d64fdee a514db6
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Fri Feb 2 16:48:03 2018 +0800
+
+    Merge branch 'master' of https://github.com/yjyvi/wette
+
+[33mcommit d64fdeebd0001c6db12977b61b72a936f0977375[m
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Fri Feb 2 16:46:18 2018 +0800
+
+    完成收藏，地址列表界面
+
+[33mcommit a514db63462930060d0e93b28e7e158ce62e6388[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Fri Feb 2 16:23:12 2018 +0800
+
+    首页接口调试
+
+[33mcommit cb4fe2e970b910c96afbd793f8b6e37e394e9f24[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Fri Feb 2 14:39:41 2018 +0800
+
+    增加StringCallBack
+
+[33mcommit c427b347720f9274cfae7c88a70d5b51a29350a2[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Fri Feb 2 13:57:34 2018 +0800
+
+    api调用调整
+
+[33mcommit 211ad71dc8cf2821c2d1b7f80321fe23e756627a[m
+Merge: cff32f6 a0227e9
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Fri Feb 2 13:51:40 2018 +0800
+
+    Merge branch 'master' of https://github.com/yjyvi/wette
+
+[33mcommit cff32f605aa0e7fe54b7e4159d0cf44879a2bf84[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Fri Feb 2 13:51:33 2018 +0800
+
+    基类bean和Callback 调整
+
+[33mcommit a0227e94503b94213aa885da25d72507e093d4ff[m
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Fri Feb 2 02:24:16 2018 +0800
+
+    完成个人中心部分界面跳转逻辑
+
+[33mcommit 92ea064e3d56dd0b122712c7066d8c5792df80ad[m
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Fri Feb 2 02:01:49 2018 +0800
+
+    完成个人中心部分界面
+
+[33mcommit da3ba27b940f29d1993c45d323993db9dba3f0aa[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Fri Feb 2 00:40:00 2018 +0800
+
+    完善分类模块及公共标题栏XML
+
+[33mcommit 94c6a7bdfd44588bd4c4e384d8ca3277c6117753[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Thu Feb 1 23:42:03 2018 +0800
+
+    新增搜索界面
+
+[33mcommit f131b2a054e305ce5727934cc147ba06ed8be25d[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Thu Feb 1 22:13:26 2018 +0800
+
+    修改页面提交，增加店铺页面
+
+[33mcommit df8cc3c0afc61da92c2decd20f3f8546a92ca89e[m
+Merge: df1e977 b586974
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Thu Feb 1 19:32:47 2018 +0800
+
+    Merge branch 'master' of https://github.com/yjyvi/wette
+
+[33mcommit df1e9779dd156fcb21b67d07ae75594c783dccc3[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Thu Feb 1 19:32:40 2018 +0800
+
+    商品详情轮播
+
+[33mcommit b586974a0237da33ba8c8ac503c60a9dc785ed91[m
+Merge: 9a9a240 0950bc8
+Author: yiyi666321 <lz13477484198@gmail.com>
+Date:   Thu Feb 1 19:20:32 2018 +0800
+
+    Merge branch 'master' of https://github.com/yjyvi/wette
+
+[33mcommit 0950bc8e492ebdbbcb525e8925cf8d045358ac54[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Thu Feb 1 19:06:54 2018 +0800
+
+    修改详情页面
+
+[33mcommit 9a9a2401f5fb5f8a5484e1a791ef5ad717613087[m
+Author: linzhengloser <lz13477484198@gmail.com>
+Date:   Thu Feb 1 19:02:42 2018 +0800
+
+    完成登录界面
+
+[33mcommit 74e8f0e9e35fb503383fe65dbd6d95d6a2507c8b[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Thu Feb 1 18:38:42 2018 +0800
+
+    更新轮播图
+
+[33mcommit 8b003938fe33cd86cf6b5f65189f7f4b8dddee5e[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Thu Feb 1 14:42:20 2018 +0800
+
+    新增页面
+
+[33mcommit fae8cc7d37f7e03a0dceb7345bd92b60b9417abd[m
+Author: yjyvi <yjyvi110@gmail.com>
+Date:   Thu Feb 1 10:10:59 2018 +0800
+
+    提交代码
+    
+    提交代码

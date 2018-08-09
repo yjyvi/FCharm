@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="@dimen/dm_75"
+                android:layout_marginLeft="@dimen/dm_15"
+                android:layout_height="@dimen/dm_75"
+                android:orientation="vertical">
+
+    <ImageView
+        android:src="@color/normal_gray"
+        android:layout_width="@dimen/dm_75"
+        android:layout_height="@dimen/dm_75"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_22"
+        android:layout_alignParentBottom="true"
+        android:background="#5666"
+        android:gravity="center"
+        android:textSize="@dimen/dm_11"
+        android:text="某某某"
+        android:textColor="@color/white"/>
+</RelativeLayout>

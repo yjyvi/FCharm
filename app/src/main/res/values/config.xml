@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<string name="service_host_address">http://hwscapi.whmnx.com</string>-->
+    <string name="service_host_address">http://api.optic-female.cn</string>
+
+    <!--上传图片-->
+    <string name="UploadImg">/api/Home/UploadImg</string>
+    <!--获取版本号-->
+    <string name="GetVersion">/api/Home/GetVersion</string>
+    <!--提交错误日志-->
+    <string name="SubmitLog">/api/Home/SubmitLog</string>
+
+    <!--支付-->
+    <string name="Pay">/api/Pay/Pay</string>
+
+    <!--登录-->
+    <string name="Login">/api/User/Login</string>
+    <!--注销用户-->
+    <string name="Cancellation">/api/User/Cancellation</string>
+    <!--微信登录-->
+    <string name="WeChatLogin">/api/User/WeChatLogin</string>
+    <!--微信绑定-->
+    <string name="WeChatIsRegister">/api/User/WeChatIsRegister</string>
+    <!--获取验证码-->
+    <string name="SendPhoneCode">/api/User/SendPhoneCode</string>
+    <!--注册-->
+    <string name="Register">/api/User/Register</string>
+    <!--获取用户信息-->
+    <string name="GetUserInfo">/api/User/GetUserInfo</string>
+    <!--找回忘记密码-->
+    <string name="RecoverUserPassword">/api/User/RecoverUserPassword</string>
+    <!--修改用户资料-->
+    <string name="ModifyUserBasicData">/api/User/ModifyUserBasicData</string>
+
+    <!--企业名录-->
+    <!--获取企业类型-->
+    <string name="GetEnterpriseType">/api/Enterprise/GetEnterpriseType</string>
+    <!--企业名录道页，推荐企业-->
+    <string name="GetRecommendEnterprise">/api/Enterprise/GetRecommendEnterprise</string>
+    <!--获取行业-->
+    <string name="GetIndustry">/api/Enterprise/GetIndustry</string>
+    <!--搜索企业-->
+    <string name="GetEnterprise">/api/Enterprise/GetEnterprise</string>
+    <!--获取企业详情-->
+    <string name="GetEnterpriseDetails">/api/Enterprise/GetEnterpriseDetails</string>
+    <!--企业评级说明-->
+    <string name="GetRatingExplain">/api/Enterprise/GetRatingExplain</string>
+
+
+    <!--评论-->
+    <string name="SendComment">/api/Comment/SendComment</string>
+    <!--分页获取评论列表-->
+    <string name="GetComment">/api/Comment/GetComment</string>
+
+    <!--招聘列表-->
+    <string name="GetRecruit">/api/Enterprise/GetRecruit</string>
+    <!--招聘列表筛选条件-->
+    <string name="GetSalary">/api/Enterprise/GetSalary</string>
+
+</resources>

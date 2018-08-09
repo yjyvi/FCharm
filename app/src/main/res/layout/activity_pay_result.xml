@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/common_title"/>
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dm_100"
+        android:background="@mipmap/icon_order_pay_success"/>
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="@dimen/dm_200"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dm_20"
+        android:gravity="center"
+        android:text="You have paid successfully"
+        android:textSize="@dimen/dm_12"/>
+
+    <TextView
+        android:id="@+id/tv_click"
+        android:layout_width="@dimen/dm_200"
+        android:layout_height="@dimen/dm_50"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dm_40"
+        android:background="@color/normal_color"
+        android:gravity="center"
+        android:text="confirm"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dm_14"/>
+</LinearLayout>

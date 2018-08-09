@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back_gray"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:background="@color/white"
+        android:paddingTop="@dimen/dm_30"
+        android:paddingBottom="@dimen/dm_5"
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingRight="@dimen/dm_15"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_69">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/dm_8"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/back"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+
+            android:layout_weight="1"
+            android:id="@+id/ll_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_33"
+            android:layout_marginLeft="@dimen/dm_15"
+            android:layout_marginRight="@dimen/dm_15"
+            android:background="@drawable/search_gray_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dm_15"
+                android:layout_marginRight="@dimen/dm_15"
+                android:background="@mipmap/home_serach"/>
+
+            <TextView
+                android:id="@+id/tv_search"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:textColorHint="@color/search_hint_text_bg"
+                android:hint="搜索你想要的商品"
+                android:textCursorDrawable="@color/black"
+                android:textSize="@dimen/dm_12"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_user_info"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/icon_header"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dm_1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_49"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_city"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="区域"
+                android:textSize="@dimen/dm_14"/>
+
+            <ImageView
+                android:id="@+id/iv_city"
+                android:layout_width="@dimen/dm_10"
+                android:layout_height="@dimen/dm_17"
+                android:layout_marginLeft="@dimen/dm_5"
+                android:src="@mipmap/icon_type_more"/>
+        </LinearLayout>
+
+        <View
+            android:layout_marginTop="@dimen/dm_15"
+            android:layout_marginBottom="@dimen/dm_15"
+            android:layout_width="@dimen/dm_1"
+            android:background="@color/common_line"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:id="@+id/ll_price"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="薪酬范围"
+                android:textSize="@dimen/dm_14"/>
+
+            <ImageView
+                android:id="@+id/iv_price"
+                android:layout_width="@dimen/dm_10"
+                android:layout_height="@dimen/dm_17"
+                android:layout_marginLeft="@dimen/dm_5"
+                android:src="@mipmap/icon_type_more"/>
+        </LinearLayout>
+
+        <View
+            android:layout_marginTop="@dimen/dm_15"
+            android:layout_marginBottom="@dimen/dm_15"
+            android:layout_width="@dimen/dm_1"
+            android:background="@color/common_line"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:id="@+id/ll_more"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="更多筛选"
+                android:textSize="@dimen/dm_14"/>
+
+            <ImageView
+                android:id="@+id/iv_more"
+                android:layout_width="@dimen/dm_10"
+                android:layout_height="@dimen/dm_17"
+                android:layout_marginLeft="@dimen/dm_5"
+                android:src="@mipmap/icon_type_more"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--Limited time sale商品-->
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nsv_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants">
+
+            <LinearLayout
+                android:id="@+id/header_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+
+                <ViewStub
+                    android:id="@+id/vs_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout="@layout/layout_empty"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="@dimen/dm_10"
+                    android:id="@+id/rv_product_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/back_gray"/>
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+</LinearLayout>
+

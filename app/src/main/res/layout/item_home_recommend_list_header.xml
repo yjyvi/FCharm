@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/withe"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_53"
+        android:background="@color/withe"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/dm_5">
+
+        <TextView
+            android:id="@+id/tv_sale_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@mipmap/icon_home_list"
+            android:drawablePadding="@dimen/dm_5"
+            android:paddingBottom="@dimen/dm_14"
+            android:paddingLeft="@dimen/dm_15"
+            android:paddingTop="@dimen/dm_14"
+            android:text="推荐行业产品库"
+            android:textSize="@dimen/dm_14"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dm_15"
+            android:text="更多>>"
+            android:textSize="@dimen/dm_14"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:background="@color/common_line"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/back_gray"/>
+</LinearLayout>

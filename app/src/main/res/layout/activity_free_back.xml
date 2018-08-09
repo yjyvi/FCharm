@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/common_title"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="请输入您的意见和建议,我们会及时联系您"
+        android:minHeight="@dimen/dm_200"
+        android:padding="@dimen/dm_10"
+        android:textColor="@color/black"
+        android:textColorHint="@color/search_hint_text_bg"
+        android:textSize="@dimen/dm_14"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:layout_marginLeft="@dimen/dm_15"
+        android:layout_marginRight="@dimen/dm_15"
+        android:background="@color/common_line"/>
+
+    <LinearLayout
+        android:id="@+id/ll_commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dm_10"
+        android:layout_marginRight="@dimen/dm_10"
+        android:layout_marginTop="@dimen/dm_20"
+        android:background="@mipmap/icon_button_bg"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dm_10">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_save"/>
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dm_10"
+            android:text="提交"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dm_16"/>
+
+    </LinearLayout>
+</LinearLayout>

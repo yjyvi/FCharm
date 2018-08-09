@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back_gray"
+    android:orientation="vertical">
+
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
+
+            <LinearLayout
+                android:id="@+id/header_layout"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <!--Banner-->
+                    <com.youth.banner.Banner
+                        android:id="@+id/banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dm_200"
+                        app:indicator_height="@dimen/dm_6"
+                        app:indicator_margin="@dimen/dm_5"
+                        app:indicator_width="@dimen/dm_6"/>
+
+                    <ImageView
+                        android:id="@+id/iv_user_info"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dm_30"
+                        android:layout_marginTop="@dimen/dm_40"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:src="@mipmap/icon_header"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+
+                <net.lucode.hackware.magicindicator.MagicIndicator
+                    android:id="@+id/tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dm_44"
+                    android:background="@color/white"/>
+            </LinearLayout>
+        </android.support.design.widget.AppBarLayout>
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+</LinearLayout>
+

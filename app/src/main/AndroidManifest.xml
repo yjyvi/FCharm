@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.whmnrc.feimei">
+
+    <!-- 可用网络 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- WIFI网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 屏幕保持唤醒 不锁屏 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- 调整多媒体音量 -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
+    <!--************************************************ SD卡权限 ***********************************************-->
+    <!-- 在sdcard中创建/删除文件的权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <!-- sdcard操作允许 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 允许读取SD卡数据 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!--************************************************ SD卡权限 end ***********************************************-->
+
+
+    <!--************************************************ 日历 ***********************************************-->
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <!--************************************************ 日历 end ***********************************************-->
+
+
+    <!--************************************************ 访问照相机 ***********************************************-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!--************************************************ 访问照相机 end ***********************************************-->
+
+
+    <!--************************************************ 联系人 ***********************************************-->
+    <!-- 读联系人 -->
+    <!--<uses-permission android:name="android.permission.READ_CONTACTS" />-->
+    <!--&lt;!&ndash; 写联系人 &ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.WRITE_CONTACTS" />-->
+    <!--************************************************ 联系人 end ***********************************************-->
+
+
+    <!--************************************************ 位置 ***********************************************-->
+    <!--&lt;!&ndash;访问CellID或WiFi热点来获取粗略的位置&ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+    <!--&lt;!&ndash; 获取精确位置 &ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+    <!--************************************************ 位置 end ***********************************************-->
+
+    <!--************************************************ 使用麦克风 ***********************************************-->
+    <!-- 使用麦克风 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!--************************************************ 使用麦克风 end ***********************************************-->
+
+    <!--************************************************ 电话 ***********************************************-->
+    <!-- 拨打电话权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <!-- 读取电话状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--************************************************ 电话 end ***********************************************-->
+
+
+    <!--************************************************ 传感器 ***********************************************-->
+    <!-- 传感器信息 -->
+    <!--<uses-permission android:name="android.permission.SENSOR_INFO" />-->
+    <!--&lt;!&ndash; 调用传感器 &ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.SENSOR_ENABLE" />-->
+    <!--<uses-permission android:name="android.permission.WAKE_LOCK" />-->
+    <!--<uses-permission android:name="android.permission.BODY_SENSORS" />-->
+    <!--************************************************ 传感器 end ***********************************************-->
+
+
+    <!--************************************************ 短信 ***********************************************-->
+    <!--  发送消息-->
+    <!--<uses-permission android:name="android.permission.SEND_SMS" />-->
+    <!--&lt;!&ndash;  阅读消息&ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.READ_SMS" />-->
+    <!--&lt;!&ndash;  写入消息&ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.WRITE_SMS" />-->
+    <!--&lt;!&ndash; 接收消息 &ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.RECEIVE_SMS" />-->
+    <!--************************************************ 短信 end ***********************************************-->
+
+
+    <!--振动-->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!-- 录音-->
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <!--<uses-permission android:name="android.permission.RECORD_AUDIO" />-->
+
+
+    <application
+        android:name="com.whmnrc.feimei.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+
+        <!-- 兼容android 7.0 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+
+        <!--启动界面-->
+        <activity
+            android:name="com.whmnrc.feimei.ui.SplashActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!--主界面-->
+        <activity
+            android:name="com.whmnrc.feimei.ui.HomeTableActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="philn"/>
+            </intent-filter>
+        </activity>
+
+        <!--向导界面-->
+        <activity android:name="com.whmnrc.feimei.ui.GuideActivity"/>
+
+        <!-- 登录 -->
+        <activity android:name="com.whmnrc.feimei.ui.login.LoginActivity"/>
+        <!-- 注册 -->
+        <!--微信支付-->
+        <activity
+            android:name="com.whmnrc.feimei.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5b07c292f43e483b31000013">
+        </meta-data>
+
+        <!--微信登录或分享-->
+        <activity
+            android:name="com.whmnrc.feimei.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            />
+
+
+        <activity
+            android:name="com.whmnrc.feimei.ui.mine.AddressManagerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="com.whmnrc.feimei.ui.mine.SettingActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="com.whmnrc.feimei.ui.mine.OrderListActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="com.whmnrc.feimei.ui.CommonH5WebView"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="com.whmnrc.feimei.ui.mine.AddAddressActivity"
+            android:windowSoftInputMode="adjustPan"
+            />
+
+
+        <activity android:name="com.whmnrc.feimei.ui.mine.AboutUsActivity"/>
+        <activity android:name="com.whmnrc.feimei.ui.mine.PayResultActivity"/>
+
+        <activity android:name="com.whmnrc.feimei.ui.login.UserAgreementActivity"/>
+        <activity android:name=".ui.login.RegisterActivity"/>
+        <activity android:name=".ui.login.BindTelActivity"/>
+        <activity android:name=".ui.login.FindPwdActivity"/>
+        <activity android:name=".ui.home.SearchActivity"/>
+        <activity android:name=".ui.mine.MineActivity"/>
+        <activity android:name=".ui.mine.MyCollectionActivity"/>
+        <activity android:name=".ui.mine.FreeBackActivity"/>
+        <activity android:name=".ui.login.NotificationPwdActivity"/>
+        <activity android:name=".ui.mine.OrderDetailsActivity"/>
+        <activity
+            android:name=".ui.organization.OrganizationDetailsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            />
+        <activity android:name=".ui.organization.BusinessMoreActivity"/>
+        <activity android:name=".ui.organization.IntellectualPropertyActivity"/>
+        <activity android:name=".ui.organization.ShareholderInformationActivity"/>
+        <activity android:name=".ui.organization.OtherInfoActivity"/>
+        <activity android:name=".ui.organization.OtherInfoDetailsActivity"/>
+        <activity android:name=".ui.organization.AssociatedPositionActivity"/>
+        <activity android:name=".ui.organization.AboutMeActivity"/>
+        <activity android:name=".ui.mine.PayActivity"/>
+        <activity android:name=".ui.organization.AllCommentActivity"/>
+        <activity android:name=".ui.organization.SearchBusinessMoreActivity"/>
+        <activity android:name=".ui.mine.CommentActivity"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden"
+            />
+        <activity android:name=".ui.product.ProductDetailsActivity"/>
+        <activity android:name=".ui.product.MsgActivity"/>
+        <activity android:name=".ui.product.ConfirmOrderActivity"/>
+        <activity android:name=".ui.product.SearchProductMoreActivity"/>
+        <activity android:name=".ui.industry.ColumnActivity"
+                  android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ui.industry.IndustryDetailsActivity"/>
+        <activity android:name=".ui.mine.PayVipActivity"/>
+        <activity android:name=".ui.mine.RuleDescriptionActivity"/>
+
+
+    </application>
+
+</manifest>

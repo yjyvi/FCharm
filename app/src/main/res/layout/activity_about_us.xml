@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/common_title"/>
+
+        <TextView
+            android:id="@+id/ve"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Copyright © 2018 Flymall.All rights Reserved."
+            android:textColor="@color/normal_gray"
+            android:textSize="@dimen/dm_12"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dm_20"/>
+        <TextView
+            android:id="@+id/ve1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Wuhan HuiJu Agel Ecommerce Co., Ltd."
+            android:textColor="@color/normal_gray"
+            android:textSize="@dimen/dm_14"
+            android:layout_above="@+id/ve"
+            android:layout_marginBottom="@dimen/dm_10"/>
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fl_title_bar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dm_64"
+            android:src="@mipmap/ic_launcher"
+            />
+        <TextView
+            android:id="@+id/version_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Flymall (1.0.0)"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_15"
+            android:layout_below="@+id/iv_logo"
+            android:layout_marginBottom="@dimen/dm_20"
+            android:layout_marginTop="@dimen/dm_20"/>
+
+    </RelativeLayout>
+</LinearLayout>
+

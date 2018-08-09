@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
+
+
+    <WebView
+        android:id="@+id/web_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dm_65"/>
+
+
+    <include layout="@layout/common_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_105"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        <View
+            android:layout_marginLeft="@dimen/dm_15"
+            android:layout_marginRight="@dimen/dm_15"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_0.5"
+            android:background="@color/common_line"/>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dm_8"
+            android:src="@mipmap/icon_load"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dm_10"
+            android:text="剩余7页未读！继续阅读需付费。"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dm_10"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/iv_zan"
+                android:layout_width="@dimen/dm_85"
+                android:layout_height="@dimen/dm_30"
+                android:background="@drawable/shape_industry_details_zan_s_blue"
+                android:gravity="center"
+                android:text="赞赏"
+                android:textColor="@color/normal_gray"
+                android:textSize="@dimen/dm_14"/>
+
+            <TextView
+                android:id="@+id/tv_join_vip"
+                android:layout_width="@dimen/dm_85"
+                android:layout_height="@dimen/dm_30"
+                android:layout_marginLeft="@dimen/dm_20"
+                android:background="@drawable/shape_pop_confirm_blue"
+                android:gravity="center"
+                android:text="加入VIP"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dm_14"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_marginLeft="@dimen/dm_15"
+            android:layout_marginRight="@dimen/dm_15"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_0.5"
+            android:layout_marginTop="@dimen/dm_8"
+            android:background="@color/common_line"/>
+
+
+    </LinearLayout>
+</FrameLayout>

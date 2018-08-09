@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dm_15"
+                android:paddingRight="@dimen/dm_15"
+
+                android:paddingTop="@dimen/dm_15">
+
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="@dimen/dm_80"
+        android:layout_height="@dimen/dm_80"
+        android:src="@color/normal_gray"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dm_15"
+        android:layout_toRightOf="@id/iv_img">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:lineSpacingExtra="@dimen/dm_5"
+            android:layout_marginTop="@dimen/dm_5"
+            android:layout_weight="1"
+            android:text="动力电池巨头通讯资讯动力电池巨头通讯资讯动力电池巨头通"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_12"/>
+
+        <TextView
+            android:id="@+id/tv_collection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dm_5"
+            android:drawableLeft="@mipmap/icon_collection_false"
+            android:drawablePadding="@dimen/dm_5"
+            android:text="收藏"
+            android:textColor="@color/normal_blue_text_color"
+            android:textSize="@dimen/dm_12"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_img"
+        android:layout_marginBottom="@dimen/dm_5"
+        android:layout_marginLeft="@dimen/dm_15"
+        android:layout_toRightOf="@id/iv_img"
+        android:text="新闻"
+        android:textColor="@color/normal_blue_text_color"
+        android:textSize="@dimen/dm_10"/>
+
+
+    <TextView
+        android:id="@+id/tv_download_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_img"
+        android:layout_alignParentRight="true"
+        android:text="810已阅读"
+        android:textSize="@dimen/dm_10"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_img"
+        android:layout_marginRight="@dimen/dm_15"
+        android:layout_toLeftOf="@id/tv_download_count"
+        android:text="2018-7-24"
+        android:textSize="@dimen/dm_10"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:layout_below="@id/iv_img"
+        android:layout_marginTop="@dimen/dm_15"
+        android:background="@color/common_line"/>
+
+</RelativeLayout>

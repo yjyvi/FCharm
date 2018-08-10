@@ -2,7 +2,6 @@ package com.whmnrc.feimei.ui.table;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -25,6 +24,7 @@ import com.whmnrc.feimei.adapter.SpecialInformationListAdapter;
 import com.whmnrc.feimei.beans.GetRecruitBean;
 import com.whmnrc.feimei.beans.JsonBean;
 import com.whmnrc.feimei.beans.SalaryListBean;
+import com.whmnrc.feimei.beans.SpecialInformationFitterBean;
 import com.whmnrc.feimei.pop.PopCity;
 import com.whmnrc.feimei.pop.PopMoreFitter;
 import com.whmnrc.feimei.pop.PopSalaryRange;
@@ -74,8 +74,6 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     @BindView(R.id.et_search)
     EditText mEtSearch;
 
-    @BindView(R.id.nsv_layout)
-    NestedScrollView mNestedScrollView;
     @BindView(R.id.tv_city)
     TextView mTvCity;
     @BindView(R.id.iv_city)
@@ -102,10 +100,10 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     private String mSearchContent;
     private List<SalaryListBean.ResultdataBean> mFitterData;
     private String mSalaryID;
-    public ArrayList<SalaryListBean.ResultdataBean> mBeans = new ArrayList<>();
     private String mEnterpriseId;
     private String mQualificationsId;
     private String mCrateTime;
+    public List<SpecialInformationFitterBean> mSpecialInformationFitterBeans = new ArrayList<>();
 
 
     @Override
@@ -180,7 +178,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
         refreshLayout.finishLoadMore();
-        mGetRecruitPresenter.getRecruit(false, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID,mCrateTime);
+        mGetRecruitPresenter.getRecruit(false, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID, mCrateTime);
     }
 
     @Override
@@ -325,81 +323,105 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
         view.setTextColor(isSelect ? ContextCompat.getColor(view.getContext(), R.color.normal_blue_text_color) : ContextCompat.getColor(view.getContext(), R.color.black));
     }
 
+
     @Override
-    public ArrayList<String> onLoadFitterData() {
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add("发布日期");
-        strings.add("学历要求");
-        return strings;
+    public List<SpecialInformationFitterBean> onLoadFitterData() {
+        if (mSpecialInformationFitterBeans.size() == 0) {
+            SpecialInformationFitterBean specialInformationFitterBean;
+            for (int i = 0; i < 2; i++) {
+                switch (i) {
+                    case 0:
+                        specialInformationFitterBean = new SpecialInformationFitterBean();
+                        specialInformationFitterBean.setName("发布日期");
+                        specialInformationFitterBean.setPosition(0);
+                        //发布日期
+                        ArrayList<SpecialInformationFitterBean.DataListBean> dataListBeans = new ArrayList<>();
+                        for (int j = 0; j < 7; j++) {
+                            SpecialInformationFitterBean.DataListBean dataListBean = new SpecialInformationFitterBean.DataListBean();
+                            switch (j) {
+                                case 0:
+                                    dataListBean.setName("所有日期");
+                                    break;
+                                case 1:
+                                    dataListBean.setName("24小时内");
+                                    dataListBean.setId("1");
+                                    break;
+                                case 2:
+                                    dataListBean.setName("近三天");
+                                    dataListBean.setId("3");
+                                    break;
+                                case 3:
+                                    dataListBean.setName("近一周");
+                                    dataListBean.setId("7");
+                                    break;
+                                case 4:
+                                    dataListBean.setName("近一月");
+                                    dataListBean.setId("30");
+                                    break;
+                                case 5:
+                                    dataListBean.setName("近半年");
+                                    dataListBean.setId(String.valueOf(365 / 2));
+                                    break;
+                                case 6:
+                                    dataListBean.setName("近一年");
+                                    dataListBean.setId("365");
+                                    break;
+                                default:
+                                    break;
+
+                            }
+                            dataListBeans.add(dataListBean);
+                            specialInformationFitterBean.setDataListBeans(dataListBeans);
+                        }
+
+                        mSpecialInformationFitterBeans.add(specialInformationFitterBean);
+                        break;
+                    case 1:
+                        if (mFitterData != null) {
+                            specialInformationFitterBean = new SpecialInformationFitterBean();
+                            specialInformationFitterBean.setPosition(1);
+                            specialInformationFitterBean.setName("学历要求");
+                            ArrayList<SpecialInformationFitterBean.DataListBean> educationBeans = new ArrayList<>();
+                            for (SalaryListBean.ResultdataBean fitterDatum : mFitterData) {
+                                if (fitterDatum.getType() == 0) {
+                                    SpecialInformationFitterBean.DataListBean educationBean = new SpecialInformationFitterBean.DataListBean();
+                                    educationBean.setId(fitterDatum.getID());
+                                    educationBean.setName(fitterDatum.getName());
+                                    educationBeans.add(educationBean);
+                                    specialInformationFitterBean.setDataListBeans(educationBeans);
+                                }
+                            }
+                            mSpecialInformationFitterBeans.add(specialInformationFitterBean);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+        return mSpecialInformationFitterBeans;
     }
 
     @Override
     public void onSelectFitter(int parentPosition, int position, int type) {
-        if (type == 0) {
-            if (position == 0) {
-                mBeans.clear();
-                SalaryListBean.ResultdataBean resultdataBean;
-                for (int i = 0; i < 7; i++) {
-                    resultdataBean = new SalaryListBean.ResultdataBean();
-                    switch (i) {
-                        case 0:
-                            resultdataBean.setName("所有日期");
-                            break;
-                        case 1:
-                            resultdataBean.setName("24小时内");
-                            resultdataBean.setID("1");
-                            break;
-                        case 2:
-                            resultdataBean.setName("近三天");
-                            resultdataBean.setID("3");
-                            break;
-                        case 3:
-                            resultdataBean.setName("近一周");
-                            resultdataBean.setID("7");
-                            break;
-                        case 4:
-                            resultdataBean.setName("近一月");
-                            resultdataBean.setID("30");
-                            break;
-                        case 5:
-                            resultdataBean.setName("近半年");
-                            resultdataBean.setID(String.valueOf(365 / 2));
-                            break;
-                        case 6:
-                            resultdataBean.setName("近一年");
-                            resultdataBean.setID("365");
-                            break;
-                        default:
-                            break;
-
-                    }
-                    mBeans.add(resultdataBean);
-                }
-
-            } else {
-                if (mFitterData != null) {
-                    mBeans.clear();
-                    for (SalaryListBean.ResultdataBean fitterDatum : mFitterData) {
-                        if (fitterDatum.getType() == 0) {
-                            mBeans.add(fitterDatum);
-                        }
-                    }
-                }
-            }
-            mPopMoreFitter.setTwoList(mBeans);
-        } else {
+        if (type == 1) {
             if (parentPosition == 0) {
                 if (position == -1) {
                     mCrateTime = "";
                 } else {
-                    mCrateTime = mBeans.get(position).getID();
+                    mCrateTime = mSpecialInformationFitterBeans.get(parentPosition).getDataListBeans().get(position).getId();
                 }
             } else if (parentPosition == 1) {
                 if (position == -1) {
                     mQualificationsId = "";
                 } else {
-                    mQualificationsId = mBeans.get(position).getID();
+                    mQualificationsId = mSpecialInformationFitterBeans.get(parentPosition).getDataListBeans().get(position).getId();
                 }
+            }else {
+                mCrateTime = "";
+                mQualificationsId = "";
             }
             loadData();
         }
@@ -407,7 +429,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     }
 
     private void loadData() {
-        mGetRecruitPresenter.getRecruit(true, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID,mCrateTime);
+        mGetRecruitPresenter.getRecruit(true, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID, mCrateTime);
     }
 
 

@@ -21,6 +21,7 @@ import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
 import com.whmnrc.feimei.beans.SalaryListBean;
+import com.whmnrc.feimei.beans.SpecialInformationFitterBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +39,12 @@ public class PopMoreFitter {
     private Activity activity;
     public PopupWindow mPopupWindow;
     private MoreFitterListener mMoreFitterListener;
-    private List<String> oneList = new ArrayList<>();
+    private List<SpecialInformationFitterBean> oneList = new ArrayList<>();
     private int oneSelect = -1;
     private int twoSelect = -1;
-    private int mTowPosition;
+    private int twoSelectTime = -1;
+    private int twoSelectEducation = -1;
+
     private List<SalaryListBean.ResultdataBean> twoList;
     private Unbinder bind;
     private Adapter oneAdapter;
@@ -70,6 +73,7 @@ public class PopMoreFitter {
     private void initData() {
         oneList = mMoreFitterListener.onLoadFitterData();
         oneAdapter.setDataArray(oneList);
+
         oneAdapter.notifyDataSetChanged();
     }
 
@@ -124,9 +128,9 @@ public class PopMoreFitter {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 oneSelect = position;
-//                if (oneSelect != 0)
-                mMoreFitterListener.onSelectFitter(0, oneSelect, 0);
                 oneAdapter.notifyDataSetChanged();
+                twoAdapter.setDataArray(oneList.get(position).getDataListBeans());
+                twoAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -137,32 +141,25 @@ public class PopMoreFitter {
 
         twoAdapter = new TwoAdapter(activity, R.layout.item_more_fitter_select);
         twoRv.setAdapter(twoAdapter);
-        twoAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
 
-
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                selectedView(view);
-                mTowPosition = position;
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
 
         tvReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedFalse(twoRv);
+                selectedFalse(twoRv,false);
             }
         });
 
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMoreFitterListener.onSelectFitter(1, mTowPosition, 1);
+
+                if (oneSelect == 0) {
+                    twoSelect = twoSelectTime;
+                } else if (oneSelect == 1) {
+                    twoSelect = twoSelectEducation;
+                }
+                mMoreFitterListener.onSelectFitter(oneSelect, twoSelect, 1);
                 if (mPopupWindow != null) {
                     mPopupWindow.dismiss();
                 }
@@ -173,10 +170,11 @@ public class PopMoreFitter {
 
     public void show() {
         mPopupWindow.showAsDropDown(showView);
-        if (mMoreFitterListener != null && twoList == null || twoList.size() == 0) {
+        if (oneSelect == -1) {
             oneSelect = 0;
-            mMoreFitterListener.onSelectFitter(0, 0, 0);
             oneAdapter.notifyDataSetChanged();
+            twoAdapter.setDataArray(oneList.get(0).getDataListBeans());
+            twoAdapter.notifyDataSetChanged();
         }
     }
 
@@ -184,25 +182,22 @@ public class PopMoreFitter {
         mPopupWindow.dismiss();
     }
 
-    public void setTwoList(List<SalaryListBean.ResultdataBean> towData) {
-        twoList = towData;
-        twoAdapter.setDataArray(twoList);
-        twoAdapter.notifyDataSetChanged();
-    }
-
-
     /**
      * 选择重置
      */
-    private void selectedFalse(RecyclerView recyclerView) {
+    private void selectedFalse(RecyclerView recyclerView, boolean isInit) {
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         int childCount = layoutManager.getChildCount();
         for (int i = 0; i < childCount; i++) {
             layoutManager.getChildAt(i).setSelected(false);
         }
 
-        oneSelect = -1;
-        mTowPosition = -1;
+        if (!isInit) {
+            oneSelect = -1;
+            twoSelect = -1;
+            twoSelectTime = -1;
+            twoSelectEducation = -1;
+        }
     }
 
 
@@ -223,42 +218,64 @@ public class PopMoreFitter {
 
 
     public interface MoreFitterListener {
-        ArrayList<String> onLoadFitterData();
+        List<SpecialInformationFitterBean> onLoadFitterData();
 
         void onSelectFitter(int parentPosition, int position, int type);
     }
 
-    class Adapter extends CommonAdapter<String> {
+    class Adapter extends CommonAdapter<SpecialInformationFitterBean> {
 
         public Adapter(Context context, int layoutId) {
             super(context, layoutId);
         }
 
         @Override
-        public void convert(ViewHolder holder, String s, int position) {
+        public void convert(ViewHolder holder, SpecialInformationFitterBean s, int position) {
             if (position == oneSelect) {
                 holder.setBackgroundColor(R.id.tv, Color.parseColor("#EBEBEB"));
             } else {
                 holder.setBackgroundColor(R.id.tv, Color.parseColor("#FFFFFF"));
             }
-            holder.setText(R.id.tv, s);
+            holder.setText(R.id.tv, s.getName());
         }
     }
 
-    class TwoAdapter extends CommonAdapter<SalaryListBean.ResultdataBean> {
+    class TwoAdapter extends CommonAdapter<SpecialInformationFitterBean.DataListBean> {
 
         public TwoAdapter(Context context, int layoutId) {
             super(context, layoutId);
         }
 
         @Override
-        public void convert(ViewHolder holder, SalaryListBean.ResultdataBean s, int position) {
-//            if (position == twoSelect) {
-//                holder.getView(R.id.tv).setSelected(true);
-//            } else {
-//                holder.getView(R.id.tv).setSelected(false);
-//            }
+        public void convert(ViewHolder holder, SpecialInformationFitterBean.DataListBean s, final int position) {
             holder.setText(R.id.tv, s.getName());
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectedFalse(twoRv,true);
+                    selectedView(v);
+                    if (oneSelect == 0) {
+                        twoSelectTime = position;
+                    } else if (oneSelect == 1) {
+                        twoSelectEducation = position;
+                    }
+                }
+            });
+
+            if (oneSelect == 0) {
+                if (position == twoSelectTime) {
+                    holder.itemView.setSelected(true);
+                } else {
+                    holder.itemView.setSelected(false);
+                }
+            } else if (oneSelect == 1) {
+                if (position == twoSelectEducation) {
+                    holder.itemView.setSelected(true);
+                } else {
+                    holder.itemView.setSelected(false);
+                }
+            }
         }
     }
 }

@@ -98,6 +98,12 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
         isShowDialog(true);
         mEnterpriseTypeID = getIntent().getStringExtra("enterpriseTypeID");
 
+        if (UserManager.getUserIsVip()) {
+            mIvVipDialog.setVisibility(View.GONE);
+        } else {
+            mIvVipDialog.setVisibility(View.VISIBLE);
+        }
+
         mGetIndustryPresenter = new GetIndustryPresenter(this);
         mGetEnterprisePresenter = new GetEnterprisePresenter(this);
 
@@ -292,7 +298,6 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                     if (type == 0) {
                         if (mPopIndustry != null) {
                             if (TextUtils.equals("-1", beans.get(position).getID())) {
-                                mEnterpriseTypeID = "";
                                 mIndustryPid = "";
                                 mIndustryId = "";
                                 mGetEnterprisePresenter.searchEnterpriseList(true, mSearchContent, mProvincial, mCity, mEnterpriseTypeID, mIndustryPid, mIndustryId);

@@ -35,6 +35,7 @@ import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.ui.mine.MineActivity;
 import com.whmnrc.feimei.utils.GetCityUtils;
+import com.whmnrc.feimei.utils.ViewRoUtils;
 import com.whmnrc.feimei.utils.evntBusBean.BaseEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -153,6 +154,15 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
             }
         });
 
+        mSpecialInformationListAdapter.setGoToDetailsListener(new SpecialInformationListAdapter.GoToDetailsListener() {
+            @Override
+            public void toDetails(int position) {
+                int clickNumber = mSpecialInformationListAdapter.getDatas().get(position).getClickNumber();
+                mSpecialInformationListAdapter.getDatas().get(position).setClickNumber(clickNumber + 1);
+                mSpecialInformationListAdapter.notifyItemChanged(position);
+            }
+        });
+
     }
 
 
@@ -217,13 +227,15 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                     mPopCity = new PopCity(getActivity(), this, mLlCity);
                 }
                 isViewSelect(mTvCity, true);
-                mIvCity.setRotation(180);
+                mIvCity.setImageResource(R.mipmap.icon_type_more_select);
+                ViewRoUtils.roView(mIvCity,180f);
                 mPopCity.show();
                 mPopCity.getmPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        mIvCity.setRotation(0);
+                        ViewRoUtils.roView(mIvCity,0f);
                         isViewSelect(mTvCity, false);
+                        mIvCity.setImageResource(R.mipmap.icon_type_more);
                     }
                 });
                 break;
@@ -247,13 +259,14 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 mPopSalaryRange.getPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        mIvPrice.setRotation(0);
+                        ViewRoUtils.roView(mIvPrice,0f);
                         isViewSelect(mTvPrice, false);
+                        mIvPrice.setImageResource(R.mipmap.icon_type_more);
                     }
                 });
-
-                mIvPrice.setRotation(180);
+                ViewRoUtils.roView(mIvPrice,180f);
                 isViewSelect(mTvPrice, true);
+                mIvPrice.setImageResource(R.mipmap.icon_type_more_select);
                 break;
             case R.id.ll_more:
                 if (mPopMoreFitter != null && mPopMoreFitter.isShow()) {
@@ -266,12 +279,14 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 mPopMoreFitter.getmPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        mIvMore.setRotation(0);
+                        ViewRoUtils.roView(mIvMore,0f);
                         isViewSelect(mTvMore, false);
+                        mIvMore.setImageResource(R.mipmap.icon_type_more);
                     }
                 });
-                mIvMore.setRotation(180);
+                ViewRoUtils.roView(mIvMore,180f);
                 isViewSelect(mTvMore, true);
+                mIvMore.setImageResource(R.mipmap.icon_type_more_select);
                 break;
             default:
                 break;
@@ -419,7 +434,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 } else {
                     mQualificationsId = mSpecialInformationFitterBeans.get(parentPosition).getDataListBeans().get(position).getId();
                 }
-            }else {
+            } else {
                 mCrateTime = "";
                 mQualificationsId = "";
             }

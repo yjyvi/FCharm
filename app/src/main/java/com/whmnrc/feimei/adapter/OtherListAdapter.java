@@ -13,6 +13,7 @@ import com.whmnrc.feimei.beans.OrganizationDetailsBean;
  */
 
 public class OtherListAdapter extends CommonAdapter<OrganizationDetailsBean.ResultdataBean.RelationBean> {
+
     public OtherListAdapter(Context context, int layoutId) {
         super(context, layoutId);
     }

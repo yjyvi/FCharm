@@ -318,6 +318,7 @@
                     android:background="@color/common_line"/>
 
                 <ImageView
+                    android:id="@+id/iv_collection"
                     android:layout_width="@dimen/dm_21"
                     android:layout_height="@dimen/dm_21"
                     android:layout_marginTop="@dimen/dm_5"

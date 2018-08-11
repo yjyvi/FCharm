@@ -63,8 +63,8 @@ public class GetEnterprisePresenter extends PresenterBase {
             ++page;
         }
         params.put("page", String.valueOf(page));
-        params.put("sidx", "Sort");
-        params.put("sord", "desc");
+        params.put("sidx", "");
+        params.put("sord", "");
         params.put("conditionJson", JSON.toJSONString(conditionJson));
         OKHttpManager.postString(getUrl(R.string.GetEnterprise), params, new CommonCallBack<EnterpriseListBean>() {
             @Override

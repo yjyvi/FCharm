@@ -232,6 +232,7 @@
         <activity android:name=".ui.industry.IndustryDetailsActivity"/>
         <activity android:name=".ui.mine.PayVipActivity"/>
         <activity android:name=".ui.mine.RuleDescriptionActivity"/>
+        <activity android:name=".ui.product.ProductSpecificationsActivity"/>
 
 
     </application>

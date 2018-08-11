@@ -36,6 +36,7 @@ import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.PayVipActivity;
 import com.whmnrc.feimei.utils.GetCityUtils;
 import com.whmnrc.feimei.utils.ToastUtils;
+import com.whmnrc.feimei.utils.ViewRoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,7 +195,7 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                 finish();
                 break;
             case R.id.ll_city:
-                mIvCity.setRotation(180);
+                ViewRoUtils.roView(mIvCity, 180f);
                 if (mPopCity != null && mPopCity.isShow()) {
                     mPopCity.dissmiss();
                 }
@@ -204,19 +205,26 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                 mPopCity.mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        mIvCity.setRotation(0);
+                        ViewRoUtils.roView(mIvCity, 0f);
                         isViewSelect(mTvCity, false);
                         mTvCity.setText("城市");
+                        mIvCity.setImageResource(R.mipmap.icon_type_more);
                     }
                 });
                 mPopCity.show();
                 isViewSelect(mTvCity, true);
+                mIvCity.setImageResource(R.mipmap.icon_type_more_select);
 
                 break;
             case R.id.ll_industry:
                 mGetIndustryPresenter.getIndustryList();
                 break;
             case R.id.iv_vip_dialog:
+
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
                 PayVipActivity.start(view.getContext());
                 break;
             default:
@@ -306,7 +314,7 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                                 }
                             } else {
                                 mSubset = beans.get(position).getSubset();
-
+                                mIndustryPid = beans.get(position).getID();
                                 IndustryBean.ResultdataBean.SubsetBean element = new IndustryBean.ResultdataBean.SubsetBean();
                                 element.setName("全部");
 
@@ -322,8 +330,10 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                             }
                         }
                     } else {
-                        mIndustryId = mSubset.get(position).getID();
-                        mIndustryPid = mSubset.get(position).getPID();
+                        if (TextUtils.isEmpty(mIndustryPid)) {
+                            mIndustryPid = mSubset.get(position).getID();
+                        }
+                        mIndustryId = mSubset.get(position).getPID();
                         if (mPopIndustry != null) {
                             mPopIndustry.dissmiss();
                         }

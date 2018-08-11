@@ -42,7 +42,7 @@ public class OrderListAdapter extends CommonAdapter {
         orderProductAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                OrderDetailsActivity.start(view.getContext());
+                OrderDetailsActivity.start(view.getContext(),"");
             }
 
             @Override

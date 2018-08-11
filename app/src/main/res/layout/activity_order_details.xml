@@ -108,15 +108,14 @@
 
             <!--商品信息-->
             <LinearLayout
+                android:layout_marginTop="@dimen/dm_8"
                 android:id="@+id/ll_product"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/dm_10"
-                android:paddingLeft="@dimen/dm_15"
-                android:paddingRight="@dimen/dm_15">
+                android:padding="@dimen/dm_15">
 
                 <ImageView
                     android:id="@+id/iv_goods_img"
@@ -180,8 +179,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/dm_15"
-                android:paddingRight="@dimen/dm_15"
+               android:padding="@dimen/dm_15"
                 >
 
 
@@ -223,6 +221,7 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_total_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dm_1"

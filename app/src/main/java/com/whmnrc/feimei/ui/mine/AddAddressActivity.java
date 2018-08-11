@@ -3,6 +3,7 @@ package com.whmnrc.feimei.ui.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -53,9 +54,20 @@ public class AddAddressActivity extends BaseActivity {
 
     @Override
     protected void initViewData() {
-        setTitle("新增收货地址");
+        int addressSize = getIntent().getIntExtra("addressSize", -1);
+        String resultdataBeanJson = getIntent().getStringExtra("resultdataBeanJson");
+        if (TextUtils.isEmpty(resultdataBeanJson)) {
+            setTitle("新增收货地址");
+        } else {
+            setTitle("编辑收货地址");
+        }
+
         initJsonData();
         initPickerView();
+
+        if (addressSize == 0) {
+            mIvIsDefault.setSelected(true);
+        }
     }
 
     @Override
@@ -63,10 +75,10 @@ public class AddAddressActivity extends BaseActivity {
         return R.layout.activity_add_address;
     }
 
-    public static void start(Context context, String resultdataBeanJson, int size) {
+    public static void start(Context context, String resultdataBeanJson, int addressSize) {
         Intent starter = new Intent(context, AddAddressActivity.class);
         starter.putExtra("resultdataBeanJson", resultdataBeanJson);
-        starter.putExtra("size", size);
+        starter.putExtra("addressSize", addressSize);
         context.startActivity(starter);
     }
 
@@ -154,11 +166,11 @@ public class AddAddressActivity extends BaseActivity {
     }
 
 
-
     @OnClick({R.id.iv_is_default, R.id.ll_commit, R.id.et_pro, R.id.et_city, R.id.et_area})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_is_default:
+                mIvIsDefault.setSelected(!mIvIsDefault.isSelected());
                 break;
             case R.id.ll_commit:
                 break;

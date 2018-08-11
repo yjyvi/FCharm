@@ -57,6 +57,7 @@
         android:background="@color/common_line" />
 
     <LinearLayout
+        android:id="@+id/ll_is_select"
         android:paddingLeft="@dimen/dm_15"
         android:paddingRight="@dimen/dm_15"
         android:layout_width="match_parent"

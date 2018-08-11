@@ -24,6 +24,7 @@ import com.whmnrc.feimei.adapter.ProductLibraryListAdapter;
 import com.whmnrc.feimei.pop.PopProductType;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.utils.TestDataUtils;
+import com.whmnrc.feimei.utils.ViewRoUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -76,8 +77,6 @@ public class SearchProductMoreActivity extends BaseActivity {
         ProductLibraryListAdapter productLibraryListAdapter = new ProductLibraryListAdapter(this, R.layout.item_product_list);
         productLibraryListAdapter.setDataArray(TestDataUtils.initTestData(15));
         mRvBusinessList.setAdapter(productLibraryListAdapter);
-
-
         mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView view, int keyCode, KeyEvent event) {
@@ -124,27 +123,28 @@ public class SearchProductMoreActivity extends BaseActivity {
                 }
 
                 mPopProductType.show();
-                mIvType.setRotation(180);
-
+                ViewRoUtils.roView(mIvType,180f);
                 mPopProductType.setPopHintListener(new PopProductType.PopHintListener() {
                     @Override
                     public void confirm() {
 
                     }
                 });
+                mIvType.setImageResource(R.mipmap.icon_pay_year_select2);
                 isViewSelect(mTvType, true);
                 mPopProductType.getPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        mIvType.setRotation(0);
                         isViewSelect(mTvType, false);
+                        ViewRoUtils.roView(mIvType,180f);
+                        mIvType.setImageResource(R.mipmap.icon_pay_year_select);
                     }
                 });
 
                 break;
             case R.id.ll_price:
-                selectedView(mIvPrice);
-                isViewSelect(mTvPrice, !mTvPrice.isSelected());
+                isViewSelect(mTvPrice, !mIvPrice.isSelected());
+                mIvPrice.setSelected(!mIvPrice.isSelected());
                 break;
             default:
                 break;
@@ -153,24 +153,11 @@ public class SearchProductMoreActivity extends BaseActivity {
 
 
     private void isViewSelect(TextView view, boolean isSelect) {
+//        selectedView(view);
         view.setTextColor(isSelect ? ContextCompat.getColor(view.getContext(), R.color.normal_blue_text_color) : ContextCompat.getColor(view.getContext(), R.color.black));
-        selectedView(view);
+        view.setSelected(isSelect);
     }
 
 
-    private View lastView;
-
-    private void selectedView(View view) {
-        if (lastView != null) {
-            lastView.setSelected(false);
-        }
-        if (!view.isSelected()) {
-            view.setSelected(true);
-            lastView = view;
-        } else {
-            view.setSelected(false);
-        }
-
-    }
 
 }

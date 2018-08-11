@@ -17,7 +17,8 @@ import com.whmnrc.feimei.adapter.OrganizationCommentAdapter;
 import com.whmnrc.feimei.pop.PopServerInfo;
 import com.whmnrc.feimei.pop.PopShare;
 import com.whmnrc.feimei.ui.BaseActivity;
-import com.whmnrc.feimei.ui.mine.PayActivity;
+import com.whmnrc.feimei.ui.UserManager;
+import com.whmnrc.feimei.ui.mine.PayVipActivity;
 import com.whmnrc.feimei.ui.organization.AllCommentActivity;
 import com.whmnrc.feimei.ui.organization.OrganizationDetailsActivity;
 import com.youth.banner.Banner;
@@ -81,6 +82,8 @@ public class ProductDetailsActivity extends BaseActivity {
     ImageView mIvShare;
     @BindView(R.id.iv_msg)
     ImageView mIvMsg;
+    @BindView(R.id.iv_collection)
+    ImageView mIvCollection;
     private PopShare mPopShare;
     public PopServerInfo mPopServerInfo;
 
@@ -153,25 +156,44 @@ public class ProductDetailsActivity extends BaseActivity {
                 isAccountLogin(false);
                 break;
             case R.id.ll_advisory:
-                if (mPopServerInfo == null) {
-                    mPopServerInfo = new PopServerInfo(this);
+
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
+                if (UserManager.getUserIsVip()) {
+                    if (mPopServerInfo == null) {
+                        mPopServerInfo = new PopServerInfo(this);
+                    }
+                } else {
+                    PayVipActivity.start(view.getContext());
                 }
                 mPopServerInfo.show();
                 break;
             case R.id.ll_collection:
 
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+                mIvCollection.setSelected(!mIvCollection.isSelected());
                 break;
             case R.id.tv_product_specifications:
-
+                ProductSpecificationsActivity.start(view.getContext());
                 break;
             case R.id.tv_organization_name:
-                OrganizationDetailsActivity.start(view.getContext(),"");
+                OrganizationDetailsActivity.start(view.getContext(), "");
                 break;
             case R.id.ll_all_comment:
-                AllCommentActivity.start(view.getContext(),"");
+                AllCommentActivity.start(view.getContext(), "");
                 break;
             case R.id.ll_pay:
-                PayActivity.start(view.getContext(), PayActivity.PRODUCT_PAY);
+
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
+                ConfirmOrderActivity.start(view.getContext());
+
                 break;
             case R.id.iv_msg:
                 MsgActivity.start(view.getContext());

@@ -58,4 +58,11 @@
     <!--招聘列表筛选条件-->
     <string name="GetSalary">/api/Enterprise/GetSalary</string>
 
+
+    <!--行业产品库 -->
+    <!--获取产品类型-->
+    <string name="GetCommodityClass">/api/Commodity/GetCommodityClass</string>
+    <!--查询产品列表-->
+    <string name="GetCommodity">/api/Commodity/GetCommodity</string>
+
 </resources>

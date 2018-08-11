@@ -39,6 +39,7 @@ import io.reactivex.functions.Consumer;
 /**
  * @author yjyvi
  * @data 2018/5/19.
+ * 评价商品
  */
 
 public class CommentActivity extends BaseActivity implements SendCommentPresenter.SendCommentListener, UpdateImgFilePresenter.UpdateHeadImgListener {

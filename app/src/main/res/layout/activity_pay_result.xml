@@ -2,37 +2,66 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/white"
               android:orientation="vertical">
 
     <include layout="@layout/common_title"/>
 
-    <ImageView
-        android:id="@+id/iv_img"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dm_100"
-        android:background="@mipmap/icon_order_pay_success"/>
+        android:gravity="center"
+        android:paddingBottom="@dimen/dm_50"
+        android:paddingTop="@dimen/dm_50">
 
-    <TextView
-        android:id="@+id/tv_text"
-        android:layout_width="@dimen/dm_200"
+        <ImageView
+            android:id="@+id/iv_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/icon_order_pay_success"/>
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dm_10"
+            android:text="购买成功"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_15"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:layout_marginLeft="@dimen/dm_15"
+        android:layout_marginRight="@dimen/dm_15"
+        android:background="@color/common_line"/>
+
+
+    <LinearLayout
+        android:id="@+id/ll_commit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/dm_10"
+        android:layout_marginRight="@dimen/dm_10"
         android:layout_marginTop="@dimen/dm_20"
+        android:background="@mipmap/icon_button_bg"
         android:gravity="center"
-        android:text="You have paid successfully"
-        android:textSize="@dimen/dm_12"/>
+        android:paddingBottom="@dimen/dm_10">
 
-    <TextView
-        android:id="@+id/tv_click"
-        android:layout_width="@dimen/dm_200"
-        android:layout_height="@dimen/dm_50"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dm_40"
-        android:background="@color/normal_color"
-        android:gravity="center"
-        android:text="confirm"
-        android:textColor="@color/black"
-        android:textSize="@dimen/dm_14"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_order_details"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dm_10"
+            android:text="查看订单详情"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dm_16"/>
+
+    </LinearLayout>
 </LinearLayout>

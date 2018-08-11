@@ -112,6 +112,7 @@
                     android:background="@color/back_gray"/>
 
                 <LinearLayout
+                    android:id="@+id/ll_is_show_all"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -121,6 +122,7 @@
                     android:paddingTop="@dimen/dm_12">
 
                     <TextView
+                        android:id="@+id/tv_more"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="展开全部"
@@ -128,16 +130,15 @@
                         android:textSize="@dimen/dm_12"/>
 
                     <ImageView
+                        android:id="@+id/iv_more"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dm_10"
-                        android:rotation="90"
-                        android:src="@mipmap/more"/>
-
-
+                        android:src="@mipmap/icon_type_more"/>
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="@dimen/dm_8"
                     android:id="@+id/rv_product_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

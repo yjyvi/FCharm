@@ -63,7 +63,7 @@ public class CommonH5WebView extends BaseActivity {
 
         rightVisible(R.mipmap.icon_share);
 
-
+        isShowDialog(true);
         mTitle = getIntent().getStringExtra("title");
         mH5Url = getIntent().getStringExtra("h5Url");
 
@@ -125,12 +125,13 @@ public class CommonH5WebView extends BaseActivity {
 
                         if (newProgress == 100) {
                             //加载完网页进度条消失
-                            mPbLoading.setVisibility(View.GONE);
+//                            mPbLoading.setVisibility(View.GONE);
+                            isShowDialog(false);
                         } else {
-                            //开始加载网页时显示进度条
-                            mPbLoading.setVisibility(View.VISIBLE);
-                            //设置进度值
-                            mPbLoading.setProgress(newProgress);
+//                            //开始加载网页时显示进度条
+//                            mPbLoading.setVisibility(View.VISIBLE);
+//                            //设置进度值
+//                            mPbLoading.setProgress(newProgress);
                         }
                     }
                 });

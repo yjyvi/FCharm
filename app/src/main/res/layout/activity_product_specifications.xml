@@ -2,19 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/white"
               android:orientation="vertical">
 
+    <include layout="@layout/common_title"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_list"
+
+    <TextView
+        android:id="@+id/tv_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <View
-        android:id="@+id/view_bg"
-        android:layout_width="match_parent"
-        android:background="#5000"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dm_12"/>
 
 </LinearLayout>

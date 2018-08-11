@@ -27,14 +27,14 @@
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-                <LinearLayout
-                    android:layout_marginTop="@dimen/dm_96"
-                    android:layout_gravity="bottom"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/shape_organiztion_top_bg"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/dm_30"/>
+                <!--<LinearLayout-->
+                    <!--android:layout_marginTop="@dimen/dm_86"-->
+                    <!--android:layout_gravity="bottom"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@drawable/shape_organiztion_top_bg"-->
+                    <!--android:orientation="vertical"-->
+                    <!--android:paddingBottom="@dimen/dm_30"/>-->
                 <LinearLayout
                     android:layout_gravity="bottom"
                     android:layout_width="match_parent"

@@ -32,11 +32,20 @@ public class BusinessMoreActivity extends BaseActivity {
     @BindView(R.id.vs_empty)
     ViewStub mVsEmpty;
     public List<OrganizationDetailsBean.ResultdataBean.RelationBean> mRelation;
+    public List<OrganizationDetailsBean.ResultdataBean.RelationBean> mResult = new ArrayList<>();
 
     @Override
     protected void initViewData() {
         mRelation = getIntent().getParcelableArrayListExtra("relation");
-        setTitle(getIntent().getStringExtra("title"));
+        String title = getIntent().getStringExtra("title");
+        int type = getIntent().getIntExtra("type", -1);
+        for (OrganizationDetailsBean.ResultdataBean.RelationBean relationBean : mRelation) {
+            if (relationBean.getType() == type) {
+                mResult.add(relationBean);
+            }
+        }
+
+        setTitle(title);
         mRvBusinessList.setLayoutManager(new LinearLayoutManager(this));
         mRvBusinessList.setNestedScrollingEnabled(false);
         mRvBusinessList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -47,8 +56,10 @@ public class BusinessMoreActivity extends BaseActivity {
             }
         });
         OtherListAdapter otherListAdapter = new OtherListAdapter(this, R.layout.item_business_more_list);
-        otherListAdapter.setDataArray(mRelation);
+        otherListAdapter.setDataArray(mResult);
         mRvBusinessList.setAdapter(otherListAdapter);
+
+        showEmpty(otherListAdapter, mVsEmpty);
     }
 
     @Override
@@ -56,9 +67,10 @@ public class BusinessMoreActivity extends BaseActivity {
         return R.layout.activity_business_more;
     }
 
-    public static void start(Context context, List<OrganizationDetailsBean.ResultdataBean.RelationBean> relation, String title) {
+    public static void start(Context context, List<OrganizationDetailsBean.ResultdataBean.RelationBean> relation, String title, int type) {
         Intent starter = new Intent(context, BusinessMoreActivity.class);
         starter.putExtra("title", title);
+        starter.putExtra("type", type);
         starter.putParcelableArrayListExtra("relation", (ArrayList<? extends Parcelable>) relation);
         context.startActivity(starter);
     }

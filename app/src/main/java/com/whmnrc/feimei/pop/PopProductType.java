@@ -44,11 +44,17 @@ public class PopProductType {
         mPopHintListener = popHintListener;
     }
 
+
+
     public PopProductType(Context context,View showView) {
         this.showView = showView;
         this.mContext = context;
+
+
+
         View view = LayoutInflater.from(context).inflate(R.layout.pop_product_type, null);
         RecyclerView mRvType = view.findViewById(R.id.rv_list);
+
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 4);
         mRvType.setLayoutManager(gridLayoutManager);
@@ -84,7 +90,12 @@ public class PopProductType {
         mPopupWindow.setOutsideTouchable(false);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setTouchable(true);
-
+        view.findViewById(R.id.view_bg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
 
     }
 

@@ -75,7 +75,7 @@ public class OrderFragment extends LazyLoadFragment implements OrderListPresente
         mOrderListAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                OrderDetailsActivity.start(view.getContext());
+                OrderDetailsActivity.start(view.getContext(),"");
             }
 
             @Override

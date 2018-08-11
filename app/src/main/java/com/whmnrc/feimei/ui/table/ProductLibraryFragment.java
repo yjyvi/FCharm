@@ -9,7 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -21,11 +23,10 @@ import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.MineActivity;
-import com.whmnrc.feimei.ui.product.ProductDetailsActivity;
 import com.whmnrc.feimei.ui.product.SearchProductMoreActivity;
 import com.whmnrc.feimei.utils.TestDataUtils;
+import com.whmnrc.feimei.utils.ViewRoUtils;
 import com.whmnrc.feimei.utils.evntBusBean.BaseEvent;
-import com.whmnrc.feimei.views.LoadingDialog;
 import com.youth.banner.Banner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +51,8 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
     ViewStub mVsEmpty;
     @BindView(R.id.header_layout)
     LinearLayout headerLayout;
+    @BindView(R.id.ll_is_show_all)
+    LinearLayout mLlIsShowAll;
     @BindView(R.id.banner)
     Banner mBanner;
 
@@ -58,15 +61,16 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
 
     @BindView(R.id.nsv_layout)
     NestedScrollView mNestedScrollView;
+    @BindView(R.id.tv_more)
+    TextView mTvMore;
+    @BindView(R.id.iv_more)
+    ImageView mIvMore;
+    public ProductLibraryTypeAdapter mProductLibraryTypeAdapter;
 
 
-    private int page = 1;
-    private int rows = 10;
-    private LoadingDialog mLoadingDialog;
     /**
      * 品牌的一页显示的最大数据
      */
-    private int pageMax = 10;
 
     @Override
     protected int contentViewLayoutID() {
@@ -94,17 +98,7 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
         ProductLibraryListAdapter productLibraryListAdapter = new ProductLibraryListAdapter(getActivity(), R.layout.item_product_list);
         productLibraryListAdapter.setDataArray(TestDataUtils.initTestData(15));
         mRvProductList.setAdapter(productLibraryListAdapter);
-        productLibraryListAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                ProductDetailsActivity.start(view.getContext());
-            }
 
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
     }
 
     private void initType() {
@@ -114,10 +108,10 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
         DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.custom_divider));
         mRvType.addItemDecoration(divider);
-        ProductLibraryTypeAdapter productLibraryTypeAdapter = new ProductLibraryTypeAdapter(getActivity(), R.layout.item_organization_chart_type);
-        productLibraryTypeAdapter.setDataArray(TestDataUtils.initTestData(12));
-        mRvType.setAdapter(productLibraryTypeAdapter);
-        productLibraryTypeAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+        mProductLibraryTypeAdapter = new ProductLibraryTypeAdapter(getActivity(), R.layout.item_organization_chart_type);
+        mProductLibraryTypeAdapter.setDataArray(TestDataUtils.initTestData(8));
+        mRvType.setAdapter(mProductLibraryTypeAdapter);
+        mProductLibraryTypeAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 SearchProductMoreActivity.start(view.getContext());
@@ -163,14 +157,11 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
 
     @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
-        mRefresh.finishLoadMore(1000);
-        page++;
         refreshLayout.finishLoadMore();
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
-        page = 1;
         refreshLayout.finishRefresh();
     }
 
@@ -186,7 +177,7 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
     }
 
 
-    @OnClick({R.id.iv_back, R.id.tv_search, R.id.iv_user_info})
+    @OnClick({R.id.iv_back, R.id.tv_search, R.id.iv_user_info, R.id.ll_is_show_all})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
@@ -200,8 +191,25 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
                 }
                 MineActivity.start(v.getContext());
                 break;
+            case R.id.ll_is_show_all:
+                if (!mIvMore.isSelected()) {
+                    mTvMore.setText("收起");
+                    ViewRoUtils.roView(mIvMore, 180f);
+                    mIvMore.setSelected(true);
+                    mProductLibraryTypeAdapter.setDataArray(TestDataUtils.initTestData(12));
+                } else {
+                    mTvMore.setText("展开全部");
+                    ViewRoUtils.roView(mIvMore, -180f);
+                    mIvMore.setSelected(false);
+                    mProductLibraryTypeAdapter.setDataArray(TestDataUtils.initTestData(8));
+                }
+
+                mProductLibraryTypeAdapter.notifyDataSetChanged();
+
+                break;
             default:
                 break;
         }
     }
+
 }

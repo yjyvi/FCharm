@@ -1,6 +1,7 @@
 package com.whmnrc.feimei.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.whmnrc.feimei.R;
@@ -20,9 +21,21 @@ public class SpecialInformationListAdapter extends CommonAdapter<GetRecruitBean.
         super(context, layoutId);
     }
 
+    private GoToDetailsListener mGoToDetailsListener;
+
+    public void setGoToDetailsListener(GoToDetailsListener goToDetailsListener) {
+        mGoToDetailsListener = goToDetailsListener;
+    }
+
     @Override
-    public void convert(ViewHolder holder, final GetRecruitBean.ResultdataBean.RecruitBean o, int position) {
+    public void convert(ViewHolder holder, final GetRecruitBean.ResultdataBean.RecruitBean o, final int position) {
         holder.setText(R.id.tv_name, o.getName());
+        if (TextUtils.isEmpty(o.getLabel())) {
+            holder.setVisible(R.id.tv_label, false);
+        } else {
+            holder.setVisible(R.id.tv_label, true);
+            holder.setText(R.id.tv_label, o.getLabel());
+        }
         holder.setText(R.id.tv_education, String.format("%s|%s", o.getQualificationsName(), o.getWorkYear()));
         holder.setText(R.id.tv_browse, String.valueOf(o.getClickNumber()));
         holder.setText(R.id.tv_price, o.getSalaryName());
@@ -33,13 +46,21 @@ public class SpecialInformationListAdapter extends CommonAdapter<GetRecruitBean.
             @Override
             public void onClick(View v) {
                 CommonH5WebView.startCommonH5WebView(v.getContext(), o.getDescribe(), "职位详情");
+                if (mGoToDetailsListener != null) {
+                    mGoToDetailsListener.toDetails(position);
+                }
             }
         });
 
         if (position == getDatas().size() - 1) {
             holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
         }
+    }
+
+
+    public interface GoToDetailsListener {
+        void toDetails(int position);
     }
 }

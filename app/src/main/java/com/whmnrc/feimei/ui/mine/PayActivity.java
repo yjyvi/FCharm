@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.beans.OrganizationDetailsBean;
 import com.whmnrc.feimei.ui.BaseActivity;
+import com.whmnrc.feimei.utils.TimeUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -119,6 +121,7 @@ public class PayActivity extends BaseActivity {
      */
     public static final int COLUMN_PAY = 5;
     public int mProductType;
+    public OrganizationDetailsBean.ResultdataBean.EnterpriseBean mEnterpriseBean;
 
 
     @Override
@@ -127,6 +130,18 @@ public class PayActivity extends BaseActivity {
         setTitle("付费");
         selectedView(mIvSelectWx);
         showTypeView();
+
+
+        if (mProductType == ORG_PAY) {
+            mEnterpriseBean = getIntent().getParcelableExtra("enterprise");
+            if (mEnterpriseBean != null) {
+                mTvMoney.setText(String.valueOf(mEnterpriseBean.getPrice()));
+                mTvOrgTitle.setText(mEnterpriseBean.getName());
+                mTvOrgDesc.setText(mEnterpriseBean.getExplain());
+                mIvImg.setVisibility(View.GONE);
+                mTvOrgTime.setText(TimeUtils.getDateToString(mEnterpriseBean.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+            }
+        }
     }
 
 
@@ -174,9 +189,16 @@ public class PayActivity extends BaseActivity {
         return R.layout.activity_pay;
     }
 
+    public static void start(Context context, int productType, OrganizationDetailsBean.ResultdataBean.EnterpriseBean enterprise) {
+        Intent starter = new Intent(context, PayActivity.class);
+        starter.putExtra("productType", productType);
+        starter.putExtra("enterprise", enterprise);
+        context.startActivity(starter);
+    }
+
     public static void start(Context context, int productType) {
         Intent starter = new Intent(context, PayActivity.class);
-        starter.putExtra("productType",productType);
+        starter.putExtra("productType", productType);
         context.startActivity(starter);
     }
 
@@ -207,9 +229,16 @@ public class PayActivity extends BaseActivity {
                 selectedView(mIvSelectZfb);
                 break;
             case R.id.ll_commit:
+                if (mProductType == PRODUCT_PAY) {
+                    PayResultActivity.start(view.getContext(), "123");
+                }
+                finish();
                 break;
             default:
                 break;
         }
     }
+
+
+
 }

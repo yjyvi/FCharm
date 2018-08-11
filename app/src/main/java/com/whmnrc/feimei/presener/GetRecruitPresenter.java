@@ -68,8 +68,8 @@ public class GetRecruitPresenter extends PresenterBase {
             ++page;
         }
         params.put("page", String.valueOf(page));
-        params.put("sidx", "Sort");
-        params.put("sord", "desc");
+        params.put("sidx", "");
+        params.put("sord", "");
         params.put("conditionJson", JSON.toJSONString(conditionJson));
         OKHttpManager.postString(getUrl(R.string.GetRecruit), params, new CommonCallBack<GetRecruitBean>() {
             @Override

@@ -2,6 +2,7 @@ package com.whmnrc.feimei.ui.mine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,10 +49,29 @@ public class OrderDetailsActivity extends BaseActivity {
     TextView mTvRefundTime;
     @BindView(R.id.ll_refund)
     LinearLayout mLlRefund;
+    @BindView(R.id.ll_total_price)
+    LinearLayout mLlTotalPrice;
+    @BindView(R.id.ll_resource)
+    LinearLayout mLlResource;
+    @BindView(R.id.ll_product)
+    LinearLayout mLlProduct;
+    public String mOrderId;
 
     @Override
     protected void initViewData() {
         setTitle("订单详情");
+        mOrderId = getIntent().getStringExtra("orderId");
+
+        int type = new Random().nextInt(2) + 1;
+        if (type == 1) {
+            mLlTotalPrice.setVisibility(View.GONE);
+            mLlResource.setVisibility(View.GONE);
+            mLlProduct.setVisibility(View.VISIBLE);
+        } else {
+            mLlTotalPrice.setVisibility(View.VISIBLE);
+            mLlResource.setVisibility(View.VISIBLE);
+            mLlProduct.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -59,8 +79,9 @@ public class OrderDetailsActivity extends BaseActivity {
         return R.layout.activity_order_details;
     }
 
-    public static void start(Context context) {
+    public static void start(Context context, String orderId) {
         Intent starter = new Intent(context, OrderDetailsActivity.class);
+        starter.putExtra("orderId", orderId);
         context.startActivity(starter);
     }
 

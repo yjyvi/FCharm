@@ -23,7 +23,6 @@ import com.whmnrc.feimei.utils.EmptyListUtils;
 import com.whmnrc.feimei.utils.TestDataUtils;
 import com.whmnrc.feimei.utils.evntBusBean.AddressEvent;
 import com.whmnrc.feimei.views.AlertDialog;
-import com.whmnrc.feimei.views.LoadingDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -49,7 +48,6 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
     public AddressListPresenter mAddressListPresenter;
     public AddressEditPresenter mAddressEditPresenter;
     public boolean mIsSelect;
-    private LoadingDialog mLoadingDialog;
     private String mAddressId = "";
 
 
@@ -105,22 +103,30 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
 
             @Override
             public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, final int position) {
-                new AlertDialog(view.getContext()).builder().setTitle("Warning!")
-                        .setMsg("Are you sure you want to delete the address?")
+
+                return true;
+            }
+        });
+
+        mAddressManagerAdapter.setDelAddressListener(new AddressManagerAdapter.DelAddressListener() {
+            @Override
+            public void delAddress(final int position) {
+                new AlertDialog(AddressManagerActivity.this).builder().setTitle("提示!")
+                        .setMsg("确认要删除地址?")
                         .setCancelable(true)
-                        .setPositiveButton("agree", new View.OnClickListener() {
+                        .setPositiveButton("确定", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-//                                mAddressEditPresenter.delAddress(String.valueOf(mAddressManagerAdapter.getDatas().get(position).getId()));
+                                mAddressManagerAdapter.getDatas().remove(position);
+                                mAddressManagerAdapter.notifyDataSetChanged();
                             }
                         })
-                        .setNegativeButton("cancel", new View.OnClickListener() {
+                        .setNegativeButton("取消", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
 
                             }
                         }).show();
-                return true;
             }
         });
 
@@ -168,7 +174,6 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
         mAddressManagerAdapter.setDataArray(resultdataBeans);
         mAddressManagerAdapter.notifyDataSetChanged();
         showEmpty();
-        mLoadingDialog.dismiss();
     }
 
 

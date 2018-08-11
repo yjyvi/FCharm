@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
@@ -23,8 +24,8 @@ public class PayResultActivity extends BaseActivity {
     ImageView mIvImg;
     @BindView(R.id.tv_text)
     TextView mTvText;
-    @BindView(R.id.tv_click)
-    TextView mTvClick;
+    @BindView(R.id.ll_commit)
+    LinearLayout mLlCommit;
     private String mOrderId;
     private String[] orderIds;
 
@@ -32,8 +33,6 @@ public class PayResultActivity extends BaseActivity {
     public int setLayoutId() {
         return R.layout.activity_pay_result;
     }
-
-
 
 
     @Override
@@ -45,7 +44,7 @@ public class PayResultActivity extends BaseActivity {
     @Override
     public void initViewData() {
 
-       setTitle("Payment results");
+        setTitle("支付结果");
         mOrderId = getIntent().getStringExtra("orderId");
         if (!TextUtils.isEmpty(mOrderId)) {
             orderIds = mOrderId.split(",");
@@ -54,10 +53,10 @@ public class PayResultActivity extends BaseActivity {
 
         if (mIsField) {
             mIvImg.setImageResource(R.mipmap.icon_order_pay_field);
-            mTvText.setText("You have failed to pay");
+            mTvText.setText("购买失败");
         }
 
-        mTvClick.setOnClickListener(new View.OnClickListener() {
+        mLlCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toActivity();
@@ -69,6 +68,7 @@ public class PayResultActivity extends BaseActivity {
         if (orderIds != null && orderIds.length > 1) {
             OrderListActivity.start(this, mIsField ? 0 : 1);
         } else if (!TextUtils.isEmpty(mOrderId)) {
+            OrderDetailsActivity.start(this,mOrderId);
         }
         finish();
     }

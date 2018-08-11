@@ -82,7 +82,7 @@ public class MineActivity extends BaseActivity {
                 MyCollectionActivity.start(view.getContext());
                 break;
             case R.id.ll_address_manager:
-                AddressManagerActivity.start(view.getContext());
+                AddressManagerActivity.start(view.getContext(),false);
                 break;
             case R.id.ll_free_back:
                 FreeBackActivity.start(view.getContext());

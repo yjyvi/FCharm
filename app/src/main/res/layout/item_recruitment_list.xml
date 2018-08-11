@@ -2,25 +2,63 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:background="@color/white"
+                android:orientation="vertical"
                 android:paddingLeft="@dimen/dm_15"
-                android:paddingRight="@dimen/dm_15"
                 android:paddingTop="@dimen/dm_15">
 
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="APP开发工程师"
-        android:textColor="@color/black"
-        android:textSize="@dimen/dm_12"/>
+
+    <LinearLayout
+        android:id="@+id/ll_top_info"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:maxLength="35"
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="APP开发11111111111111111111111工程师"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_12"/>
+
+        <TextView
+            android:id="@+id/tv_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dm_8"
+            android:background="@mipmap/icon_sp_label"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dm_6"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dm_9"/>
+
+
+        <TextView
+            android:layout_marginLeft="@dimen/dm_8"
+            android:id="@+id/tv_price"
+            android:layout_weight="1"
+            android:lines="1"
+            android:gravity="right"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dm_15"
+            android:text="0.8—1.2万/月"
+            android:textColor="@color/normal_red"
+            android:textSize="@dimen/dm_12"/>
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_education"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_name"
+        android:layout_below="@id/ll_top_info"
         android:layout_marginTop="@dimen/dm_8"
         android:text="大专 | 5-7年"
         android:textColor="@color/normal_gray"
@@ -32,28 +70,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_education"
         android:layout_marginTop="@dimen/dm_8"
-        android:drawablePadding="@dimen/dm_5"
         android:drawableLeft="@mipmap/icon_browse"
+        android:drawablePadding="@dimen/dm_5"
         android:text="5128"
         android:textColor="@color/normal_gray"
         android:textSize="@dimen/dm_11"/>
 
 
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="0.8—1.2万/月"
-        android:textSize="@dimen/dm_12"
-        android:textColor="@color/normal_red"/>
 
     <TextView
         android:id="@+id/tv_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/tv_price"
+        android:layout_marginRight="@dimen/dm_15"
+        android:layout_below="@id/ll_top_info"
         android:layout_marginTop="@dimen/dm_8"
         android:text="武汉-洪山区"
         android:textColor="@color/normal_gray"
@@ -63,6 +94,7 @@
     <TextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"
+        android:layout_marginRight="@dimen/dm_15"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/tv_address"
@@ -74,9 +106,10 @@
 
     <View
         android:id="@+id/v_line"
+        android:layout_width="match_parent"
+        android:layout_marginRight="@dimen/dm_15"
+        android:layout_height="@dimen/dm_0.5"
         android:layout_below="@id/tv_browse"
         android:layout_marginTop="@dimen/dm_15"
-        android:layout_width="match_parent"
-        android:background="@color/common_line"
-        android:layout_height="@dimen/dm_0.5"/>
+        android:background="@color/common_line"/>
 </RelativeLayout>

@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
@@ -15,16 +14,22 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ProductLibraryListAdapter;
+import com.whmnrc.feimei.beans.ProductListBean;
+import com.whmnrc.feimei.beans.ProductTypeBean;
 import com.whmnrc.feimei.pop.PopProductType;
+import com.whmnrc.feimei.presener.GetProductListPresenter;
+import com.whmnrc.feimei.presener.GetProductTypePresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
-import com.whmnrc.feimei.utils.TestDataUtils;
 import com.whmnrc.feimei.utils.ViewRoUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,7 +39,7 @@ import butterknife.OnClick;
  * @data 2018/7/26.
  */
 
-public class SearchProductMoreActivity extends BaseActivity {
+public class SearchProductMoreActivity extends BaseActivity implements GetProductListPresenter.GetProductListListener, GetProductTypePresenter.GetProductTypeListener {
 
 
     @BindView(R.id.rv_business_list)
@@ -61,10 +66,56 @@ public class SearchProductMoreActivity extends BaseActivity {
 
     private String mSearchContent;
     public PopProductType mPopProductType;
+    private GetProductListPresenter mGetProductListPresenter;
+    public ProductLibraryListAdapter mProductLibraryListAdapter;
+    private String mName = "";
+    private String mCommodityClassId = "";
+    private String mDesc = "";
+    private String mSort = "Sort";
+    private GetProductTypePresenter mGetProductTypePresenter;
 
     @Override
     protected void initViewData() {
+        mCommodityClassId = getIntent().getStringExtra("productType");
+        mGetProductListPresenter = new GetProductListPresenter(this);
+        mGetProductListPresenter.getProductList(mName, mCommodityClassId);
 
+        mGetProductTypePresenter = new GetProductTypePresenter(this);
+
+        initRv();
+        mEtSearch.setOnEditorActionListener((view, keyCode, event) -> {
+            if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
+                // 先隐藏键盘
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus()
+                                .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                mSearchContent = view.getText().toString().trim();
+
+                if (!TextUtils.isEmpty(mSearchContent)) {
+
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        mRefresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore();
+                mGetProductListPresenter.getProductList(false, mSort, mName, mCommodityClassId, mDesc);
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                refreshLayout.finishRefresh();
+                refreshLayout.setEnableLoadMore(true);
+                mGetProductListPresenter.getProductList(true, mSort, mName, mCommodityClassId, mDesc);
+            }
+        });
+    }
+
+    private void initRv() {
         mRvBusinessList.setLayoutManager(new LinearLayoutManager(this));
         mRvBusinessList.setNestedScrollingEnabled(false);
         mRvBusinessList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -74,27 +125,8 @@ public class SearchProductMoreActivity extends BaseActivity {
                 outRect.bottom = getResources().getDimensionPixelOffset(R.dimen.dm_8);
             }
         });
-        ProductLibraryListAdapter productLibraryListAdapter = new ProductLibraryListAdapter(this, R.layout.item_product_list);
-        productLibraryListAdapter.setDataArray(TestDataUtils.initTestData(15));
-        mRvBusinessList.setAdapter(productLibraryListAdapter);
-        mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int keyCode, KeyEvent event) {
-                if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
-                    // 先隐藏键盘
-                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(getCurrentFocus()
-                                    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    mSearchContent = view.getText().toString().trim();
-
-                    if (!TextUtils.isEmpty(mSearchContent)) {
-
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        mProductLibraryListAdapter = new ProductLibraryListAdapter(this, R.layout.item_product_list);
+        mRvBusinessList.setAdapter(mProductLibraryListAdapter);
     }
 
     @Override
@@ -102,8 +134,9 @@ public class SearchProductMoreActivity extends BaseActivity {
         return R.layout.activity_search_product_more;
     }
 
-    public static void start(Context context) {
+    public static void start(Context context, String productType) {
         Intent starter = new Intent(context, SearchProductMoreActivity.class);
+        starter.putExtra("productType", productType);
         context.startActivity(starter);
     }
 
@@ -115,36 +148,27 @@ public class SearchProductMoreActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.ll_composite:
-                isViewSelect(mTvComposite, !mTvComposite.isSelected());
+                isViewSelect(mTvComposite, true);
+                isViewSelect(mTvPrice, false);
+                mIvPrice.setSelected(false);
+                mDesc = "desc";
+                mSort = "Sort";
+                mGetProductListPresenter.getProductList(mName, mCommodityClassId);
                 break;
             case R.id.ll_type:
-                if (mPopProductType == null) {
-                    mPopProductType = new PopProductType(this, mLlType);
-                }
-
-                mPopProductType.show();
-                ViewRoUtils.roView(mIvType,180f);
-                mPopProductType.setPopHintListener(new PopProductType.PopHintListener() {
-                    @Override
-                    public void confirm() {
-
-                    }
-                });
-                mIvType.setImageResource(R.mipmap.icon_pay_year_select2);
-                isViewSelect(mTvType, true);
-                mPopProductType.getPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        isViewSelect(mTvType, false);
-                        ViewRoUtils.roView(mIvType,180f);
-                        mIvType.setImageResource(R.mipmap.icon_pay_year_select);
-                    }
-                });
-
+                mGetProductTypePresenter.getProductType();
                 break;
             case R.id.ll_price:
+                isViewSelect(mTvComposite, false);
                 isViewSelect(mTvPrice, !mIvPrice.isSelected());
                 mIvPrice.setSelected(!mIvPrice.isSelected());
+                if (!mIvPrice.isSelected()) {
+                    mDesc = "desc";
+                } else {
+                    mDesc = "asc";
+                }
+                mSort = "Price";
+                mGetProductListPresenter.getProductList(true, mSort, mName, mCommodityClassId, mDesc);
                 break;
             default:
                 break;
@@ -153,11 +177,60 @@ public class SearchProductMoreActivity extends BaseActivity {
 
 
     private void isViewSelect(TextView view, boolean isSelect) {
-//        selectedView(view);
+
         view.setTextColor(isSelect ? ContextCompat.getColor(view.getContext(), R.color.normal_blue_text_color) : ContextCompat.getColor(view.getContext(), R.color.black));
         view.setSelected(isSelect);
     }
 
 
+    @Override
+    public void getProductListSuccess(ProductListBean.ResultdataBean bean, boolean isRefresh) {
+        if (isRefresh) {
+            mProductLibraryListAdapter.setDataArray(bean.getEnterprise());
+        } else {
+            List<ProductListBean.ResultdataBean.EnterpriseBean> datas = mProductLibraryListAdapter.getDatas();
+            if (bean.getPagination().getRecords() == datas.size()) {
+                mRefresh.setEnableLoadMore(false);
+            }
+            datas.addAll(bean.getEnterprise());
+            mProductLibraryListAdapter.setDataArray(datas);
+        }
 
+        mProductLibraryListAdapter.notifyDataSetChanged();
+
+        showEmpty(mProductLibraryListAdapter, mVsEmpty);
+    }
+
+    @Override
+    public void getProductListField() {
+
+    }
+
+    @Override
+    public void getProductTypeSuccess(List<ProductTypeBean.ResultdataBean> bean) {
+        if (mPopProductType == null) {
+            mPopProductType = new PopProductType(this, mLlType, bean);
+        }
+
+        mPopProductType.show();
+        ViewRoUtils.roView(mIvType, 360f);
+        mPopProductType.setPopHintListener((ProductTypeBean.ResultdataBean bean1) -> {
+            mCommodityClassId = bean1.getID();
+            mSort = "Sort";
+            mDesc = "desc";
+            mGetProductListPresenter.getProductList(true, mSort, mName, mCommodityClassId, mDesc);
+        });
+        mIvType.setImageResource(R.mipmap.icon_pay_year_select2);
+        isViewSelect(mTvType, true);
+        mPopProductType.getPopupWindow().setOnDismissListener(() -> {
+            isViewSelect(mTvType, false);
+            ViewRoUtils.roView(mIvType, 0f);
+            mIvType.setImageResource(R.mipmap.icon_pay_year_select);
+        });
+    }
+
+    @Override
+    public void getProductTypeField() {
+
+    }
 }

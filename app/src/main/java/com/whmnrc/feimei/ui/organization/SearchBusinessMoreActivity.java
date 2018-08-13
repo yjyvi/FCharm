@@ -195,7 +195,8 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                 finish();
                 break;
             case R.id.ll_city:
-                ViewRoUtils.roView(mIvCity, 180f);
+                mIvCity.setImageResource(R.mipmap.icon_type_more_select);
+                ViewRoUtils.roView(mIvCity,360f);
                 if (mPopCity != null && mPopCity.isShow()) {
                     mPopCity.dissmiss();
                 }
@@ -205,16 +206,14 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                 mPopCity.mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
+                        mIvCity.setImageResource(R.mipmap.icon_type_more);
                         ViewRoUtils.roView(mIvCity, 0f);
                         isViewSelect(mTvCity, false);
                         mTvCity.setText("城市");
-                        mIvCity.setImageResource(R.mipmap.icon_type_more);
                     }
                 });
                 mPopCity.show();
                 isViewSelect(mTvCity, true);
-                mIvCity.setImageResource(R.mipmap.icon_type_more_select);
-
                 break;
             case R.id.ll_industry:
                 mGetIndustryPresenter.getIndustryList();
@@ -289,7 +288,8 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
 
     @Override
     public void getIndustrySuccess(final List<IndustryBean.ResultdataBean> beans) {
-        mIvIndustry.setRotation(180);
+        mIvIndustry.setImageResource(R.mipmap.icon_type_more_select);
+        ViewRoUtils.roView(mIvIndustry,360f);
         if (mPopIndustry == null) {
             mPopIndustry = new PopIndustry(SearchBusinessMoreActivity.this, new PopIndustry.CityListener() {
                 @Override
@@ -354,7 +354,8 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
         mPopIndustry.getmPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                mIvIndustry.setRotation(0);
+                mIvIndustry.setImageResource(R.mipmap.icon_type_more);
+                ViewRoUtils.roView(mIvIndustry,0f);
                 isViewSelect(mTvIndustry, false);
             }
         });

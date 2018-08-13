@@ -2,6 +2,7 @@ package com.whmnrc.feimei.ui.mine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -11,8 +12,12 @@ import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.beans.OrganizationDetailsBean;
+import com.whmnrc.feimei.beans.ProductDetailsBean;
 import com.whmnrc.feimei.ui.BaseActivity;
+import com.whmnrc.feimei.utils.CodeTimeUtils;
+import com.whmnrc.feimei.utils.TextColorChangeUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
+import com.whmnrc.feimei.utils.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,8 +55,8 @@ public class PayActivity extends BaseActivity {
     RelativeLayout mRlOnePay;
     @BindView(R.id.tv_product_end_time)
     TextView mTvProductEndTime;
-    @BindView(R.id.tv_product_name)
-    TextView mTvProductName;
+//    @BindView(R.id.tv_product_name)
+//    TextView mTvProductName;
     @BindView(R.id.tv_money2)
     TextView mTvMoney2;
     @BindView(R.id.tv_product_desc)
@@ -122,7 +127,7 @@ public class PayActivity extends BaseActivity {
     public static final int COLUMN_PAY = 5;
     public int mProductType;
     public OrganizationDetailsBean.ResultdataBean.EnterpriseBean mEnterpriseBean;
-
+    public ProductDetailsBean.ResultdataBean.CommodityBean mCommodityBean;
 
     @Override
     protected void initViewData() {
@@ -132,16 +137,6 @@ public class PayActivity extends BaseActivity {
         showTypeView();
 
 
-        if (mProductType == ORG_PAY) {
-            mEnterpriseBean = getIntent().getParcelableExtra("enterprise");
-            if (mEnterpriseBean != null) {
-                mTvMoney.setText(String.valueOf(mEnterpriseBean.getPrice()));
-                mTvOrgTitle.setText(mEnterpriseBean.getName());
-                mTvOrgDesc.setText(mEnterpriseBean.getExplain());
-                mIvImg.setVisibility(View.GONE);
-                mTvOrgTime.setText(TimeUtils.getDateToString(mEnterpriseBean.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
-            }
-        }
     }
 
 
@@ -156,6 +151,16 @@ public class PayActivity extends BaseActivity {
                 mRlProductPay.setVisibility(View.GONE);
                 mRlOrderInfo.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
+
+                mEnterpriseBean = getIntent().getParcelableExtra("payData");
+                if (mEnterpriseBean != null) {
+                    mTvMoney.setText(String.valueOf(mEnterpriseBean.getPrice()));
+                    mTvOrgTitle.setText(mEnterpriseBean.getName());
+                    mTvOrgDesc.setText(mEnterpriseBean.getExplain());
+                    mIvImg.setVisibility(View.GONE);
+                    mTvOrgTime.setText(TimeUtils.getDateToString(mEnterpriseBean.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+                }
+
                 break;
             case PRODUCT_PAY:
                 mRlProductPay.setVisibility(View.VISIBLE);
@@ -163,6 +168,21 @@ public class PayActivity extends BaseActivity {
                 mRlOnePay.setVisibility(View.GONE);
                 mRlOrderInfo.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
+
+                mCommodityBean = getIntent().getParcelableExtra("payData");
+                String totalPrice = getIntent().getStringExtra("totalPrice");
+                if (mCommodityBean != null) {
+                    CodeTimeUtils.payOrderTime(mTvProductEndTime, () -> {
+                        ToastUtils.showToast("支付超时");
+                        mLlCommit.setEnabled(false);
+                        mLlCommit.setBackgroundColor(ContextCompat.getColor(this, R.color.normal_gray));
+                    });
+                    mTvMoney2.setText(totalPrice);
+                    TextColorChangeUtils.changeTextSize(mTvMoney2, String.format("￥%s",totalPrice), 1, totalPrice.length()+1, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                    mTvProductDesc.setText(mCommodityBean.getName());
+                    mTvPay.setText(String.format("确认支付￥%s", totalPrice));
+                }
+
                 break;
             case ORG_PAY:
             case COLUMN_PAY:
@@ -189,10 +209,32 @@ public class PayActivity extends BaseActivity {
         return R.layout.activity_pay;
     }
 
-    public static void start(Context context, int productType, OrganizationDetailsBean.ResultdataBean.EnterpriseBean enterprise) {
+    /**
+     * 企业名录支付界面数据
+     *
+     * @param context
+     * @param productType
+     * @param bean
+     */
+    public static void startOrg(Context context, int productType, OrganizationDetailsBean.ResultdataBean.EnterpriseBean bean) {
         Intent starter = new Intent(context, PayActivity.class);
         starter.putExtra("productType", productType);
-        starter.putExtra("enterprise", enterprise);
+        starter.putExtra("payData", bean);
+        context.startActivity(starter);
+    }
+
+    /**
+     * 产品支付界面数据
+     *
+     * @param context
+     * @param productType
+     * @param bean
+     */
+    public static void startProduct(Context context, int productType, ProductDetailsBean.ResultdataBean.CommodityBean bean, String totalPrice) {
+        Intent starter = new Intent(context, PayActivity.class);
+        starter.putExtra("productType", productType);
+        starter.putExtra("totalPrice", totalPrice);
+        starter.putExtra("payData", bean);
         context.startActivity(starter);
     }
 
@@ -238,7 +280,6 @@ public class PayActivity extends BaseActivity {
                 break;
         }
     }
-
 
 
 }

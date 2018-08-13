@@ -26,8 +26,6 @@
                 android:gravity="center">
 
 
-
-
                 <TextView
                     android:id="@+id/tv_money"
                     android:layout_width="wrap_content"
@@ -77,25 +75,24 @@
                     android:gravity="center">
 
 
-                    <TextView
-                        android:id="@+id/tv_product_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/tv_money2"
-                        android:includeFontPadding="false"
-                        android:text="支付：￥"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/dm_15"/>
+                    <!--<TextView-->
+                        <!--android:id="@+id/tv_product_name"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignBottom="@id/tv_money2"-->
+                        <!--android:includeFontPadding="false"-->
+                        <!--android:text="支付：￥"-->
+                        <!--android:textColor="@color/white"-->
+                        <!--android:textSize="@dimen/dm_15"/>-->
 
                     <TextView
                         android:id="@+id/tv_money2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/tv_product_name"
                         android:includeFontPadding="false"
-                        android:text="199"
+                        android:text="支付：￥199"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/dm_24"/>
+                        android:textSize="@dimen/dm_15"/>
                 </RelativeLayout>
 
 

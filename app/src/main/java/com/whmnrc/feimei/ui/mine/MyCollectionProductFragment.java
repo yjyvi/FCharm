@@ -11,7 +11,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ProductLibraryListAdapter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
-import com.whmnrc.feimei.utils.TestDataUtils;
 
 import butterknife.BindView;
 
@@ -69,7 +68,6 @@ public class MyCollectionProductFragment extends LazyLoadFragment {
         }
 
         ProductLibraryListAdapter productLibraryListAdapter = new ProductLibraryListAdapter(getActivity(), itemProductList);
-        productLibraryListAdapter.setDataArray(TestDataUtils.initTestData(12));
         mRvList.setAdapter(productLibraryListAdapter);
     }
 }

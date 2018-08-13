@@ -34,5 +34,33 @@ public class CodeTimeUtils {
         mCountDownTimer.start();
     }
 
+    /**
+     * 倒计时
+     */
+    public static void payOrderTime(TextView textView, PayOrderTimeListener payOrderTimeListener) {
+        mCountDownTimer = new CountDownTimer(5_60_000L, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                textView.setText(String.format("支付剩余时间  %s", TimeUtils.second2MMSS((int) millisUntilFinished / 1000)));
+            }
+
+            @Override
+            public void onFinish() {
+                textView.setText("支付超时");
+                if (payOrderTimeListener != null) {
+                    payOrderTimeListener.payField();
+                }
+                if (mCountDownTimer != null) {
+                    mCountDownTimer = null;
+                }
+            }
+        };
+        mCountDownTimer.start();
+    }
+
+    public interface PayOrderTimeListener {
+        void payField();
+    }
+
 
 }

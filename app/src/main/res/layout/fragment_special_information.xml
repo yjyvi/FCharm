@@ -87,6 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:includeFontPadding="false"
                 android:text="区域"
                 android:textSize="@dimen/dm_14"/>
@@ -117,6 +118,7 @@
                 android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="薪酬范围"
@@ -150,6 +152,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:includeFontPadding="false"
+                android:textColor="@color/black"
                 android:text="更多筛选"
                 android:textSize="@dimen/dm_14"/>
 

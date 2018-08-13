@@ -25,10 +25,8 @@ public abstract class CommonCallBack<T> implements OKHttpManager.ObjectCallback 
 
     @Override
     public void onFailure(int call, String e) {
-        if (BuildConfig.DEBUG) {
-            if (!TextUtils.isEmpty(e)) {
-                Log.e("CommonCallBack==", e);
-            }
+        if (BuildConfig.DEBUG && !TextUtils.isEmpty(e)) {
+            Log.e("CommonCallBack==", e);
         }
         onError("网络请求错误！");
     }
@@ -41,8 +39,8 @@ public abstract class CommonCallBack<T> implements OKHttpManager.ObjectCallback 
             T data = JSON.parseObject(result, params[0]);
             onSuccess(data);
         } catch (Exception e) {
-            Log.e("Exception",e.toString());
-            onError("网络请求错误！");
+            Log.e("Exception", e.toString());
+            onError("解析出错了！");
         }
     }
 

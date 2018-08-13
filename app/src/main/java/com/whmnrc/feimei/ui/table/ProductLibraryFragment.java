@@ -20,17 +20,23 @@ import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ProductLibraryListAdapter;
 import com.whmnrc.feimei.adapter.ProductLibraryTypeAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
+import com.whmnrc.feimei.beans.ProductListBean;
+import com.whmnrc.feimei.beans.ProductTypeBean;
+import com.whmnrc.feimei.presener.GetProductListPresenter;
+import com.whmnrc.feimei.presener.GetProductTypePresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.MineActivity;
 import com.whmnrc.feimei.ui.product.SearchProductMoreActivity;
-import com.whmnrc.feimei.utils.TestDataUtils;
 import com.whmnrc.feimei.utils.ViewRoUtils;
 import com.whmnrc.feimei.utils.evntBusBean.BaseEvent;
 import com.youth.banner.Banner;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,7 +47,7 @@ import butterknife.OnClick;
  * 行业产品库
  */
 
-public class ProductLibraryFragment extends LazyLoadFragment implements OnRefreshLoadMoreListener {
+public class ProductLibraryFragment extends LazyLoadFragment implements OnRefreshLoadMoreListener, GetProductListPresenter.GetProductListListener, GetProductTypePresenter.GetProductTypeListener {
     @BindView(R.id.rv_type)
     RecyclerView mRvType;
     @BindView(R.id.rv_product_list)
@@ -66,6 +72,13 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
     @BindView(R.id.iv_more)
     ImageView mIvMore;
     public ProductLibraryTypeAdapter mProductLibraryTypeAdapter;
+    public GetProductTypePresenter mGetProductTypePresenter;
+    public GetProductListPresenter mGetProductListPresenter;
+    private boolean isShowAllType;
+    public ProductLibraryListAdapter mProductLibraryListAdapter;
+    private String mPrice = "";
+    private String mName = "";
+    private String mCommodityClassId = "";
 
 
     /**
@@ -80,24 +93,32 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
 
     @Override
     protected void initViewData() {
+
+        initType();
+
+        initProductList();
+
+
+        mGetProductTypePresenter = new GetProductTypePresenter(this);
+        mGetProductTypePresenter.getProductType();
+
+        mGetProductListPresenter = new GetProductListPresenter(this);
+        mGetProductListPresenter.getProductList(mName, mCommodityClassId);
+
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
 
         mRefresh.setOnRefreshLoadMoreListener(this);
 
-        initType();
-
-        initProductList();
 
     }
 
     private void initProductList() {
         mRvProductList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRvProductList.setNestedScrollingEnabled(false);
-        ProductLibraryListAdapter productLibraryListAdapter = new ProductLibraryListAdapter(getActivity(), R.layout.item_product_list);
-        productLibraryListAdapter.setDataArray(TestDataUtils.initTestData(15));
-        mRvProductList.setAdapter(productLibraryListAdapter);
+        mProductLibraryListAdapter = new ProductLibraryListAdapter(getActivity(), R.layout.item_product_list);
+        mRvProductList.setAdapter(mProductLibraryListAdapter);
 
     }
 
@@ -109,12 +130,11 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
         divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.custom_divider));
         mRvType.addItemDecoration(divider);
         mProductLibraryTypeAdapter = new ProductLibraryTypeAdapter(getActivity(), R.layout.item_organization_chart_type);
-        mProductLibraryTypeAdapter.setDataArray(TestDataUtils.initTestData(8));
         mRvType.setAdapter(mProductLibraryTypeAdapter);
         mProductLibraryTypeAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                SearchProductMoreActivity.start(view.getContext());
+                SearchProductMoreActivity.start(view.getContext(), mProductLibraryTypeAdapter.getDatas().get(position).getID());
             }
 
             @Override
@@ -122,6 +142,7 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
                 return false;
             }
         });
+
     }
 
 
@@ -138,17 +159,6 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
     }
 
 
-    public void showEmpty() {
-//        if (mAdapter != null && mAdapter.getDatas().size() == 0) {
-//            EmptyListUtils.loadEmpty(true, mVsEmpty);
-//        } else {
-//            if (mVsEmpty != null) {
-//                mVsEmpty.setVisibility(View.GONE);
-//            }
-//        }
-    }
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -158,11 +168,16 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
     @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
         refreshLayout.finishLoadMore();
+        mGetProductListPresenter.getProductList(mName, mCommodityClassId);
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
         refreshLayout.finishRefresh();
+        refreshLayout.setEnableLoadMore(true);
+        mGetProductTypePresenter.getProductType();
+        mGetProductListPresenter.getProductList(mName, mCommodityClassId);
+
     }
 
 
@@ -183,7 +198,7 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
             case R.id.iv_back:
                 break;
             case R.id.tv_search:
-                SearchProductMoreActivity.start(view.getContext());
+                SearchProductMoreActivity.start(view.getContext(), "");
                 break;
             case R.id.iv_user_info:
                 if (!UserManager.getIsLogin(v.getContext())) {
@@ -196,13 +211,15 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
                     mTvMore.setText("收起");
                     ViewRoUtils.roView(mIvMore, 180f);
                     mIvMore.setSelected(true);
-                    mProductLibraryTypeAdapter.setDataArray(TestDataUtils.initTestData(12));
+                    isShowAllType = true;
                 } else {
                     mTvMore.setText("展开全部");
                     ViewRoUtils.roView(mIvMore, -180f);
                     mIvMore.setSelected(false);
-                    mProductLibraryTypeAdapter.setDataArray(TestDataUtils.initTestData(8));
+                    isShowAllType = false;
                 }
+
+                mGetProductTypePresenter.getProductType();
 
                 mProductLibraryTypeAdapter.notifyDataSetChanged();
 
@@ -212,4 +229,59 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
         }
     }
 
+    @Override
+    public void getProductListSuccess(ProductListBean.ResultdataBean bean, boolean isRefresh) {
+        if (isRefresh) {
+            mProductLibraryListAdapter.setDataArray(bean.getEnterprise());
+        } else {
+            List<ProductListBean.ResultdataBean.EnterpriseBean> datas = mProductLibraryListAdapter.getDatas();
+            if (bean.getPagination().getRecords() == datas.size()) {
+                mRefresh.setEnableLoadMore(false);
+            }
+
+            datas.addAll(bean.getEnterprise());
+            mProductLibraryListAdapter.setDataArray(datas);
+        }
+
+        mProductLibraryListAdapter.notifyDataSetChanged();
+
+        showEmpty(mProductLibraryListAdapter, mVsEmpty);
+    }
+
+    @Override
+    public void getProductListField() {
+
+    }
+
+    @Override
+    public void getProductTypeSuccess(List<ProductTypeBean.ResultdataBean> bean) {
+        if (mProductLibraryTypeAdapter == null) {
+            return;
+        }
+        if (isShowAllType) {
+            mProductLibraryTypeAdapter.setDataArray(bean);
+        } else {
+            List<ProductTypeBean.ResultdataBean> datas = mProductLibraryTypeAdapter.getDatas();
+            if (datas ==null) {
+                datas = new ArrayList<>();
+            }
+            if ( datas.size() > 0) {
+                datas.clear();
+            }
+            for (int i = 0; i < bean.size(); i++) {
+                if (i >= 8) {
+                    break;
+                }
+
+                datas.add(bean.get(i));
+            }
+            mProductLibraryTypeAdapter.setDataArray(datas);
+        }
+        mProductLibraryTypeAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void getProductTypeField() {
+
+    }
 }

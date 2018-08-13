@@ -65,7 +65,7 @@ public class ProductTypeBean {
         private String ID;
         private String Img;
         private String Name;
-        private String Sort;
+        private int Sort;
 
         public String getID() {
             return ID;
@@ -91,11 +91,11 @@ public class ProductTypeBean {
             this.Name = Name;
         }
 
-        public String getSort() {
+        public int getSort() {
             return Sort;
         }
 
-        public void setSort(String Sort) {
+        public void setSort(int Sort) {
             this.Sort = Sort;
         }
     }

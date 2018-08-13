@@ -13,6 +13,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.beans.ProductDetailsBean;
 
 
 /**
@@ -22,6 +23,7 @@ import com.whmnrc.feimei.R;
 
 public class PopServerInfo {
 
+    private  ProductDetailsBean.ResultdataBean.CommodityBean mCommdity;
     private PopupWindow mPopupWindow;
     private Context mContext;
 
@@ -32,22 +34,24 @@ public class PopServerInfo {
         mPopHintListener = popHintListener;
     }
 
-    public PopServerInfo(Context context) {
+    public PopServerInfo(Context context, ProductDetailsBean.ResultdataBean.CommodityBean commodity) {
         mContext = context;
+        this.mCommdity  =commodity;
         View view = LayoutInflater.from(context).inflate(R.layout.pop_server_info, null);
         LinearLayout ll_layout = (LinearLayout) view.findViewById(R.id.ll_layout);
+        TextView tvName = view.findViewById(R.id.tv_name);
         TextView tvTel = view.findViewById(R.id.tv_tel);
-        TextView tvQq = view.findViewById(R.id.tv_qq);
         TextView tvMail = view.findViewById(R.id.tv_mail);
+
+        tvName.setText(String.format("销售人员：%s",mCommdity.getSalesman()));
+        tvTel.setText(String.format("邮箱：%s",mCommdity.getMail()));
+        tvMail.setText(String.format("电话：%s",mCommdity.getPhone()));
 
         ImageView ivClose = view.findViewById(R.id.iv_close);
 
-        ivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPopupWindow != null) {
-                    mPopupWindow.dismiss();
-                }
+        ivClose.setOnClickListener(v -> {
+            if (mPopupWindow != null) {
+                mPopupWindow.dismiss();
             }
         });
 
@@ -74,12 +78,7 @@ public class PopServerInfo {
         // 刷新状态
         mPopupWindow.update();
 
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-               PopUtils.setBackgroundAlpha((Activity) mContext, 1f);
-            }
-        });
+        mPopupWindow.setOnDismissListener(() -> PopUtils.setBackgroundAlpha((Activity) mContext, 1f));
     }
 
 

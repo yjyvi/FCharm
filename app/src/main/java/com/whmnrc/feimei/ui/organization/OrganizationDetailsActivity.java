@@ -179,7 +179,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 if (UserManager.getUserIsVip()) {
                     AboutMeActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise());
                 } else {
-                    PayActivity.start(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
+                    PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
                 }
                 break;
             //主营业务
@@ -202,7 +202,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                         BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "关联企业", 0);
                     }
                 } else {
-                    PayActivity.start(view.getContext(), PayActivity.ORG_PAY,mOrganizationDetailsBean.getEnterprise());
+                    PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY,mOrganizationDetailsBean.getEnterprise());
                 }
 
 
@@ -232,7 +232,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                             BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "主要客户", 1);
                         }
                     } else {
-                        PayActivity.start(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
+                        PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
                     }
 
                 }else {
@@ -266,12 +266,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 }
 
                 CommentActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise().getID());
-                CommentActivity.setCommentListener(new CommentActivity.CommentListener() {
-                    @Override
-                    public void commentSuccess() {
-                        mOrganizationDetailsPresenter.getOrganizationDetails(mIndustryID);
-                    }
-                });
+                CommentActivity.setCommentListener(() -> mOrganizationDetailsPresenter.getOrganizationDetails(mIndustryID));
                 break;
             case R.id.iv_back:
                 finish();

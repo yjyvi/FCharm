@@ -5,7 +5,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
@@ -13,7 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -132,35 +130,28 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
         mRvProductList.setAdapter(mSpecialInformationListAdapter);
 
 
-        mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mEtSearch.setOnEditorActionListener((view, keyCode, event) -> {
+            if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
+                // 先隐藏键盘
+                ((InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getActivity().getCurrentFocus()
+                                .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                mSearchContent = view.getText().toString().trim();
 
-            @Override
-            public boolean onEditorAction(TextView view, int keyCode, KeyEvent event) {
-                if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
-                    // 先隐藏键盘
-                    ((InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(getActivity().getCurrentFocus()
-                                    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    mSearchContent = view.getText().toString().trim();
-
-                    if (!TextUtils.isEmpty(mSearchContent)) {
-                        SearchActivity.start(view.getContext(), mSearchContent, SearchActivity.SEARCH_SPECIAL);
-                        mEtSearch.setText("");
-                        mSearchContent = "";
-                        return true;
-                    }
+                if (!TextUtils.isEmpty(mSearchContent)) {
+                    SearchActivity.start(view.getContext(), mSearchContent, SearchActivity.SEARCH_SPECIAL);
+                    mEtSearch.setText("");
+                    mSearchContent = "";
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
-        mSpecialInformationListAdapter.setGoToDetailsListener(new SpecialInformationListAdapter.GoToDetailsListener() {
-            @Override
-            public void toDetails(int position) {
-                int clickNumber = mSpecialInformationListAdapter.getDatas().get(position).getClickNumber();
-                mSpecialInformationListAdapter.getDatas().get(position).setClickNumber(clickNumber + 1);
-                mSpecialInformationListAdapter.notifyItemChanged(position);
-            }
+        mSpecialInformationListAdapter.setGoToDetailsListener(position -> {
+            int clickNumber = mSpecialInformationListAdapter.getDatas().get(position).getClickNumber();
+            mSpecialInformationListAdapter.getDatas().get(position).setClickNumber(clickNumber + 1);
+            mSpecialInformationListAdapter.notifyItemChanged(position);
         });
 
     }
@@ -228,15 +219,12 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 }
                 isViewSelect(mTvCity, true);
                 mIvCity.setImageResource(R.mipmap.icon_type_more_select);
-                ViewRoUtils.roView(mIvCity,180f);
+                ViewRoUtils.roView(mIvCity,360f);
                 mPopCity.show();
-                mPopCity.getmPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        ViewRoUtils.roView(mIvCity,0f);
-                        isViewSelect(mTvCity, false);
-                        mIvCity.setImageResource(R.mipmap.icon_type_more);
-                    }
+                mPopCity.getmPopupWindow().setOnDismissListener(() -> {
+                    mIvCity.setImageResource(R.mipmap.icon_type_more);
+                    ViewRoUtils.roView(mIvCity,0f);
+                    isViewSelect(mTvCity, false);
                 });
                 break;
             case R.id.ll_price:
@@ -256,17 +244,14 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                     mPopSalaryRange = new PopSalaryRange(getActivity(), this, mLlPrice, beans);
                 }
                 mPopSalaryRange.show();
-                mPopSalaryRange.getPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        ViewRoUtils.roView(mIvPrice,0f);
-                        isViewSelect(mTvPrice, false);
-                        mIvPrice.setImageResource(R.mipmap.icon_type_more);
-                    }
+                mPopSalaryRange.getPopupWindow().setOnDismissListener(() -> {
+                    mIvPrice.setImageResource(R.mipmap.icon_type_more);
+                    ViewRoUtils.roView(mIvPrice,0f);
+                    isViewSelect(mTvPrice, false);
                 });
-                ViewRoUtils.roView(mIvPrice,180f);
-                isViewSelect(mTvPrice, true);
                 mIvPrice.setImageResource(R.mipmap.icon_type_more_select);
+                ViewRoUtils.roView(mIvPrice,360f);
+                isViewSelect(mTvPrice, true);
                 break;
             case R.id.ll_more:
                 if (mPopMoreFitter != null && mPopMoreFitter.isShow()) {
@@ -276,17 +261,14 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                     mPopMoreFitter = new PopMoreFitter(getActivity(), this, mLlCity);
                 }
                 mPopMoreFitter.show();
-                mPopMoreFitter.getmPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        ViewRoUtils.roView(mIvMore,0f);
-                        isViewSelect(mTvMore, false);
-                        mIvMore.setImageResource(R.mipmap.icon_type_more);
-                    }
+                mPopMoreFitter.getmPopupWindow().setOnDismissListener(() -> {
+                    mIvMore.setImageResource(R.mipmap.icon_type_more);
+                    ViewRoUtils.roView(mIvMore,0f);
+                    isViewSelect(mTvMore, false);
                 });
-                ViewRoUtils.roView(mIvMore,180f);
-                isViewSelect(mTvMore, true);
                 mIvMore.setImageResource(R.mipmap.icon_type_more_select);
+                ViewRoUtils.roView(mIvMore,360f);
+                isViewSelect(mTvMore, true);
                 break;
             default:
                 break;
@@ -318,12 +300,12 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 mCity = "";
                 loadData();
             } else {
-                mProvincial = mProvinceList.get(position).getName();
+                mProvincial = mProvinceList.get(position).getName().trim();
                 mCityList = mProvinceList.get(position).getCityList();
                 mPopCity.setTwoList(mCityList);
             }
         } else {
-            mCity = mCityList.get(position).getName();
+            mCity = mCityList.get(position).getName().trim();
             mPopCity.dissmiss();
             loadData();
         }

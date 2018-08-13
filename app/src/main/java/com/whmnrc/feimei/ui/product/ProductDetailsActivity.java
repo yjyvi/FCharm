@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewStub;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -13,15 +15,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.adapter.OrganizationCommentAdapter;
+import com.whmnrc.feimei.adapter.ProductDetailsCommentAdapter;
+import com.whmnrc.feimei.beans.ProductDetailsBean;
 import com.whmnrc.feimei.pop.PopServerInfo;
 import com.whmnrc.feimei.pop.PopShare;
+import com.whmnrc.feimei.presener.GetProductDetailsPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.PayVipActivity;
 import com.whmnrc.feimei.ui.organization.AllCommentActivity;
 import com.whmnrc.feimei.ui.organization.OrganizationDetailsActivity;
+import com.whmnrc.mylibrary.utils.GlideUtils;
 import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.loader.ImageLoader;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -31,7 +40,7 @@ import butterknife.OnClick;
  * @data 2018/7/26.
  */
 
-public class ProductDetailsActivity extends BaseActivity {
+public class ProductDetailsActivity extends BaseActivity implements GetProductDetailsPresenter.GetProductDetailsListener {
 
 
     @BindView(R.id.banner)
@@ -40,6 +49,8 @@ public class ProductDetailsActivity extends BaseActivity {
     TextView mTvTitle;
     @BindView(R.id.tv_price)
     TextView mTvPrice;
+    @BindView(R.id.tv_showpiece)
+    TextView mTvShowpiece;
     @BindView(R.id.tv_browse)
     TextView mTvBrowse;
     @BindView(R.id.tv_sales)
@@ -84,44 +95,90 @@ public class ProductDetailsActivity extends BaseActivity {
     ImageView mIvMsg;
     @BindView(R.id.iv_collection)
     ImageView mIvCollection;
+    @BindView(R.id.vs_empty)
+    ViewStub mVsEmpty;
     private PopShare mPopShare;
     public PopServerInfo mPopServerInfo;
+    public GetProductDetailsPresenter mGetProductDetailsPresenter;
+    public String mProductId;
+    public ProductDetailsCommentAdapter mOrganizationCommentAdapter;
+    private ProductDetailsBean.ResultdataBean mProductDetailsBean;
 
     @Override
     protected void initViewData() {
+        showEmpty(true, mVsEmpty);
+        mProductId = getIntent().getStringExtra("productId");
         isAccountLogin(true);
-
+        mGetProductDetailsPresenter = new GetProductDetailsPresenter(this);
+        mGetProductDetailsPresenter.getProductDetails(mProductId);
         mRvCommentList.setNestedScrollingEnabled(false);
         mRvCommentList.setLayoutManager(new LinearLayoutManager(this));
-        OrganizationCommentAdapter organizationCommentAdapter = new OrganizationCommentAdapter(this, R.layout.item_organization_comment);
-//        organizationCommentAdapter.setDataArray(TestDataUtils.initTestData(6));
-        mRvCommentList.setAdapter(organizationCommentAdapter);
-        loadUrl();
+        mOrganizationCommentAdapter = new ProductDetailsCommentAdapter(this, R.layout.item_organization_comment);
+        mRvCommentList.setAdapter(mOrganizationCommentAdapter);
+
     }
 
 
     /**
      * 加载网页
      */
-    private void loadUrl() {
-        mWbProductDetails.post(new Runnable() {
-            @Override
-            public void run() {
-                mWbProductDetails.loadUrl("http://www.whmnx.com");
-                mWbProductDetails.setWebViewClient(new WebViewClient() {
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        return true;
-                    }
-                });
-                WebSettings settings = mWbProductDetails.getSettings();
-                settings.setJavaScriptEnabled(false);
-                settings.setUseWideViewPort(true);
-                settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-                settings.setLoadWithOverviewMode(true);
-            }
+    private void loadUrl(String url) {
+        mWbProductDetails.post(() -> {
+            mWbProductDetails.loadUrl(TextUtils.isEmpty(url) ? "http://www.whmnx.com" : url);
+            mWbProductDetails.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    return true;
+                }
+            });
+            WebSettings settings = mWbProductDetails.getSettings();
+            settings.setJavaScriptEnabled(false);
+            settings.setUseWideViewPort(true);
+            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            settings.setLoadWithOverviewMode(true);
         });
 
+    }
+
+    /**
+     * 轮播图
+     */
+    private void initBanner(List<String> bannerList) {
+        if (mBanner != null) {
+            mBanner.setDelayTime(3000);
+            mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+            mBanner.setIndicatorGravity(BannerConfig.CENTER);
+            mBanner.offsetLeftAndRight(10);
+            mBanner.setImages(bannerList).setImageLoader(new ImageLoader() {
+                @Override
+                public void displayImage(Context context, Object path, ImageView imageView) {
+                    final String resultdataBeans = (String) path;
+                    GlideUtils.LoadImage(imageView.getContext(), resultdataBeans, imageView);
+                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                    //轮播图跳转
+                    imageView.setOnClickListener(view -> {
+//
+
+                    });
+                }
+            }).start();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mBanner != null) {
+            mBanner.startAutoPlay();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mBanner != null) {
+            mBanner.stopAutoPlay();
+        }
     }
 
     @Override
@@ -130,8 +187,9 @@ public class ProductDetailsActivity extends BaseActivity {
     }
 
 
-    public static void start(Context context) {
+    public static void start(Context context, String productId) {
         Intent starter = new Intent(context, ProductDetailsActivity.class);
+        starter.putExtra("productId", productId);
         context.startActivity(starter);
     }
 
@@ -163,12 +221,12 @@ public class ProductDetailsActivity extends BaseActivity {
 
                 if (UserManager.getUserIsVip()) {
                     if (mPopServerInfo == null) {
-                        mPopServerInfo = new PopServerInfo(this);
+                        mPopServerInfo = new PopServerInfo(this, mProductDetailsBean.getCommodity());
                     }
+                    mPopServerInfo.show();
                 } else {
                     PayVipActivity.start(view.getContext());
                 }
-                mPopServerInfo.show();
                 break;
             case R.id.ll_collection:
 
@@ -181,10 +239,12 @@ public class ProductDetailsActivity extends BaseActivity {
                 ProductSpecificationsActivity.start(view.getContext());
                 break;
             case R.id.tv_organization_name:
-                OrganizationDetailsActivity.start(view.getContext(), "");
+                OrganizationDetailsActivity.start(view.getContext(), mProductDetailsBean.getCommodity().getEnterprise_ID());
                 break;
             case R.id.ll_all_comment:
-                AllCommentActivity.start(view.getContext(), "");
+                if (mProductDetailsBean.getComment().size() > 0) {
+                    AllCommentActivity.start(view.getContext(), mProductDetailsBean.getCommodity().getID());
+                }
                 break;
             case R.id.ll_pay:
 
@@ -192,7 +252,7 @@ public class ProductDetailsActivity extends BaseActivity {
                     return;
                 }
 
-                ConfirmOrderActivity.start(view.getContext());
+                ConfirmOrderActivity.start(view.getContext(),mProductDetailsBean.getCommodity());
 
                 break;
             case R.id.iv_msg:
@@ -202,7 +262,10 @@ public class ProductDetailsActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_share:
-                mPopShare = new PopShare(ProductDetailsActivity.this, "1", "1", "1", "1");
+                mPopShare = new PopShare(ProductDetailsActivity.this,
+                        mProductDetailsBean.getCommodity().getName(),
+                        mProductDetailsBean.getCommodity().getImgAdd().get(0),
+                        mProductDetailsBean.getCommodity().getConten(), mProductDetailsBean.getCommodity().getSalesman());
                 mPopShare.show();
                 break;
             default:
@@ -220,4 +283,37 @@ public class ProductDetailsActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void getProductDetailsSuccess(ProductDetailsBean.ResultdataBean bean) {
+        mProductDetailsBean = bean;
+        ProductDetailsBean.ResultdataBean.CommodityBean commodity = bean.getCommodity();
+        initBanner(commodity.getImgAdd());
+        loadUrl(commodity.getConten());
+
+        mTvTitle.setText(commodity.getName());
+        if (commodity.getPrice() <= 0) {
+            mTvPrice.setVisibility(View.GONE);
+            mTvSales.setVisibility(View.GONE);
+            mTvShowpiece.setVisibility(View.VISIBLE);
+        } else {
+            mTvShowpiece.setVisibility(View.GONE);
+            mTvSales.setVisibility(View.VISIBLE);
+            mTvPrice.setVisibility(View.VISIBLE);
+            mTvPrice.setText(String.format("￥%s", commodity.getPrice()));
+            mTvSales.setText(String.format("销量%s", commodity.getSales()));
+        }
+        mTvBrowse.setText(String.format("浏览量%s", commodity.getClickNumber()));
+        mTvOrganizationName.setText(commodity.getEnterpriseName());
+        mTvCommentCount.setText(String.format("共%s条", bean.getCommentCount()));
+
+        mOrganizationCommentAdapter.setDataArray(bean.getComment());
+        mOrganizationCommentAdapter.notifyDataSetChanged();
+        isShowDialog(false);
+        showEmpty(false, mVsEmpty);
+    }
+
+    @Override
+    public void getProductDetailsField() {
+        isShowDialog(false);
+    }
 }

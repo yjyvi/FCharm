@@ -59,6 +59,7 @@
                         android:textSize="@dimen/dm_17"/>
 
                     <TextView
+                        android:id="@+id/tv_showpiece"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="展示品"
@@ -391,4 +392,11 @@
             android:src="@mipmap/icon_details_msg"/>
 
     </RelativeLayout>
+
+
+    <ViewStub
+        android:id="@+id/vs_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/layout_empty"/>
 </RelativeLayout>

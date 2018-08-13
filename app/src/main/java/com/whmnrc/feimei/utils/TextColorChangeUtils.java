@@ -2,6 +2,7 @@ package com.whmnrc.feimei.utils;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
@@ -24,6 +25,14 @@ public class TextColorChangeUtils {
         SpannableStringBuilder style = new SpannableStringBuilder(text);
         //设置指定位置文字的颜色
         style.setSpan(new ForegroundColorSpan(color), start, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        textView.setText(style);
+    }
+
+    public static void changeTextSize(TextView textView, String text, int start, int end,int size) {
+        SpannableStringBuilder style = new SpannableStringBuilder(text);
+        //设置指定位置文字的颜色
+        AbsoluteSizeSpan absoluteSizeSpan=new AbsoluteSizeSpan(size);
+        style.setSpan(absoluteSizeSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(style);
     }
 }

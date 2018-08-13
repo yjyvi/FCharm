@@ -62,7 +62,7 @@ public class HomePageListAdapter extends CommonAdapter {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 if (selectPosition == 0) {
-                    ProductDetailsActivity.start(view.getContext());
+                    ProductDetailsActivity.start(view.getContext(),"");
                 } else if (selectPosition == 1) {
                     CommonH5WebView.startCommonH5WebView(view.getContext(), "", "职位详情");
                 } else if (selectPosition == 2) {
@@ -90,7 +90,7 @@ public class HomePageListAdapter extends CommonAdapter {
                     @Override
                     public void confirm() {
                         if (position == 0) {
-                            SearchProductMoreActivity.start(mContext);
+                            SearchProductMoreActivity.start(mContext,"");
                         } else if (position == 1) {
                             EventBus.getDefault().post(new HomeTableChangeEvent().setEventType(HomeTableChangeEvent.TO_SPECIAL_INFORMATION));
                         } else if (position == 2) {

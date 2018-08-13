@@ -47,45 +47,50 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/dm_10"
+            android:layout_marginRight="@dimen/dm_10"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_name"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/dm_40"
-            android:paddingRight="@dimen/dm_40">
+            android:paddingLeft="@dimen/dm_30"
+            android:paddingRight="@dimen/dm_30">
 
 
             <TextView
                 android:drawablePadding="@dimen/dm_10"
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/icon_user"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dm_13"/>
+
+
+
+            <TextView
+                android:lines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="@dimen/dm_5"
+                android:drawablePadding="@dimen/dm_10"
+                android:drawableLeft="@mipmap/icon_mail"
                 android:id="@+id/tv_tel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/icon_about_2"
-                android:text="电话：15926318604"
-                android:textColor="@color/black"
-                android:textSize="@dimen/dm_13"/>
-
-
-
-            <TextView
-                android:layout_marginTop="@dimen/dm_5"
-                android:drawablePadding="@dimen/dm_10"
-                android:drawableLeft="@mipmap/icon_about_1"
-                android:id="@+id/tv_qq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="QQ：277485259"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dm_13"/>
 
 
             <TextView
+                android:lines="1"
+                android:ellipsize="end"
                 android:layout_marginTop="@dimen/dm_5"
                 android:drawablePadding="@dimen/dm_10"
-                android:drawableLeft="@mipmap/icon_about_4"
+                android:drawableLeft="@mipmap/icon_tel"
                 android:id="@+id/tv_mail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="邮箱：opcitvfen@126.com"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dm_13"/>
 

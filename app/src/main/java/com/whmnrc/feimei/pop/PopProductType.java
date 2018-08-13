@@ -14,7 +14,7 @@ import android.widget.PopupWindow;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ProductLibraryTypeAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
-import com.whmnrc.feimei.utils.TestDataUtils;
+import com.whmnrc.feimei.beans.ProductTypeBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +27,13 @@ import java.util.List;
 
 public class PopProductType {
 
-    private  View showView;
+    private View showView;
     private PopupWindow mPopupWindow;
     private Context mContext;
 
     private PopHintListener mPopHintListener;
 
-    private List<String> mDataList = new ArrayList<>();
+    private List<ProductTypeBean.ResultdataBean> mDataList = new ArrayList<>();
 
 
     public PopupWindow getPopupWindow() {
@@ -45,11 +45,10 @@ public class PopProductType {
     }
 
 
-
-    public PopProductType(Context context,View showView) {
+    public PopProductType(Context context, View showView, List<ProductTypeBean.ResultdataBean> dataList) {
         this.showView = showView;
         this.mContext = context;
-
+        this.mDataList = dataList;
 
 
         View view = LayoutInflater.from(context).inflate(R.layout.pop_product_type, null);
@@ -63,12 +62,15 @@ public class PopProductType {
         divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.custom_divider));
         mRvType.addItemDecoration(divider);
         ProductLibraryTypeAdapter productLibraryTypeAdapter = new ProductLibraryTypeAdapter(context, R.layout.item_organization_chart_type);
-        productLibraryTypeAdapter.setDataArray(TestDataUtils.initTestData(12));
+        productLibraryTypeAdapter.setDataArray(mDataList);
         mRvType.setAdapter(productLibraryTypeAdapter);
         productLibraryTypeAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-
+                mPopHintListener.confirm(mDataList.get(position));
+                if (mPopupWindow != null) {
+                    mPopupWindow.dismiss();
+                }
             }
 
             @Override
@@ -90,12 +92,7 @@ public class PopProductType {
         mPopupWindow.setOutsideTouchable(false);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setTouchable(true);
-        view.findViewById(R.id.view_bg).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopupWindow.dismiss();
-            }
-        });
+        view.findViewById(R.id.view_bg).setOnClickListener(v -> mPopupWindow.dismiss());
 
     }
 
@@ -107,7 +104,7 @@ public class PopProductType {
 
 
     public interface PopHintListener {
-        void confirm();
+        void confirm(ProductTypeBean.ResultdataBean bean);
     }
 
 }

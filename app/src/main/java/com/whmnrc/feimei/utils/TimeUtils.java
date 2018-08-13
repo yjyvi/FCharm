@@ -108,6 +108,12 @@ public class TimeUtils {
         return format.format(date);
     }
 
+    public static String getDateToString(long milSecond, String pattern) {
+        Date date = new Date(milSecond * 1000);
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return format.format(date);
+    }
+
 
     /**
      * 格式化时间去掉T

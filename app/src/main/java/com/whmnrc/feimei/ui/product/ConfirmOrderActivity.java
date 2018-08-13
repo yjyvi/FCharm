@@ -9,9 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.beans.ProductDetailsBean;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.mine.AddressManagerActivity;
 import com.whmnrc.feimei.ui.mine.PayActivity;
+import com.whmnrc.mylibrary.utils.GlideUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -49,11 +51,24 @@ public class ConfirmOrderActivity extends BaseActivity {
     TextView mTvSubtotalName;
     @BindView(R.id.tv_total)
     TextView mTvTotal;
+    public ProductDetailsBean.ResultdataBean.CommodityBean mCommodityBean;
+    public int mNum;
 
     @Override
     protected void initViewData() {
         setTitle("确认订单");
 
+        mCommodityBean = getIntent().getParcelableExtra("commodity");
+
+        if (mCommodityBean != null) {
+
+            mTvGoodsName.setText(mCommodityBean.getName());
+            GlideUtils.LoadImage(this, mCommodityBean.getImg(), mIvGoodsImg);
+            mTvSourcePrice.setText(String.format("%s", mCommodityBean.getPrice()));
+            mTvSubtotalPrice.setText(String.format("%s", mCommodityBean.getPrice()));
+            mTvTotal.setText(String.format("%s", mCommodityBean.getPrice()));
+
+        }
 
     }
 
@@ -62,8 +77,9 @@ public class ConfirmOrderActivity extends BaseActivity {
         return R.layout.activity_confirm_order;
     }
 
-    public static void start(Context context) {
+    public static void start(Context context, ProductDetailsBean.ResultdataBean.CommodityBean commodity) {
         Intent starter = new Intent(context, ConfirmOrderActivity.class);
+        starter.putExtra("commodity", commodity);
         context.startActivity(starter);
     }
 
@@ -81,7 +97,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                 isAdd(true);
                 break;
             case R.id.ll_pay:
-                PayActivity.start(view.getContext(), PayActivity.PRODUCT_PAY);
+                PayActivity.startProduct(view.getContext(), PayActivity.PRODUCT_PAY, mCommodityBean,mTvTotal.getText().toString().trim());
                 finish();
                 break;
             default:
@@ -90,16 +106,18 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     public void isAdd(boolean isAdd) {
-        int num = Integer.parseInt(mEditNum.getText().toString().trim());
+        mNum = Integer.parseInt(mEditNum.getText().toString().trim());
         if (isAdd) {
-            ++num;
+            ++mNum;
         } else {
-            if (num > 1) {
-                --num;
+            if (mNum > 1) {
+                --mNum;
             }
         }
-        mEditNum.setText(String.valueOf(num));
-        mTvSubtotalName.setText(String.format("共%s件商品    小计： ", num));
+        mEditNum.setText(String.valueOf(mNum));
+        mTvSubtotalName.setText(String.format("共%s件商品    小计： ", mNum));
+        mTvSubtotalPrice.setText(String.format("%s", mCommodityBean.getPrice() * mNum));
+        mTvTotal.setText(String.format("%s", mCommodityBean.getPrice() * mNum));
     }
 
 

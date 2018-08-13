@@ -28,24 +28,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:lines="2"
+           android:maxLines="2"
             android:includeFontPadding="false"
-            android:text="华三（H3C） SFP-GE-SX-
-千兆光模块 850nm 550m"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
+        <TextView
+            android:layout_marginTop="@dimen/dm_5"
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/dm_13"
+            android:textColor="@color/good_price_red"
+            android:layout_height="wrap_content"/>
 
         <TextView
-            android:layout_marginTop="@dimen/dm_10"
-            android:id="@+id/tv_source_price"
+            android:id="@+id/tv_sale"
+            android:textColor="@color/normal_gray"
+            android:layout_marginTop="@dimen/dm_5"
+            android:textSize="@dimen/dm_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginTop="@dimen/dm_5"
+            android:id="@+id/tv_rows"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:ellipsize="end"
             android:textSize="@dimen/dm_12"
             android:lines="1"
-            android:text="已浏览：4852人"
             android:textColor="@color/normal_gray"/>
     </LinearLayout>
 

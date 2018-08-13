@@ -64,5 +64,7 @@
     <string name="GetCommodityClass">/api/Commodity/GetCommodityClass</string>
     <!--查询产品列表-->
     <string name="GetCommodity">/api/Commodity/GetCommodity</string>
+    <!--商品详情-->
+    <string name="GetCommodityDetails">/api/Commodity/GetCommodityDetails</string>
 
 </resources>

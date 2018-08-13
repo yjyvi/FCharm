@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
@@ -14,7 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -128,24 +126,21 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
         mGetEnterprisePresenter.searchEnterpriseList(true, mSearchContent, mProvincial, mCity, mEnterpriseTypeID, mIndustryPid, mIndustryId);
 
 
-        mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int keyCode, KeyEvent event) {
-                if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
-                    // 先隐藏键盘
-                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(getCurrentFocus()
-                                    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    mSearchContent = view.getText().toString().trim();
+        mEtSearch.setOnEditorActionListener((view, keyCode, event) -> {
+            if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
+                // 先隐藏键盘
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus()
+                                .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                mSearchContent = view.getText().toString().trim();
 
-                    if (!TextUtils.isEmpty(mSearchContent)) {
-                        isShowDialog(true);
-                        mGetEnterprisePresenter.searchEnterpriseList(true, mSearchContent, mProvincial, mCity, mEnterpriseTypeID, mIndustryPid, mIndustryId);
-                        return true;
-                    }
+                if (!TextUtils.isEmpty(mSearchContent)) {
+                    isShowDialog(true);
+                    mGetEnterprisePresenter.searchEnterpriseList(true, mSearchContent, mProvincial, mCity, mEnterpriseTypeID, mIndustryPid, mIndustryId);
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
 
@@ -203,14 +198,11 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                 if (mPopCity == null) {
                     mPopCity = new PopCity(SearchBusinessMoreActivity.this, this, mLlCity);
                 }
-                mPopCity.mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        mIvCity.setImageResource(R.mipmap.icon_type_more);
-                        ViewRoUtils.roView(mIvCity, 0f);
-                        isViewSelect(mTvCity, false);
-                        mTvCity.setText("城市");
-                    }
+                mPopCity.mPopupWindow.setOnDismissListener(() -> {
+                    mIvCity.setImageResource(R.mipmap.icon_type_more);
+                    ViewRoUtils.roView(mIvCity, 0f);
+                    isViewSelect(mTvCity, false);
+                    mTvCity.setText("城市");
                 });
                 mPopCity.show();
                 isViewSelect(mTvCity, true);
@@ -351,13 +343,10 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
 
         mPopIndustry.show();
 
-        mPopIndustry.getmPopupWindow().setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                mIvIndustry.setImageResource(R.mipmap.icon_type_more);
-                ViewRoUtils.roView(mIvIndustry,0f);
-                isViewSelect(mTvIndustry, false);
-            }
+        mPopIndustry.getmPopupWindow().setOnDismissListener(() -> {
+            mIvIndustry.setImageResource(R.mipmap.icon_type_more);
+            ViewRoUtils.roView(mIvIndustry,0f);
+            isViewSelect(mTvIndustry, false);
         });
         isViewSelect(mTvIndustry, true);
     }

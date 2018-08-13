@@ -168,7 +168,7 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
     @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
         refreshLayout.finishLoadMore();
-        mGetProductListPresenter.getProductList(mName, mCommodityClassId);
+        mGetProductListPresenter.getProductList(false, "Sort", mName, mCommodityClassId, "desc");
     }
 
     @Override
@@ -262,10 +262,10 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
             mProductLibraryTypeAdapter.setDataArray(bean);
         } else {
             List<ProductTypeBean.ResultdataBean> datas = mProductLibraryTypeAdapter.getDatas();
-            if (datas ==null) {
+            if (datas == null) {
                 datas = new ArrayList<>();
             }
-            if ( datas.size() > 0) {
+            if (datas.size() > 0) {
                 datas.clear();
             }
             for (int i = 0; i < bean.size(); i++) {

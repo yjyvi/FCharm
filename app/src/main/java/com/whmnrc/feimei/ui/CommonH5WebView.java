@@ -3,8 +3,6 @@ package com.whmnrc.feimei.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -67,14 +65,11 @@ public class CommonH5WebView extends BaseActivity {
         mTitle = getIntent().getStringExtra("title");
         mH5Url = getIntent().getStringExtra("h5Url");
 
-        findViewById(R.id.rl_right).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPopShare == null) {
-                    mPopShare = new PopShare(CommonH5WebView.this, mTitle, "", mH5Url, "");
-                }
-                mPopShare.show();
+        findViewById(R.id.rl_right).setOnClickListener(v -> {
+            if (mPopShare == null) {
+                mPopShare = new PopShare(CommonH5WebView.this, mTitle, "", mH5Url, "");
             }
+            mPopShare.show();
         });
 
         setTitle(mTitle);
@@ -94,12 +89,7 @@ public class CommonH5WebView extends BaseActivity {
                 //去除WebView的焦点事件
                 mWbContent.setFocusableInTouchMode(false);
 
-                mWbContent.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return false;
-                    }
-                });
+                mWbContent.setOnTouchListener((v, event) -> false);
 
                 //去掉超连接事件
                 mWbContent.setWebViewClient(new WebViewClient() {
@@ -110,12 +100,7 @@ public class CommonH5WebView extends BaseActivity {
                 });
 
                 //取消长按复制事件
-                mWbContent.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        return true;
-                    }
-                });
+                mWbContent.setOnLongClickListener(v -> true);
 
                 mWbContent.setWebChromeClient(new WebChromeClient() {
 

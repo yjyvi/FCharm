@@ -39,20 +39,16 @@ public class OrganizationChartListAdapter extends CommonAdapter<GetRecommendEnte
         holder.setText(R.id.tv_desc, "主营：" + bean.getMainExplain());
         holder.setText(R.id.tv_address, bean.getProvincial() + bean.getCity());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OrganizationDetailsActivity.start(v.getContext(),bean.getID());
-            }
-        });
+        holder.itemView.setOnClickListener(v -> OrganizationDetailsActivity.start(v.getContext(),bean.getID()));
 
 
-        holder.setOnClickListener(R.id.tv_more, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SearchBusinessMoreActivity.start(v.getContext());
-            }
-        });
+        holder.setOnClickListener(R.id.tv_more, v -> SearchBusinessMoreActivity.start(v.getContext()));
+
+        if (position == getDatas().size()-1) {
+            holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
+        }else {
+            holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
+        }
     }
 
 

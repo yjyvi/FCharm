@@ -265,7 +265,7 @@ public class CommentActivity extends BaseActivity implements SendCommentPresente
 
 
     public void isShowButton() {
-        if (mediaMap.size() > 0 && !TextUtils.isEmpty(mEtContent.getText().toString().trim())) {
+        if ( !TextUtils.isEmpty(mEtContent.getText().toString().trim())) {
             mLlCommit.setEnabled(true);
             mLlCommit.setBackgroundColor(ContextCompat.getColor(this,R.color.normal_blue_text_color));
         } else {

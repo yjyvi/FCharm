@@ -25,7 +25,7 @@ import com.whmnrc.feimei.ui.CommonH5WebView;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.CommentActivity;
 import com.whmnrc.feimei.ui.mine.PayActivity;
-import com.whmnrc.feimei.utils.TextColorChangeUtils;
+import com.whmnrc.feimei.utils.TextSpannableUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
 import com.whmnrc.feimei.views.RatingBarView;
 
@@ -306,7 +306,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
             mTvCommentCount.setText(String.format("共%s条", beans.getCommentCount()));
             mTvAllComment.setText(String.format("全部评价(%s)", beans.getCommentCount()));
             String textContent = mTvAllComment.getText().toString().trim();
-            TextColorChangeUtils.changeTextColor(mTvAllComment, textContent, 4, textContent.length(), ContextCompat.getColor(this, R.color.good_price_red));
+            TextSpannableUtils.changeTextColor(mTvAllComment, textContent, 4, textContent.length(), ContextCompat.getColor(this, R.color.good_price_red));
         } else {
             mTvCommentCount.setVisibility(View.GONE);
         }

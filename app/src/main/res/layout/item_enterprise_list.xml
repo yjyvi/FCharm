@@ -22,15 +22,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/dm_10"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
-            android:text="威海天力电源有限公司"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
 
+
         <com.whmnrc.feimei.views.RatingBarView
-            android:layout_weight="1"
             android:id="@+id/rb_star"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +57,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="传动设备开发、生产、销售、研发......"
             android:textColor="@color/normal_gray"
             android:textSize="@dimen/dm_10"/>
 
@@ -73,7 +72,6 @@
             android:layout_marginLeft="@dimen/dm_10"
             android:layout_marginRight="@dimen/dm_15"
             android:background="@drawable/shape_enterprise_address_bg"
-            android:text="江苏省南京市"
             android:textColor="@color/normal_gray"
             android:textSize="@dimen/dm_10"/>
 
@@ -81,7 +79,6 @@
             android:id="@+id/tv_tel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1345895****"
             android:textColor="@color/normal_gray"
             android:textSize="@dimen/dm_10"/>
 
@@ -95,9 +92,7 @@
         android:layout_below="@id/ll_tel"
         android:layout_marginTop="@dimen/dm_10"
         android:ellipsize="end"
-        android:lines="2"
-        android:text="主营：热解氮化硼、氮化铝、氮化硅、玻璃碳、石墨稀薄  碳纳米
-         等新材料制品，氮化铝、氮化硅、玻璃碳、石墨稀薄、......"
+        android:maxLines="2"
         android:textColor="@color/normal_gray"
         android:textSize="@dimen/dm_12"/>
 

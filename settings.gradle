@@ -1,1 +1,1 @@
-include ':app', ':mylibrary',':camera',':ucrop',':picture_library','push'
+include ':app', ':mylibrary',':camera',':ucrop',':picture_library'

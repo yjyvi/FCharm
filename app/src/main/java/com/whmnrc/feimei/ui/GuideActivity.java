@@ -111,12 +111,9 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
             iv.setImageResource(pics[i]);
             views.add(iv);
             if (i == pics.length - 1) {
-                iv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        LoginActivity.start(GuideActivity.this);
-                        finish();
-                    }
+                iv.setOnClickListener(view -> {
+                    LoginActivity.start(GuideActivity.this);
+                    finish();
                 });
             }
         }

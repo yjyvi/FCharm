@@ -14,7 +14,6 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.whmnrc.feimei.CommonConstant;
-import com.whmnrc.feimei.beans.UserBean;
 import com.whmnrc.feimei.presener.IsWeChatLoginPresenter;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.login.BindTelActivity;
@@ -120,17 +119,14 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 
     private void getIsWeChatBind(final String openId) {
-        IsWeChatLoginPresenter isWeChatLoginPresenter = new IsWeChatLoginPresenter(new IsWeChatLoginPresenter.IsWeChatLoginListener() {
-            @Override
-            public void isWeChat(UserBean.ResultdataBean userBean) {
-                if (userBean == null) {
-                    BindTelActivity.start(WXEntryActivity.this, openId);
-                } else {
-                    SPUtils.put(WXEntryActivity.this, CommonConstant.Common.LAST_LOGIN_ID, userBean.getMobile());
-                    UserManager.saveUser(userBean);
-                    EventBus.getDefault().post(new UserInfoEvent().setEventType(UserInfoEvent.UPDATE_USER_INFO));
-                    finish();
-                }
+        IsWeChatLoginPresenter isWeChatLoginPresenter = new IsWeChatLoginPresenter(userBean -> {
+            if (userBean == null) {
+                BindTelActivity.start(WXEntryActivity.this, openId);
+            } else {
+                SPUtils.put(WXEntryActivity.this, CommonConstant.Common.LAST_LOGIN_ID, userBean.getMobile());
+                UserManager.saveUser(userBean);
+                EventBus.getDefault().post(new UserInfoEvent().setEventType(UserInfoEvent.UPDATE_USER_INFO));
+                finish();
             }
         });
         isWeChatLoginPresenter.isWeChatLogin(openId);

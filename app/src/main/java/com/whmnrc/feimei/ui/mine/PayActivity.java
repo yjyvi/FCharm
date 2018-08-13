@@ -15,7 +15,7 @@ import com.whmnrc.feimei.beans.OrganizationDetailsBean;
 import com.whmnrc.feimei.beans.ProductDetailsBean;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.utils.CodeTimeUtils;
-import com.whmnrc.feimei.utils.TextColorChangeUtils;
+import com.whmnrc.feimei.utils.TextSpannableUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
 import com.whmnrc.feimei.utils.ToastUtils;
 
@@ -178,7 +178,7 @@ public class PayActivity extends BaseActivity {
                         mLlCommit.setBackgroundColor(ContextCompat.getColor(this, R.color.normal_gray));
                     });
                     mTvMoney2.setText(totalPrice);
-                    TextColorChangeUtils.changeTextSize(mTvMoney2, String.format("￥%s",totalPrice), 1, totalPrice.length()+1, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                    TextSpannableUtils.changeTextSize(mTvMoney2, String.format("￥%s",totalPrice), 1, totalPrice.length()+1, getResources().getDimensionPixelSize(R.dimen.dm_24));
                     mTvProductDesc.setText(mCommodityBean.getName());
                     mTvPay.setText(String.format("确认支付￥%s", totalPrice));
                 }

@@ -25,12 +25,9 @@ public class SplashActivity extends BaseActivity {
 
 
     public void intoApp() {
-        sHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                HomeTableActivity.startHomeTableView(SplashActivity.this, 0);
-                finish();
-            }
+        sHandler.postDelayed(() -> {
+            HomeTableActivity.startHomeTableView(SplashActivity.this, 0);
+            finish();
         }, 2000);
     }
 }

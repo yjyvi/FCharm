@@ -37,12 +37,9 @@ public class PopUtils {
         tv_msg.setText(msg);
         tv_commit.setText(commitContent);
 
-        tv_commit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickListener.commitClick();
-                sharePopupWindow.dismiss();
-            }
+        tv_commit.setOnClickListener(view -> {
+            clickListener.commitClick();
+            sharePopupWindow.dismiss();
         });
 
 
@@ -67,12 +64,7 @@ public class PopUtils {
         tv_msg.setText(msg);
         tv_commit.setText(commitContent);
 
-        tv_commit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickListener.commitClick();
-            }
-        });
+        tv_commit.setOnClickListener(view -> clickListener.commitClick());
         sharePopupWindow.showAtLocation(contentView, Gravity.CENTER, 0, 0);
     }
 
@@ -89,7 +81,7 @@ public class PopUtils {
      * @param contentView
      * @param popupWindow
      */
-    private static void showPoPNormal(final Activity context, View contentView, PopupWindow popupWindow, int location, final NormalNotifyPopListener clickListener) {
+    public static void showPoPNormal(final Activity context, View contentView, PopupWindow popupWindow, int location, final NormalNotifyPopListener clickListener) {
         //设置SelectPicPopupWindow弹出窗体可点击
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(false);
@@ -97,13 +89,10 @@ public class PopUtils {
         //设置SelectPicPopupWindow弹出窗体动画效果
         setBackgroundAlpha(context, 0.5F);
         popupWindow.showAtLocation(contentView, location, 0, 0);
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                setBackgroundAlpha(context, 1F);
-                if (clickListener != null) {
-                    clickListener.dissmiss();
-                }
+        popupWindow.setOnDismissListener(() -> {
+            setBackgroundAlpha(context, 1F);
+            if (clickListener != null) {
+                clickListener.dissmiss();
             }
         });
     }

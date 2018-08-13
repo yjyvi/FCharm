@@ -16,7 +16,7 @@ import com.whmnrc.feimei.adapter.AllCommentAdapter;
 import com.whmnrc.feimei.beans.CommentListBean;
 import com.whmnrc.feimei.presener.GetCommentPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
-import com.whmnrc.feimei.utils.TextColorChangeUtils;
+import com.whmnrc.feimei.utils.TextSpannableUtils;
 
 import java.util.List;
 
@@ -88,7 +88,7 @@ public class AllCommentActivity extends BaseActivity implements GetCommentPresen
 
             mTvAllComment.setText(String.format("全部评价(%s)", beans.getPagination().getRecords()));
             String textContent = mTvAllComment.getText().toString().trim();
-            TextColorChangeUtils.changeTextColor(mTvAllComment, textContent, 4, textContent.length(), ContextCompat.getColor(this, R.color.good_price_red));
+            TextSpannableUtils.changeTextColor(mTvAllComment, textContent, 4, textContent.length(), ContextCompat.getColor(this, R.color.good_price_red));
 
         } else {
             if (beans.getPagination().getRecords() == mOrganizationCommentAdapter.getDatas().size()) {

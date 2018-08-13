@@ -2,9 +2,15 @@ package com.whmnrc.feimei.ui.product;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewStub;
 import android.webkit.WebSettings;
@@ -25,6 +31,7 @@ import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.PayVipActivity;
 import com.whmnrc.feimei.ui.organization.AllCommentActivity;
 import com.whmnrc.feimei.ui.organization.OrganizationDetailsActivity;
+import com.whmnrc.feimei.views.BackGroundColorSpan;
 import com.whmnrc.mylibrary.utils.GlideUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -97,12 +104,16 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
     ImageView mIvCollection;
     @BindView(R.id.vs_empty)
     ViewStub mVsEmpty;
+    @BindView(R.id.dsl_layout)
+    NestedScrollView mDslLayout;
+
     private PopShare mPopShare;
     public PopServerInfo mPopServerInfo;
     public GetProductDetailsPresenter mGetProductDetailsPresenter;
     public String mProductId;
     public ProductDetailsCommentAdapter mOrganizationCommentAdapter;
     private ProductDetailsBean.ResultdataBean mProductDetailsBean;
+
 
     @Override
     protected void initViewData() {
@@ -132,10 +143,26 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                 }
             });
             WebSettings settings = mWbProductDetails.getSettings();
-            settings.setJavaScriptEnabled(false);
+            settings.setFixedFontFamily("monospace");
+            settings.setJavaScriptEnabled(true);
             settings.setUseWideViewPort(true);
+            settings.setDefaultTextEncodingName("utf-8");
+            settings.setTextZoom(200);
             settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             settings.setLoadWithOverviewMode(true);
+            //去除WebView的焦点事件
+            mWbProductDetails.setFocusableInTouchMode(false);
+            //取消长按复制事件
+            mWbProductDetails.setOnLongClickListener(v -> true);
+            mWbProductDetails.setOnTouchListener((v, event) -> false);
+
+            //去掉超连接事件
+            mWbProductDetails.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    return true;
+                }
+            });
         });
 
     }
@@ -212,21 +239,33 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                 break;
             case R.id.ll_comment:
                 isAccountLogin(false);
+                int bottom = mWbProductDetails.getBottom();
+                mDslLayout.smoothScrollTo(0, bottom);
                 break;
             case R.id.ll_advisory:
 
-                if (!UserManager.getIsLogin(view.getContext())) {
-                    return;
-                }
-
-                if (UserManager.getUserIsVip()) {
+                if (mProductDetailsBean.getCommodity().getPrice() <= 0) {
                     if (mPopServerInfo == null) {
                         mPopServerInfo = new PopServerInfo(this, mProductDetailsBean.getCommodity());
                     }
-                    mPopServerInfo.show();
+
                 } else {
-                    PayVipActivity.start(view.getContext());
+                    if (!UserManager.getIsLogin(view.getContext())) {
+                        return;
+                    }
+
+                    if (UserManager.getUserIsVip()) {
+                        if (mPopServerInfo == null) {
+                            mPopServerInfo = new PopServerInfo(this, mProductDetailsBean.getCommodity());
+                        }
+                    } else {
+                        PayVipActivity.start(view.getContext());
+                    }
                 }
+                if (mPopServerInfo != null) {
+                    mPopServerInfo.show();
+                }
+
                 break;
             case R.id.ll_collection:
 
@@ -236,7 +275,7 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                 mIvCollection.setSelected(!mIvCollection.isSelected());
                 break;
             case R.id.tv_product_specifications:
-                ProductSpecificationsActivity.start(view.getContext());
+                ProductSpecificationsActivity.start(view.getContext(),mProductDetailsBean.getCommodity());
                 break;
             case R.id.tv_organization_name:
                 OrganizationDetailsActivity.start(view.getContext(), mProductDetailsBean.getCommodity().getEnterprise_ID());
@@ -248,11 +287,14 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                 break;
             case R.id.ll_pay:
 
+                if (mProductDetailsBean.getCommodity().getPrice() <= 0) {
+                    return;
+                }
                 if (!UserManager.getIsLogin(view.getContext())) {
                     return;
                 }
 
-                ConfirmOrderActivity.start(view.getContext(),mProductDetailsBean.getCommodity());
+                ConfirmOrderActivity.start(view.getContext(), mProductDetailsBean.getCommodity());
 
                 break;
             case R.id.iv_msg:
@@ -264,7 +306,7 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
             case R.id.iv_share:
                 mPopShare = new PopShare(ProductDetailsActivity.this,
                         mProductDetailsBean.getCommodity().getName(),
-                        mProductDetailsBean.getCommodity().getImgAdd().get(0),
+                        mProductDetailsBean.getCommodity().getImg(),
                         mProductDetailsBean.getCommodity().getConten(), mProductDetailsBean.getCommodity().getSalesman());
                 mPopShare.show();
                 break;
@@ -290,12 +332,29 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
         initBanner(commodity.getImgAdd());
         loadUrl(commodity.getConten());
 
-        mTvTitle.setText(commodity.getName());
+        String productName = commodity.getName() + " " + commodity.getLabel();
+
+//        TextSpannableUtils.changeTextSize(mTvTitle, productName, productName.length()-commodity.getLabel().length(), productName.length(), getResources().getDimensionPixelOffset(R.dimen.dm_10));
+
+        SpannableStringBuilder spannableString = new SpannableStringBuilder(productName);
+        int bgColor =Color.parseColor("#ff0000");
+        int textColor = Color.parseColor("#ffffff");
+        BackGroundColorSpan span = new BackGroundColorSpan(bgColor, textColor, 10);
+        spannableString.setSpan(span, productName.length()-commodity.getLabel().length(), productName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        mTvTitle.setText(spannableString);
+        mTvTitle.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+
         if (commodity.getPrice() <= 0) {
             mTvPrice.setVisibility(View.GONE);
             mTvSales.setVisibility(View.GONE);
             mTvShowpiece.setVisibility(View.VISIBLE);
+            mLlPay.setBackgroundColor(ContextCompat.getColor(this, R.color.normal_gray));
+            mLlPay.setEnabled(false);
         } else {
+            mLlPay.setBackgroundColor(ContextCompat.getColor(this, R.color.normal_blue_text_color));
+            mLlPay.setEnabled(true);
             mTvShowpiece.setVisibility(View.GONE);
             mTvSales.setVisibility(View.VISIBLE);
             mTvPrice.setVisibility(View.VISIBLE);

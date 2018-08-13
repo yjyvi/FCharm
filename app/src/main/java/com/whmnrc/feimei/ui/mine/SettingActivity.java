@@ -3,7 +3,6 @@ package com.whmnrc.feimei.ui.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -76,26 +75,23 @@ public class SettingActivity extends BaseActivity implements LoginOutPresenter.L
         }
 
 
-        mEtNickname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int keyCode, KeyEvent event) {
-                if (keyCode == EditorInfo.IME_ACTION_DONE) {
-                    // 先隐藏键盘
-                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(getCurrentFocus()
-                                    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    mSearchContent = view.getText().toString().trim();
+        mEtNickname.setOnEditorActionListener((view, keyCode, event) -> {
+            if (keyCode == EditorInfo.IME_ACTION_DONE) {
+                // 先隐藏键盘
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus()
+                                .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                mSearchContent = view.getText().toString().trim();
 
-                    if (!TextUtils.isEmpty(mSearchContent)) {
-                        if (UserManager.getUser() != null && UserManager.getUser().getHeadImg() != null && !TextUtils.isEmpty(UserManager.getUser().getHeadImg())) {
-                            mResultImgUrl = UserManager.getUser().getHeadImg();
-                        }
-                        mUpdateUserInfoPresenter.updateUserInfo(mResultImgUrl, mSearchContent);
-                        return true;
+                if (!TextUtils.isEmpty(mSearchContent)) {
+                    if (UserManager.getUser() != null && UserManager.getUser().getHeadImg() != null && !TextUtils.isEmpty(UserManager.getUser().getHeadImg())) {
+                        mResultImgUrl = UserManager.getUser().getHeadImg();
                     }
+                    mUpdateUserInfoPresenter.updateUserInfo(mResultImgUrl, mSearchContent);
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
 
@@ -162,12 +158,9 @@ public class SettingActivity extends BaseActivity implements LoginOutPresenter.L
                     mPopHintInfo = new PopHintInfo(SettingActivity.this, "亲，确定注销账号吗？");
                 }
                 mPopHintInfo.show();
-                mPopHintInfo.setPopHintListener(new PopHintInfo.PopHintListener() {
-                    @Override
-                    public void confirm() {
-                        isShowDialog(true);
-                        mLoginOutPresenter.onLoginOut();
-                    }
+                mPopHintInfo.setPopHintListener(() -> {
+                    isShowDialog(true);
+                    mLoginOutPresenter.onLoginOut();
                 });
                 break;
             default:

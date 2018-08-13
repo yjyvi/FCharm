@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.umeng.message.PushAgent;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
 import com.whmnrc.feimei.utils.EmptyListUtils;
@@ -50,20 +49,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(setLayoutId());
         setTranslucentStatus();
         ButterKnife.bind(this);
         View back = findViewById(R.id.common_title_back);
         if (back != null) {
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    back();
-                }
-            });
+            back.setOnClickListener(v -> back());
         }
-        //在基类中友盟推送初始化
-        PushAgent.getInstance(this).onAppStart();
         initViewData();
     }
 

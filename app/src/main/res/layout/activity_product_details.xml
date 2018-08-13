@@ -9,6 +9,7 @@
 
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/dsl_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/dm_50">
@@ -35,13 +36,15 @@
                 android:orientation="vertical"
                 android:padding="@dimen/dm_15">
 
+
                 <TextView
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
                     android:layout_height="wrap_content"
-                    android:text="华三（H3C）SFP-GE-SX-MM850-A SFP千兆光模块 850nm 550m"
                     android:textColor="@color/black"
                     android:textSize="@dimen/dm_15"/>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -54,7 +57,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="$188"
                         android:textColor="@color/normal_red"
                         android:textSize="@dimen/dm_17"/>
 
@@ -67,13 +69,12 @@
                         android:textSize="@dimen/dm_12"/>
 
                     <TextView
-                        android:drawableLeft="@mipmap/icon_sole"
-                        android:drawablePadding="@dimen/dm_5"
                         android:id="@+id/tv_sales"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dm_25"
-                        android:text="销量231"
+                        android:drawableLeft="@mipmap/icon_sole"
+                        android:drawablePadding="@dimen/dm_5"
                         android:textColor="@color/normal_gray"
                         android:textSize="@dimen/dm_12"/>
 
@@ -83,7 +84,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dm_25"
-                        android:text="浏览量1231"
                         android:textColor="@color/normal_gray"
                         android:textSize="@dimen/dm_12"/>
 
@@ -246,7 +246,6 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/dm_5"
                     android:drawableRight="@mipmap/icon_more"
-                    android:text="共218条"
                     android:textColor="@color/normal_gray"
                     android:textSize="@dimen/dm_12"/>
 
@@ -291,11 +290,11 @@
                     android:src="@mipmap/icon_server"/>
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/dm_13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="咨询"/>
+                    android:text="咨询"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dm_13"/>
             </LinearLayout>
 
 
@@ -327,12 +326,12 @@
 
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/dm_13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="收藏"/>
+                    android:text="收藏"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dm_13"/>
             </LinearLayout>
 
         </LinearLayout>

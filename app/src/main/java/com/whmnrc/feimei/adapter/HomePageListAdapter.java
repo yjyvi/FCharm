@@ -44,11 +44,15 @@ public class HomePageListAdapter extends CommonAdapter {
         int itemProductList;
         if (position == 0) {
             itemProductList = R.layout.item_product_list;
+            holder.setText(R.id.tv_sale_name,"推荐行业产品库");
         } else if (position == 1) {
             itemProductList = R.layout.item_recruitment_list;
+            holder.setText(R.id.tv_sale_name,"推荐特聘信息");
         } else if (position == 2) {
             itemProductList = R.layout.item_enterprise_list;
+            holder.setText(R.id.tv_sale_name,"推荐企业名录");
         } else {
+            holder.setText(R.id.tv_sale_name,"推荐行业资源");
             itemProductList = R.layout.item_resource_list;
         }
 

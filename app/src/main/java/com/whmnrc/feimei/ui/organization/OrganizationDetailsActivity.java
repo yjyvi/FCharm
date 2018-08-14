@@ -176,12 +176,12 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                         return;
                     }
 
-                    if (UserManager.getUserIsVip()) {
+                    if (UserManager.getUserIsVip() || mOrganizationDetailsBean.getIsPay() == 1) {
                         AboutMeActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise());
                     } else {
                         PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
                     }
-                }else {
+                } else {
                     AboutMeActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise());
                 }
                 break;
@@ -200,21 +200,18 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                         return;
                     }
 
-                    if (UserManager.getUserIsVip()) {
+                    if (UserManager.getUserIsVip() || mOrganizationDetailsBean.getIsPay() == 1) {
                         if (mOrganizationDetailsBean.getRelation().size() > 0) {
                             BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "关联企业", 0);
                         }
                     } else {
                         PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
                     }
-                }else {
+                } else {
                     if (mOrganizationDetailsBean.getRelation().size() > 0) {
                         BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "关联企业", 0);
                     }
                 }
-
-
-
                 break;
             //其它信息
             case R.id.ll_other_more:
@@ -236,7 +233,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                         return;
                     }
 
-                    if (UserManager.getUserIsVip()) {
+                    if (UserManager.getUserIsVip() || mOrganizationDetailsBean.getIsPay() == 1) {
                         if (mOrganizationDetailsBean.getRelation().size() > 0) {
                             BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "主要客户", 1);
                         }
@@ -290,6 +287,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 break;
         }
     }
+
 
     @Override
     public void getOrganizationDetailsSuccess(OrganizationDetailsBean.ResultdataBean beans) {

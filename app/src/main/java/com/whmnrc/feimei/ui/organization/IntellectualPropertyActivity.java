@@ -31,6 +31,7 @@ public class IntellectualPropertyActivity extends BaseActivity {
     RecyclerView mRvBusinessList;
     @BindView(R.id.vs_empty)
     ViewStub mVsEmpty;
+
     public List<OrganizationDetailsBean.ResultdataBean.CertificateBean> mCertificateBeans;
 
     @Override

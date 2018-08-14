@@ -23,7 +23,6 @@ import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.ui.mine.MineActivity;
 import com.whmnrc.feimei.utils.TestDataUtils;
-import com.whmnrc.feimei.views.LoadingDialog;
 import com.youth.banner.Banner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -70,7 +69,6 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
     private int page = 1;
     private int rows = 10;
     public HomePageDataPresenter mHomePageBannerPresenter;
-    private LoadingDialog mLoadingDialog;
     /**
      * 品牌的一页显示的最大数据
      */
@@ -121,7 +119,6 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
     }
 
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -135,7 +132,6 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
 
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
-        page = 1;
         refreshLayout.finishRefresh();
     }
 
@@ -161,7 +157,7 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
                 EventBus.getDefault().post(new HomeTableChangeEvent().setEventType(HomeTableChangeEvent.TO_SPECIAL_INFORMATION));
                 break;
             case R.id.tv_search:
-                SearchActivity.start(v.getContext(),"",SearchActivity.SEARCH_ALL);
+                SearchActivity.start(v.getContext(),  SearchActivity.SEARCH_ALL, null);
                 break;
             case R.id.iv_user_info:
                 if (!UserManager.getIsLogin(getActivity())) {

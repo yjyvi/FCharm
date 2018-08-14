@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
+import com.whmnrc.feimei.ui.industry.IndustryDetailsActivity;
 
 /**
  * @author yjyvi
@@ -17,7 +18,7 @@ public class AuthorResourceListAdapter extends CommonAdapter {
 
     @Override
     public void convert(ViewHolder holder, Object o, int position) {
-
+        holder.itemView.setOnClickListener(v -> IndustryDetailsActivity.start(mContext));
     }
 
 

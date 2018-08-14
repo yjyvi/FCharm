@@ -64,7 +64,7 @@ public class BusinessMoreActivity extends BaseActivity {
 
     @Override
     protected int setLayoutId() {
-        return R.layout.activity_business_more;
+        return R.layout.activity_intellectual_property;
     }
 
     public static void start(Context context, List<OrganizationDetailsBean.ResultdataBean.RelationBean> relation, String title, int type) {

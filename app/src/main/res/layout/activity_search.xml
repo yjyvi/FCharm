@@ -10,6 +10,72 @@
     android:orientation="vertical">
 
     <include layout="@layout/common_title"/>
+
+    <LinearLayout
+        android:id="@+id/ll_search_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_69"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dm_5"
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingRight="@dimen/dm_15"
+        android:paddingTop="@dimen/dm_30">
+
+        <ImageView
+            android:id="@+id/iv_search_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/dm_8"
+            android:src="@mipmap/back"/>
+
+        <LinearLayout
+            android:id="@+id/ll_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_33"
+            android:layout_marginLeft="@dimen/dm_15"
+            android:layout_marginRight="@dimen/dm_15"
+            android:layout_weight="1"
+            android:background="@drawable/search_gray_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dm_15"
+                android:layout_marginRight="@dimen/dm_15"
+                android:background="@mipmap/home_serach"/>
+
+            <EditText
+                android:id="@+id/et_search_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:lines="1"
+                android:layout_marginRight="@dimen/dm_15"
+                android:gravity="center_vertical"
+                android:hint="请输入您搜索的关键词"
+                android:textColorHint="@color/search_hint_text_bg"
+                android:textCursorDrawable="@color/black"
+                android:textSize="@dimen/dm_12"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_all_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="搜索"
+            android:textColor="@color/normal_blue_text_color"
+            android:textSize="@dimen/dm_15"/>
+    </LinearLayout>
+
     <!--Limited time sale商品-->
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refresh"
@@ -28,70 +94,6 @@
                 android:layout_height="match_parent"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/ll_search_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dm_69"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingBottom="@dimen/dm_5"
-                    android:paddingLeft="@dimen/dm_15"
-                    android:paddingRight="@dimen/dm_15"
-                    android:paddingTop="@dimen/dm_30">
-
-                    <ImageView
-                        android:id="@+id/iv_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:padding="@dimen/dm_8"
-                        android:src="@mipmap/back"/>
-
-                    <LinearLayout
-                        android:id="@+id/ll_search"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dm_33"
-                        android:layout_marginLeft="@dimen/dm_15"
-                        android:layout_marginRight="@dimen/dm_15"
-                        android:layout_weight="1"
-                        android:background="@drawable/search_gray_bg"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dm_15"
-                            android:layout_marginRight="@dimen/dm_15"
-                            android:background="@mipmap/home_serach"/>
-
-                        <EditText
-                            android:id="@+id/et_search_content"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:lines="1"
-                            android:layout_marginRight="@dimen/dm_15"
-                            android:gravity="center_vertical"
-                            android:hint="请输入您搜索的关键词"
-                            android:textColorHint="@color/search_hint_text_bg"
-                            android:textCursorDrawable="@color/black"
-                            android:textSize="@dimen/dm_12"/>
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tv_search"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="搜索"
-                        android:textColor="@color/normal_blue_text_color"
-                        android:textSize="@dimen/dm_15"/>
-                </LinearLayout>
-
 
                 <ViewStub
                     android:id="@+id/vs_empty"

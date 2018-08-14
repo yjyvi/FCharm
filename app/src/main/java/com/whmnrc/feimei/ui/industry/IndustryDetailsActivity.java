@@ -57,12 +57,7 @@ public class IndustryDetailsActivity extends BaseActivity {
                     mPopAppreciate = new PopAppreciate(IndustryDetailsActivity.this);
                 }
                 mPopAppreciate.show();
-                mPopAppreciate.setPopHintListener(new PopAppreciate.PopHintListener() {
-                    @Override
-                    public void confirm() {
-                        PayActivity.start(view.getContext(),PayActivity.ONE_PAY,"20");
-                    }
-                });
+                mPopAppreciate.setPopHintListener(() -> PayActivity.start(view.getContext(),PayActivity.ONE_PAY,"20"));
                 break;
             case R.id.tv_join_vip:
                 PayVipActivity.start(view.getContext());

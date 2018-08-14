@@ -208,6 +208,8 @@ public class PayActivity extends BaseActivity {
                 mRlOrderInfo.setVisibility(View.VISIBLE);
                 mRlProductPay.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
+                totalPrice = getIntent().getStringExtra("totalPrice");
+                TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length()+ 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
                 break;
             case RESOURCE_PAY:
                 mLlResourcePay.setVisibility(View.VISIBLE);

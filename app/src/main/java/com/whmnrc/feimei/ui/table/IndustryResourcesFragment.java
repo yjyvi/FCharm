@@ -174,13 +174,7 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
                 colorTransitionPagerTitleView.setSelectedColor(ContextCompat.getColor(context, R.color.normal_blue_text_color));
                 colorTransitionPagerTitleView.setTextSize(0, getResources().getDimensionPixelSize(R.dimen.dm_14));
                 colorTransitionPagerTitleView.setText(titles[index]);
-                colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        viewPager.setCurrentItem(index);
-
-                    }
-                });
+                colorTransitionPagerTitleView.setOnClickListener(view -> viewPager.setCurrentItem(index));
                 return colorTransitionPagerTitleView;
             }
 

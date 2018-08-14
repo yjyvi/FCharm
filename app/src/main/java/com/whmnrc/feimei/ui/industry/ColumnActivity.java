@@ -5,19 +5,18 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ResourceListAdapter;
+import com.whmnrc.feimei.beans.SearchConditionBean;
+import com.whmnrc.feimei.pop.PopShare;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.TestDataUtils;
-import com.whmnrc.feimei.pop.PopShare;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,25 +42,23 @@ public class ColumnActivity extends BaseActivity {
         setTitle("专栏");
         rightVisible(R.mipmap.icon_share);
 
-        mTvSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mTvSearch.setOnEditorActionListener((view, keyCode, event) -> {
+            if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
+                // 先隐藏键盘
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus()
+                                .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                mSearchContent = view.getText().toString().trim();
 
-            @Override
-            public boolean onEditorAction(TextView view, int keyCode, KeyEvent event) {
-                if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
-                    // 先隐藏键盘
-                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(getCurrentFocus()
-                                    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    mSearchContent = view.getText().toString().trim();
-
-                    if (!TextUtils.isEmpty(mSearchContent)) {
-                        SearchActivity.start(view.getContext(),mSearchContent,SearchActivity.SEARCH_COLUMN);
-                        mTvSearch.setText("");
-                        return true;
-                    }
+                if (!TextUtils.isEmpty(mSearchContent)) {
+                    SearchConditionBean searchConditionBean = new SearchConditionBean();
+                    searchConditionBean.setContent(mSearchContent);
+                    SearchActivity.start(view.getContext(), SearchActivity.SEARCH_COLUMN, searchConditionBean);
+                    mTvSearch.setText("");
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
         mRvProductList.setLayoutManager(new LinearLayoutManager(this));

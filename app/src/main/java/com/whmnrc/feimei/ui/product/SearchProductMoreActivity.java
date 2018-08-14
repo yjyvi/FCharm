@@ -22,10 +22,12 @@ import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ProductLibraryListAdapter;
 import com.whmnrc.feimei.beans.ProductListBean;
 import com.whmnrc.feimei.beans.ProductTypeBean;
+import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.pop.PopProductType;
 import com.whmnrc.feimei.presener.GetProductListPresenter;
 import com.whmnrc.feimei.presener.GetProductTypePresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
+import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.ViewRoUtils;
 
 import java.util.List;
@@ -93,7 +95,14 @@ public class SearchProductMoreActivity extends BaseActivity implements GetProduc
                 mSearchContent = view.getText().toString().trim();
 
                 if (!TextUtils.isEmpty(mSearchContent)) {
-
+                    SearchConditionBean searchConditionBean = new SearchConditionBean();
+                    searchConditionBean.setSort(mSort);
+                    searchConditionBean.setContent(mSearchContent);
+                    searchConditionBean.setCommodityClassId(mCommodityClassId);
+                    searchConditionBean.setDesc(mDesc);
+                    SearchActivity.start(view.getContext(), SearchActivity.SEARCH_PRODUCT, searchConditionBean);
+                    mSearchContent = "";
+                    mEtSearch.setText("");
                     return true;
                 }
             }

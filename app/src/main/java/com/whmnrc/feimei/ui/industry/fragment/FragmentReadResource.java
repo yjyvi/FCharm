@@ -3,16 +3,22 @@ package com.whmnrc.feimei.ui.industry.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.AuthorResourceListAdapter;
 import com.whmnrc.feimei.adapter.ResourceListAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
+import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
+import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.ui.industry.ColumnActivity;
 import com.whmnrc.feimei.ui.mine.PayActivity;
+import com.whmnrc.feimei.utils.KeyboardUtils;
 import com.whmnrc.feimei.utils.TestDataUtils;
 
 import java.util.Random;
@@ -32,6 +38,8 @@ public class FragmentReadResource extends LazyLoadFragment {
     RecyclerView mRvProductList;
     @BindView(R.id.rv_author_list)
     RecyclerView mRvAuthorList;
+    @BindView(R.id.et_search_content)
+    EditText mEtSearchContent;
 
     @Override
     protected int contentViewLayoutID() {
@@ -69,7 +77,22 @@ public class FragmentReadResource extends LazyLoadFragment {
         resourceListAdapter.setDataArray(TestDataUtils.initTestData(15));
         mRvProductList.setAdapter(resourceListAdapter);
 
+        mEtSearchContent.setOnEditorActionListener((view, keyCode, event) -> {
+            if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
+                // 先隐藏键盘
+                KeyboardUtils.hideKeyBoard(getActivity(), mEtSearchContent);
+                String mSearchContent = view.getText().toString().trim();
 
+                if (!TextUtils.isEmpty(mSearchContent)) {
+                    SearchConditionBean searchConditionBean = new SearchConditionBean();
+                    searchConditionBean.setContent(mSearchContent);
+                    SearchActivity.start(getActivity(), SearchActivity.SEARCH_RESOURCE, searchConditionBean);
+                    mEtSearchContent.setText("");
+                    return true;
+                }
+            }
+            return false;
+        });
     }
 
     /**

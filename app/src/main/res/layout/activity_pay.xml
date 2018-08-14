@@ -203,6 +203,7 @@
             <!--文库产品付费信息-->
             <LinearLayout
                 android:id="@+id/ll_resource_pay"
+                android:paddingBottom="@dimen/dm_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"

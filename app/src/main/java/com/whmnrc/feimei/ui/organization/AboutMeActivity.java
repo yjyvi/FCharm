@@ -2,7 +2,6 @@ package com.whmnrc.feimei.ui.organization;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
@@ -36,7 +35,7 @@ public class AboutMeActivity extends BaseActivity {
         if (enterprise != null) {
             mTvName.setText(enterprise.getName());
             mTvTel.setText(String.format("电话：%s",enterprise.getPhone()));
-            mTvQq.setText(String.format("QQ：%s",enterprise.getQQ()));
+            mTvQq.setText(String.format("官网：%s",enterprise.getQQ()));
             mTvMail.setText(String.format("邮箱：%s",enterprise.getMail()));
             mTvAddress.setText(enterprise.getAddress());
         }
@@ -49,7 +48,7 @@ public class AboutMeActivity extends BaseActivity {
 
     public static void start(Context context, OrganizationDetailsBean.ResultdataBean.EnterpriseBean enterprise) {
         Intent starter = new Intent(context, AboutMeActivity.class);
-        starter.putExtra("enterprise", (Parcelable) enterprise);
+        starter.putExtra("enterprise",  enterprise);
         context.startActivity(starter);
     }
 

@@ -22,6 +22,7 @@ import com.whmnrc.feimei.adapter.SpecialInformationListAdapter;
 import com.whmnrc.feimei.beans.GetRecruitBean;
 import com.whmnrc.feimei.beans.JsonBean;
 import com.whmnrc.feimei.beans.SalaryListBean;
+import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.beans.SpecialInformationFitterBean;
 import com.whmnrc.feimei.pop.PopCity;
 import com.whmnrc.feimei.pop.PopMoreFitter;
@@ -139,7 +140,14 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 mSearchContent = view.getText().toString().trim();
 
                 if (!TextUtils.isEmpty(mSearchContent)) {
-                    SearchActivity.start(view.getContext(), mSearchContent, SearchActivity.SEARCH_SPECIAL);
+                    SearchConditionBean searchConditionBean = new SearchConditionBean();
+                    searchConditionBean.setContent(mSearchContent);
+                    searchConditionBean.setCity(mCity);
+                    searchConditionBean.setProvincial(mProvincial);
+                    searchConditionBean.setCrateTime(mCrateTime);
+                    searchConditionBean.setQualificationsId(mQualificationsId);
+                    searchConditionBean.setSalaryID(mSalaryID);
+                    SearchActivity.start(view.getContext(), SearchActivity.SEARCH_SPECIAL, searchConditionBean);
                     mEtSearch.setText("");
                     mSearchContent = "";
                     return true;
@@ -219,11 +227,11 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 }
                 isViewSelect(mTvCity, true);
                 mIvCity.setImageResource(R.mipmap.icon_type_more_select);
-                ViewRoUtils.roView(mIvCity,360f);
+                ViewRoUtils.roView(mIvCity, 360f);
                 mPopCity.show();
                 mPopCity.getmPopupWindow().setOnDismissListener(() -> {
                     mIvCity.setImageResource(R.mipmap.icon_type_more);
-                    ViewRoUtils.roView(mIvCity,0f);
+                    ViewRoUtils.roView(mIvCity, 0f);
                     isViewSelect(mTvCity, false);
                 });
                 break;
@@ -246,11 +254,11 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 mPopSalaryRange.show();
                 mPopSalaryRange.getPopupWindow().setOnDismissListener(() -> {
                     mIvPrice.setImageResource(R.mipmap.icon_type_more);
-                    ViewRoUtils.roView(mIvPrice,0f);
+                    ViewRoUtils.roView(mIvPrice, 0f);
                     isViewSelect(mTvPrice, false);
                 });
                 mIvPrice.setImageResource(R.mipmap.icon_type_more_select);
-                ViewRoUtils.roView(mIvPrice,360f);
+                ViewRoUtils.roView(mIvPrice, 360f);
                 isViewSelect(mTvPrice, true);
                 break;
             case R.id.ll_more:
@@ -263,11 +271,11 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 mPopMoreFitter.show();
                 mPopMoreFitter.getmPopupWindow().setOnDismissListener(() -> {
                     mIvMore.setImageResource(R.mipmap.icon_type_more);
-                    ViewRoUtils.roView(mIvMore,0f);
+                    ViewRoUtils.roView(mIvMore, 0f);
                     isViewSelect(mTvMore, false);
                 });
                 mIvMore.setImageResource(R.mipmap.icon_type_more_select);
-                ViewRoUtils.roView(mIvMore,360f);
+                ViewRoUtils.roView(mIvMore, 360f);
                 isViewSelect(mTvMore, true);
                 break;
             default:

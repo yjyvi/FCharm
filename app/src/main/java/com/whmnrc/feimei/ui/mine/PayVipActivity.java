@@ -98,6 +98,8 @@ public class PayVipActivity extends BaseActivity {
         VipTypeAdapter vipTypeAdapter = new VipTypeAdapter(this, R.layout.item_vip_type_list);
         vipTypeAdapter.setDataArray(TestDataUtils.initTestData(8));
         mRvTypeList.setAdapter(vipTypeAdapter);
+
+        selectedView(mIvSelectWx);
     }
 
     @Override

@@ -75,18 +75,15 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
     @BindView(R.id.iv_industry)
     ImageView mIvIndustry;
 
-    private List<String> oneCity;
-    private List<String> twoCity;
-    private String currentCity;
     private ArrayList<JsonBean> mProvinceList;
     public List<JsonBean.CityBean> mCityList;
     public PopIndustry mPopIndustry;
     private GetIndustryPresenter mGetIndustryPresenter;
     public List<IndustryBean.ResultdataBean.SubsetBean> mSubset;
-    public String mIndustryId;
     public GetEnterprisePresenter mGetEnterprisePresenter;
-    private String mIndustryPid;
     public BusinessMoreListAdapter mBusinessMoreListAdapter;
+    public String mIndustryId;
+    private String mIndustryPid;
     public String mEnterpriseTypeID;
     private String mSearchContent;
     private String mProvincial;
@@ -281,7 +278,7 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
     @Override
     public void getIndustrySuccess(final List<IndustryBean.ResultdataBean> beans) {
         mIvIndustry.setImageResource(R.mipmap.icon_type_more_select);
-        ViewRoUtils.roView(mIvIndustry,360f);
+//        ViewRoUtils.roView(mIvIndustry,360f);
         if (mPopIndustry == null) {
             mPopIndustry = new PopIndustry(SearchBusinessMoreActivity.this, new PopIndustry.CityListener() {
                 @Override
@@ -345,7 +342,7 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
 
         mPopIndustry.getmPopupWindow().setOnDismissListener(() -> {
             mIvIndustry.setImageResource(R.mipmap.icon_type_more);
-            ViewRoUtils.roView(mIvIndustry,0f);
+//            ViewRoUtils.roView(mIvIndustry,0f);
             isViewSelect(mTvIndustry, false);
         });
         isViewSelect(mTvIndustry, true);

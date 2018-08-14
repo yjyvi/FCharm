@@ -97,16 +97,12 @@ public class OrganizationChartFragment extends LazyLoadFragment implements OnRef
         mGetEnterpriseTypePresenter.getRecommendEnterpriseList();
         mGetRecommendEnterprisePresenter = new GetRecommendEnterprisePresenter(this);
         mGetRecommendEnterprisePresenter.getRecommendEnterpriseList(0);
-        isShowDialog(true);
+
 
         mRefresh.setOnRefreshLoadMoreListener(this);
         mRefresh.setEnableLoadMore(false);
         initOrgType();
-
-
         initOrgList();
-
-
     }
 
     private void initOrgList() {
@@ -218,7 +214,6 @@ public class OrganizationChartFragment extends LazyLoadFragment implements OnRef
     public void getRecommendEnterpriseSuccess(List<GetRecommendEnterpriseBean.ResultdataBean> beans) {
         mOrganizationChartListAdapter.setDataArray(beans);
         mOrganizationChartListAdapter.notifyDataSetChanged();
-        isShowDialog(false);
     }
 
     @Override

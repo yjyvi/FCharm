@@ -11,35 +11,18 @@
 
     <include layout="@layout/common_title"/>
 
-    <!--Limited time sale商品-->
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refresh"
+
+    <ViewStub
+        android:id="@+id/vs_empty"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout="@layout/layout_empty"/>
 
-        <LinearLayout
-            android:id="@+id/header_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusableInTouchMode="true"
-            android:orientation="vertical">
-
-
-            <ViewStub
-                android:id="@+id/vs_empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout="@layout/layout_empty"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_business_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/back_gray"/>
-        </LinearLayout>
-
-
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_business_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/back_gray"/>
 
 
 </LinearLayout>

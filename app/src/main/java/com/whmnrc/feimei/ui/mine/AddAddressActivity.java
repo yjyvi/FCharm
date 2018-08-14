@@ -14,6 +14,7 @@ import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.beans.JsonBean;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.utils.GetCityUtils;
+import com.whmnrc.feimei.utils.ToastUtils;
 import com.whmnrc.feimei.utils.evntBusBean.AddressEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -83,16 +84,6 @@ public class AddAddressActivity extends BaseActivity {
     }
 
 
-    /**
-     * 输入提示
-     *
-     * @return
-     */
-    private boolean inputVerification() {
-
-
-        return true;
-    }
 
 
     @Override
@@ -173,6 +164,16 @@ public class AddAddressActivity extends BaseActivity {
                 mIvIsDefault.setSelected(!mIvIsDefault.isSelected());
                 break;
             case R.id.ll_commit:
+                if (inputVerification()) {
+                    String name = mEtName.getText().toString().trim();
+                    String tel = mEtTel.getText().toString().trim();
+                    String pro = mEtPro.getText().toString().trim();
+                    String city = mEtCity.getText().toString().trim();
+                    String area = mEtArea.getText().toString().trim();
+                    int isDefault = mIvIsDefault.isSelected() ? 1 : 0;
+
+                }
+
                 break;
             case R.id.et_pro:
             case R.id.et_city:
@@ -182,6 +183,33 @@ public class AddAddressActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+
+    /**
+     * 输入提示
+     *
+     * @return
+     */
+    private boolean inputVerification() {
+
+        if (TextUtils.isEmpty(mEtName.getText().toString().trim())) {
+            ToastUtils.showToast(mEtName.getHint().toString().trim());
+            return false;
+        }
+
+        if ( TextUtils.isEmpty(mEtTel.getText().toString().trim())) {
+            ToastUtils.showToast(mEtTel.getHint().toString().trim());
+            return false;
+        }
+
+        if (TextUtils.isEmpty(mEtPro.getText().toString().trim())) {
+            ToastUtils.showToast(mEtPro.getHint().toString().trim());
+            return false;
+        }
+
+
+        return true;
     }
 
 

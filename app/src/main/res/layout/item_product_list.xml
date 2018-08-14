@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:padding="@dimen/dm_15"
               android:layout_height="wrap_content"
               android:background="@color/withe"
-              android:orientation="horizontal">
+              android:orientation="horizontal"
+              android:padding="@dimen/dm_15">
 
     <ImageView
-        android:background="@drawable/shape_home_product_bg"
-        android:padding="@dimen/dm_5"
         android:id="@+id/iv_goods_img"
         android:layout_width="@dimen/dm_165"
         android:layout_height="@dimen/dm_100"
+        android:background="@drawable/shape_home_product_bg"
+        android:padding="@dimen/dm_5"
         android:scaleType="fitCenter"
         android:src="@color/normal_gray"/>
 
 
     <LinearLayout
-        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="@dimen/dm_15">
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/dm_15"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_goods_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-           android:maxLines="2"
             android:includeFontPadding="false"
+            android:maxLines="2"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
         <TextView
-            android:layout_marginTop="@dimen/dm_5"
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
-            android:textSize="@dimen/dm_13"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dm_5"
             android:textColor="@color/good_price_red"
-            android:layout_height="wrap_content"/>
+            android:textSize="@dimen/dm_13"/>
 
         <TextView
             android:id="@+id/tv_sale"
-            android:textColor="@color/normal_gray"
-            android:layout_marginTop="@dimen/dm_5"
-            android:textSize="@dimen/dm_11"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dm_5"
+            android:textColor="@color/normal_gray"
+            android:textSize="@dimen/dm_11"/>
 
         <TextView
-            android:layout_marginTop="@dimen/dm_5"
             android:id="@+id/tv_rows"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:includeFontPadding="false"
+            android:layout_marginTop="@dimen/dm_5"
             android:ellipsize="end"
-            android:textSize="@dimen/dm_12"
+            android:includeFontPadding="false"
             android:lines="1"
-            android:textColor="@color/normal_gray"/>
+            android:textColor="@color/normal_gray"
+            android:textSize="@dimen/dm_12"/>
     </LinearLayout>
 
 </LinearLayout>

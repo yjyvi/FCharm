@@ -9,15 +9,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.whmnrc.feimei.CommonConstant;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.VipPriceAdapter;
 import com.whmnrc.feimei.adapter.VipTypeAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
+import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.login.LoginActivity;
 import com.whmnrc.feimei.utils.TestDataUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
+import com.whmnrc.feimei.utils.ToastUtils;
+import com.whmnrc.feimei.utils.pay.PayUtils;
 import com.whmnrc.mylibrary.utils.GlideUtils;
 
 import butterknife.BindView;
@@ -47,10 +51,12 @@ public class PayVipActivity extends BaseActivity {
     ImageView mIvSelectWx;
     @BindView(R.id.iv_select_zfb)
     ImageView mIvSelectZfb;
+    public PayUtils mPayUtils;
+    private int payType;
 
     @Override
     protected void initViewData() {
-
+        mPayUtils = new PayUtils(this);
         if (UserManager.getUser() != null && UserManager.getUser().getMobile() != null && TextUtils.isEmpty(UserManager.getUser().getMobile())) {
             setTitle("开通VIP");
             mTvVipTime.setVisibility(View.GONE);
@@ -105,7 +111,6 @@ public class PayVipActivity extends BaseActivity {
     }
 
 
-
     private View lastView2;
 
     private void selectedView2(View view) {
@@ -123,6 +128,7 @@ public class PayVipActivity extends BaseActivity {
 
 
     private View lastView;
+
     private void selectedView(View view) {
         if (lastView != null) {
             lastView.setSelected(false);
@@ -144,11 +150,14 @@ public class PayVipActivity extends BaseActivity {
                 LoginActivity.start(view.getContext());
                 break;
             case R.id.ll_commit:
+                payResult(payType, "123123");
                 break;
             case R.id.ll_wx:
+                payType = CommonConstant.Common.PAY_METHOD_WX;
                 selectedView(mIvSelectWx);
                 break;
             case R.id.ll_zfb:
+                payType = CommonConstant.Common.PAY_METHOD_ZFB;
                 selectedView(mIvSelectZfb);
                 break;
             default:
@@ -156,4 +165,31 @@ public class PayVipActivity extends BaseActivity {
         }
     }
 
+
+    /**
+     * 支付结果
+     *
+     * @param
+     * @param order
+     */
+    private void payResult(int payType, final String order) {
+
+        if (mPayUtils == null) {
+            return;
+        }
+        mPayUtils.playPay(payType,  order, new OKHttpManager.ObjectCallback() {
+            @Override
+            public void onSuccess(String st) {
+                ToastUtils.showToast(st);
+                PayResultActivity.start(PayVipActivity.this, order, false);
+                finish();
+            }
+
+            @Override
+            public void onFailure(int code, String errorMsg) {
+                ToastUtils.showToast(errorMsg);
+                finish();
+            }
+        });
+    }
 }

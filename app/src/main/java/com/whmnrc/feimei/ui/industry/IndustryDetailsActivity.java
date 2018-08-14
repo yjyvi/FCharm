@@ -60,7 +60,7 @@ public class IndustryDetailsActivity extends BaseActivity {
                 mPopAppreciate.setPopHintListener(new PopAppreciate.PopHintListener() {
                     @Override
                     public void confirm() {
-                        PayActivity.start(view.getContext(),PayActivity.ONE_PAY);
+                        PayActivity.start(view.getContext(),PayActivity.ONE_PAY,"20");
                     }
                 });
                 break;

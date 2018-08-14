@@ -50,7 +50,7 @@ public class FragmentReadResource extends LazyLoadFragment {
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 int type = new Random().nextInt(2) + 1;
                 if (type == 1) {
-                    PayActivity.start(view.getContext(), PayActivity.COLUMN_PAY);
+                    PayActivity.start(view.getContext(), PayActivity.COLUMN_PAY,"123");
                 } else {
                     ColumnActivity.start(view.getContext());
                 }

@@ -17,10 +17,10 @@ import com.whmnrc.feimei.ui.mine.AddAddressActivity;
 public class AddressManagerAdapter extends CommonAdapter {
     private boolean mIsSelect;
 
-    private  DelAddressListener mDelAddressListener;
+    private  AddressListener mAddressListener;
 
-    public void setDelAddressListener(DelAddressListener delAddressListener) {
-        mDelAddressListener = delAddressListener;
+    public void setAddressListener(AddressListener addressListener) {
+        mAddressListener = addressListener;
     }
 
     public AddressManagerAdapter(Context context, int layoutId, boolean isSelect) {
@@ -30,22 +30,16 @@ public class AddressManagerAdapter extends CommonAdapter {
 
     @Override
     public void convert(ViewHolder holder, final Object resultdataBean, final int position) {
-//        holder.setText(R.id.tv_address_name, String.format("Receiver：%s %s", resultdataBean.getShipTo(), resultdataBean.getAddress_LastName()));
-//        holder.setText(R.id.tv_address_tel, resultdataBean.getPhone());
-//        holder.setText(R.id.tv_address_desc, resultdataBean.getAddress());
-        holder.setOnClickListener(R.id.tv_edit, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddAddressActivity.start(v.getContext(), JSON.toJSONString(resultdataBean), 1);
+        holder.setOnClickListener(R.id.tv_edit, v -> AddAddressActivity.start(v.getContext(), JSON.toJSONString(resultdataBean), 1));
+
+        holder.setOnClickListener(R.id.tv_delete, v -> {
+            if (mAddressListener != null) {
+                mAddressListener.delAddress(position);
             }
         });
-
-        holder.setOnClickListener(R.id.tv_delete, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mDelAddressListener != null) {
-                    mDelAddressListener.delAddress(position);
-                }
+        holder.setOnClickListener(R.id.ll_is_default, v -> {
+            if (mAddressListener != null) {
+                mAddressListener.setAddressDefault(position,v);
             }
         });
 //
@@ -63,7 +57,10 @@ public class AddressManagerAdapter extends CommonAdapter {
         }
     }
 
-    public interface DelAddressListener{
+    public interface AddressListener{
+
         void delAddress(int position);
+
+        void setAddressDefault(int position,View view);
     }
 }

@@ -25,6 +25,7 @@ import com.whmnrc.feimei.utils.ToastUtils;
 import com.whmnrc.feimei.utils.evntBusBean.UserInfoEvent;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -48,7 +49,7 @@ public class RegisterActivity extends BaseActivity implements RegisterPresenter.
 
     @Override
     protected void initViewData() {
-
+        EventBus.getDefault().register(this);
         mGetCodePresenter = new GetCodePresenter(this);
         mRegisterPresenter = new RegisterPresenter(this);
         setTitle("注册");
@@ -149,6 +150,21 @@ public class RegisterActivity extends BaseActivity implements RegisterPresenter.
     public void getCodeField() {
         isShowDialog(false);
     }
+
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscribe
+    public void userUpdateEvent(UserInfoEvent userInfoEvent) {
+        if (userInfoEvent.getEventType() == UserInfoEvent.UPDATE_USER_INFO) {
+            finish();
+        }
+    }
+
 
     /**
      * 微信登录

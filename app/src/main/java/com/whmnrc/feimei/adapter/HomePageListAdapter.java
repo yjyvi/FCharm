@@ -79,29 +79,23 @@ public class HomePageListAdapter extends CommonAdapter {
             }
         });
 
-        holder.setOnClickListener(R.id.tv_more, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPopHintInfo == null) {
-                    mPopHintInfo = new PopHintInfo(mContext, "查看更多信息需要付费\n请问是否继");
-                }
-                mPopHintInfo.show();
-                mPopHintInfo.setPopHintListener(new PopHintInfo.PopHintListener() {
-                    @Override
-                    public void confirm() {
-                        if (position == 0) {
-                            SearchProductMoreActivity.start(mContext,"");
-                        } else if (position == 1) {
-                            EventBus.getDefault().post(new HomeTableChangeEvent().setEventType(HomeTableChangeEvent.TO_SPECIAL_INFORMATION));
-                        } else if (position == 2) {
-                            SearchBusinessMoreActivity.start(mContext);
-                        } else {
-                            EventBus.getDefault().post(new HomeTableChangeEvent().setEventType(HomeTableChangeEvent.TO_INDUSTRY_RESOURCES));
-                        }
-                    }
-                });
-
+        holder.setOnClickListener(R.id.tv_more, v -> {
+            if (mPopHintInfo == null) {
+                mPopHintInfo = new PopHintInfo(mContext, "查看更多信息需要付费\n请问是否继");
             }
+            mPopHintInfo.show();
+            mPopHintInfo.setPopHintListener(() -> {
+                if (position == 0) {
+                    SearchProductMoreActivity.start(mContext,"");
+                } else if (position == 1) {
+                    EventBus.getDefault().post(new HomeTableChangeEvent().setEventType(HomeTableChangeEvent.TO_SPECIAL_INFORMATION));
+                } else if (position == 2) {
+                    SearchBusinessMoreActivity.start(mContext);
+                } else {
+                    EventBus.getDefault().post(new HomeTableChangeEvent().setEventType(HomeTableChangeEvent.TO_INDUSTRY_RESOURCES));
+                }
+            });
+
         });
     }
 

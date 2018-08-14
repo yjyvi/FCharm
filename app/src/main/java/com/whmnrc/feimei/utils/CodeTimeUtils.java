@@ -51,11 +51,19 @@ public class CodeTimeUtils {
                     payOrderTimeListener.payField();
                 }
                 if (mCountDownTimer != null) {
+                    mCountDownTimer.cancel();
                     mCountDownTimer = null;
                 }
             }
         };
         mCountDownTimer.start();
+    }
+
+    public static void cancelTimer(){
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+            mCountDownTimer = null;
+        }
     }
 
     public interface PayOrderTimeListener {

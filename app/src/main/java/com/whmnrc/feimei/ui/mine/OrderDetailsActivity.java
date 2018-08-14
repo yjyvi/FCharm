@@ -90,7 +90,7 @@ public class OrderDetailsActivity extends BaseActivity {
     public void onClick() {
         int type = new Random().nextInt(2) + 1;
         if (type == 1) {
-            PayActivity.start(this, PayActivity.ONE_PAY);
+            PayActivity.start(this, PayActivity.ONE_PAY,"12");
         } else {
             CommentActivity.start(this, "");
         }

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -25,6 +26,7 @@ import com.whmnrc.feimei.utils.evntBusBean.AddressEvent;
 import com.whmnrc.feimei.views.AlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -44,6 +46,8 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
     RecyclerView mRvAddressList;
     @BindView(R.id.refresh)
     SmartRefreshLayout mRefresh;
+    @BindView(R.id.tv_commit)
+    TextView mTvCommit;
     public AddressManagerAdapter mAddressManagerAdapter;
     public AddressListPresenter mAddressListPresenter;
     public AddressEditPresenter mAddressEditPresenter;
@@ -51,14 +55,6 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
     private String mAddressId = "";
 
 
-    @Override
-    protected void back() {
-        if (mIsSelect) {
-            EventBus.getDefault().post(new AddressEvent().setEventType(AddressEvent.ADD_ADDRESS_SUCCESS));
-        }
-        super.back();
-
-    }
 
     @Override
     protected void initViewData() {
@@ -89,16 +85,10 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
         mAddressManagerAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-//                if (mIsSelect) {
-//                    for (AddressBean.ResultdataBean resultdataBean : mAddressManagerAdapter.getDatas()) {
-//                        resultdataBean.setSelect(false);
-//                    }
-//                    mAddressManagerAdapter.getDatas().get(position).setSelect(true);
-//                    mAddressManagerAdapter.notifyDataSetChanged();
-//                    AddressBean.ResultdataBean resultdataBean = mAddressManagerAdapter.getDatas().get(position);
-//                    EventBus.getDefault().post(new AddressEvent().setEventType(AddressEvent.ORDER_SELECT_ADDRESS).setData(resultdataBean));
-//                    finish();
-//                }
+                if (mIsSelect) {
+                    EventBus.getDefault().post(new AddressEvent().setEventType(AddressEvent.ORDER_SELECT_ADDRESS).setData(null));
+                    finish();
+                }
             }
 
             @Override
@@ -108,25 +98,24 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
             }
         });
 
-        mAddressManagerAdapter.setDelAddressListener(new AddressManagerAdapter.DelAddressListener() {
+        mAddressManagerAdapter.setAddressListener(new AddressManagerAdapter.AddressListener() {
             @Override
-            public void delAddress(final int position) {
+            public void delAddress(int position) {
                 new AlertDialog(AddressManagerActivity.this).builder().setTitle("提示!")
                         .setMsg("确认要删除地址?")
                         .setCancelable(true)
-                        .setPositiveButton("确定", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mAddressManagerAdapter.getDatas().remove(position);
-                                mAddressManagerAdapter.notifyDataSetChanged();
-                            }
+                        .setPositiveButton("确定", view -> {
+                            mAddressManagerAdapter.getDatas().remove(position);
+                            mAddressManagerAdapter.notifyDataSetChanged();
                         })
-                        .setNegativeButton("取消", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                        .setNegativeButton("取消", view -> {
 
-                            }
                         }).show();
+            }
+
+            @Override
+            public void setAddressDefault(int position, View view) {
+                view.setSelected(!view.isSelected());
             }
         });
 
@@ -200,7 +189,7 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
     }
 
 
-    @org.greenrobot.eventbus.Subscribe
+    @Subscribe
     public void addressEvent(AddressEvent addressEvent) {
         if (addressEvent.getEventType() == AddressEvent.ADD_ADDRESS_SUCCESS) {
             mAddressListPresenter.getAddressList();

@@ -72,17 +72,14 @@ public class PayUtils {
      *
      * @param orderId
      * @param payType
-     * @param payPurpose
      * @param objectCallback
      */
-    private void createOrderSign(String orderId, int payType, int payPurpose, OKHttpManager.ObjectCallback objectCallback) {
+    private void createOrderSign(String orderId, int payType, OKHttpManager.ObjectCallback objectCallback) {
         String url = MyApplication.applicationContext.getString(R.string.service_host_address).concat(MyApplication.applicationContext.getString(R.string.Pay));
         Map params = new HashMap();
-        params.put("UserInfoID", UserManager.getUser().getMobile());
-        params.put("Money", "");
+        params.put("Mobile", UserManager.getUser().getMobile());
+        params.put("PayType_ID", orderId);
         params.put("PayType", payType);
-        params.put("OrderPayNo", orderId);
-        params.put("PayPurpose", payPurpose);
         OKHttpManager.postString(url, params, objectCallback);
     }
 
@@ -94,14 +91,13 @@ public class PayUtils {
 
 
     /**
-     * @param payType        1-支付宝，2-微信，3-余额
+     * @param payType        1-支付宝，2-微信
      * @param order
-     * @param payPurpost     0余额充值 1订单支付 2鱼币充值
      * @param objectCallback
      */
-    public void playPay(final int payType, int payPurpost, final String order, final OKHttpManager.ObjectCallback objectCallback) {
+    public void playPay(final int payType,  final String order, final OKHttpManager.ObjectCallback objectCallback) {
         //创建sign
-        createOrderSign(order, payType, payPurpost, new OKHttpManager.ObjectCallback() {
+        createOrderSign(order, payType,  new OKHttpManager.ObjectCallback() {
             @Override
             public void onSuccess(String st) {
                 switch (payType) {

@@ -2,7 +2,6 @@ package com.whmnrc.feimei.ui.product;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,6 +61,8 @@ public class SearchProductMoreActivity extends BaseActivity implements GetProduc
     ImageView mIvPrice;
     @BindView(R.id.ll_type)
     LinearLayout mLlType;
+    @BindView(R.id.v_line)
+    View mVLine;
 
 
     private String mSearchContent;
@@ -118,13 +119,6 @@ public class SearchProductMoreActivity extends BaseActivity implements GetProduc
     private void initRv() {
         mRvBusinessList.setLayoutManager(new LinearLayoutManager(this));
         mRvBusinessList.setNestedScrollingEnabled(false);
-        mRvBusinessList.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                outRect.bottom = getResources().getDimensionPixelOffset(R.dimen.dm_8);
-            }
-        });
         mProductLibraryListAdapter = new ProductLibraryListAdapter(this, R.layout.item_product_list);
         mRvBusinessList.setAdapter(mProductLibraryListAdapter);
     }
@@ -153,6 +147,7 @@ public class SearchProductMoreActivity extends BaseActivity implements GetProduc
                 mIvPrice.setSelected(false);
                 mDesc = "desc";
                 mSort = "Sort";
+                mCommodityClassId = "";
                 mGetProductListPresenter.getProductList(mName, mCommodityClassId);
                 break;
             case R.id.ll_type:
@@ -209,7 +204,7 @@ public class SearchProductMoreActivity extends BaseActivity implements GetProduc
     @Override
     public void getProductTypeSuccess(List<ProductTypeBean.ResultdataBean> bean) {
         if (mPopProductType == null) {
-            mPopProductType = new PopProductType(this, mLlType, bean);
+            mPopProductType = new PopProductType(this, mVLine, bean);
         }
 
         mPopProductType.show();

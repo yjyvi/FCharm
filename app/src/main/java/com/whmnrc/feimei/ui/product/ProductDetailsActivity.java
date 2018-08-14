@@ -182,11 +182,6 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                     final String resultdataBeans = (String) path;
                     GlideUtils.LoadImage(imageView.getContext(), resultdataBeans, imageView);
                     imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                    //轮播图跳转
-                    imageView.setOnClickListener(view -> {
-//
-
-                    });
                 }
             }).start();
         }

@@ -36,12 +36,9 @@ public class HomeRecommendListAdapter extends CommonAdapter {
 
 
         if (positionType==2) {
-            holder.setOnClickListener(R.id.ll_start, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PopRatingRule popRatingRule = new PopRatingRule(mContext,"评级规则","信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的的评 ......");
-                    popRatingRule.show();
-                }
+            holder.setOnClickListener(R.id.ll_start, v -> {
+                PopRatingRule popRatingRule = new PopRatingRule(mContext,"评级规则","信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的评级规则整理中，信用等级的的评 ......");
+                popRatingRule.show();
             });
             RatingBarView barView = holder.getView(R.id.rb_star);
             barView.setStarCount(position);

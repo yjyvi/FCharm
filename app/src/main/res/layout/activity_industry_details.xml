@@ -1,16 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
 
-    <WebView
-        android:id="@+id/web_content"
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dm_65"/>
+        android:layout_marginTop="@dimen/dm_65">
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dm_15"
+                android:paddingRight="@dimen/dm_15">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/dm_15">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="标准规范"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dm_14"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dm_8"
+                        android:text="[武宿]"
+                        android:textColor="@color/normal_blue_text_color"
+                        android:textSize="@dimen/dm_14"/>
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_pop_confirm_blue"
+                        android:paddingBottom="@dimen/dm_3"
+                        android:paddingLeft="@dimen/dm_15"
+                        android:paddingRight="@dimen/dm_15"
+                        android:paddingTop="@dimen/dm_3"
+                        android:text="标价"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dm_12"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginBottom="@dimen/dm_15"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dm_15"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_time_browse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="2018-07-21 阅读810"
+                        android:textColor="@color/normal_gray"
+                        android:textSize="@dimen/dm_10"/>
+
+                    <TextView
+                        android:id="@+id/tv_download_count"
+                        android:layout_width="wrap_content"
+                        android:drawablePadding="@dimen/dm_5"
+                        android:textSize="@dimen/dm_12"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@mipmap/icon_read_download"
+                        android:text="234"/>
+
+                    <TextView
+                        android:id="@+id/tv_comment_count"
+                        android:layout_marginLeft="@dimen/dm_15"
+                        android:drawableLeft="@mipmap/icon_read_msg"
+                        android:drawablePadding="@dimen/dm_5"
+                        android:textSize="@dimen/dm_12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="234"/>
+
+                    <TextView
+                        android:id="@+id/tv_collection"
+                        android:drawableLeft="@drawable/select_collection"
+                        android:layout_marginLeft="@dimen/dm_15"
+                        android:drawablePadding="@dimen/dm_5"
+                        android:textSize="@dimen/dm_12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="收藏"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <WebView
+                android:id="@+id/web_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <include layout="@layout/common_title"/>
 
@@ -21,11 +133,12 @@
         android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical">
+
         <View
-            android:layout_marginLeft="@dimen/dm_15"
-            android:layout_marginRight="@dimen/dm_15"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dm_0.5"
+            android:layout_marginLeft="@dimen/dm_15"
+            android:layout_marginRight="@dimen/dm_15"
             android:background="@color/common_line"/>
 
 
@@ -37,6 +150,7 @@
 
 
         <TextView
+            android:id="@+id/tv_read_page_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dm_10"
@@ -72,10 +186,10 @@
         </LinearLayout>
 
         <View
-            android:layout_marginLeft="@dimen/dm_15"
-            android:layout_marginRight="@dimen/dm_15"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dm_0.5"
+            android:layout_marginLeft="@dimen/dm_15"
+            android:layout_marginRight="@dimen/dm_15"
             android:layout_marginTop="@dimen/dm_8"
             android:background="@color/common_line"/>
 

@@ -49,7 +49,7 @@ public class HomeTableActivity extends BaseActivity {
     MyViewPager mTabPager;
 
     private int mIndex;
-    ArrayList<Fragment> mFragments = new ArrayList<>();
+    private ArrayList<Fragment> mFragments = new ArrayList<>();
 
     public static void startHomeTableView(Context activity, int tab) {
         Intent intent = new Intent(activity, HomeTableActivity.class);
@@ -84,7 +84,7 @@ public class HomeTableActivity extends BaseActivity {
 
         UserManager.refresh();
 
-        HelpsViewPagerAdapter helpsViewPagerAdapter = new HelpsViewPagerAdapter(getSupportFragmentManager(), mFragments);
+        HelpsViewPagerAdapter helpsViewPagerAdapter = new HelpsViewPagerAdapter(getSupportFragmentManager());
         mTabPager.setNoScroll(true);
         mTabPager.setAdapter(helpsViewPagerAdapter);
         mTabPager.setOffscreenPageLimit(2);
@@ -97,11 +97,9 @@ public class HomeTableActivity extends BaseActivity {
     }
 
     public class HelpsViewPagerAdapter extends FragmentPagerAdapter {
-        private ArrayList<Fragment> mFragments;
 
-        public HelpsViewPagerAdapter(FragmentManager supportFragmentManager, ArrayList<Fragment> fragments) {
+        public HelpsViewPagerAdapter(FragmentManager supportFragmentManager) {
             super(supportFragmentManager);
-            this.mFragments = fragments;
         }
 
         @Override

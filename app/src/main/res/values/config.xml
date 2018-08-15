@@ -33,6 +33,11 @@
     <!--修改用户资料-->
     <string name="ModifyUserBasicData">/api/User/ModifyUserBasicData</string>
 
+    <!--添加收藏-->
+    <string name="AddCollection">/api/Collection/AddCollection</string>
+    <!--删除收藏-->
+    <string name="DelCollection">/api/Collection/DelCollection</string>
+
     <!--企业名录-->
     <!--获取企业类型-->
     <string name="GetEnterpriseType">/api/Enterprise/GetEnterpriseType</string>
@@ -66,5 +71,13 @@
     <string name="GetCommodity">/api/Commodity/GetCommodity</string>
     <!--商品详情-->
     <string name="GetCommodityDetails">/api/Commodity/GetCommodityDetails</string>
+
+    <!--行业资源-->
+    <!--获取阅读列表-->
+    <string name="GeRead">/api/Industry/GeRead</string>
+    <!--阅读详情-->
+    <string name="GetReadDetails">/api/Industry/GetReadDetails</string>
+    <!--获取专栏-->
+    <string name="GetColumn">/api/Industry/GetColumn</string>
 
 </resources>

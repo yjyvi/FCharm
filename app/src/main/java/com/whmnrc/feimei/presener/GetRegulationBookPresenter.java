@@ -18,12 +18,12 @@ import java.util.HashMap;
  * @data 2018/5/29.
  */
 
-public class GetReadPresenter extends PresenterBase {
+public class GetRegulationBookPresenter extends PresenterBase {
 
     private GetReadListener mGetReadListener;
     private int page = 0;
 
-    public GetReadPresenter(GetReadListener getReadListener) {
+    public GetRegulationBookPresenter(GetReadListener getReadListener) {
         this.mGetReadListener = getReadListener;
     }
 
@@ -54,7 +54,7 @@ public class GetReadPresenter extends PresenterBase {
         }
         params.put("conditionJson", JSON.toJSONString(conditionJson));
 
-        OKHttpManager.postString(getUrl(R.string.GeRead), params, new CommonCallBack<ReadListBean>() {
+        OKHttpManager.postString(getUrl(R.string.GetRegulationBook), params, new CommonCallBack<ReadListBean>() {
             @Override
             protected void onSuccess(ReadListBean data) {
                 if (data.getType() == 1) {

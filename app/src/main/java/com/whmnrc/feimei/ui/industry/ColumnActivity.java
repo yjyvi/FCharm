@@ -9,24 +9,31 @@ import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ResourceListAdapter;
+import com.whmnrc.feimei.beans.ColumnBean;
+import com.whmnrc.feimei.beans.ReadListBean;
 import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.pop.PopShare;
+import com.whmnrc.feimei.presener.GetReadPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.home.SearchActivity;
-import com.whmnrc.feimei.utils.TestDataUtils;
+import com.whmnrc.mylibrary.utils.GlideUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * @author yjyvi
  * @data 2018/7/31.
  */
 
-public class ColumnActivity extends BaseActivity {
+public class ColumnActivity extends BaseActivity implements GetReadPresenter.GetReadListener {
     @BindView(R.id.tv_search)
     EditText mTvSearch;
     @BindView(R.id.vs_empty)
@@ -36,11 +43,36 @@ public class ColumnActivity extends BaseActivity {
 
     public String mSearchContent;
     public PopShare mPopShare;
+    @BindView(R.id.iv_user_img)
+    CircleImageView mIvUserImg;
+    @BindView(R.id.tv_title)
+    TextView mTvTitle;
+    @BindView(R.id.tv_content)
+    TextView mTvContent;
+    private GetReadPresenter mGetReadPresenter;
+    public String mColumnId;
+    public ResourceListAdapter mResourceListAdapter;
+    public ColumnBean.ResultdataBean mColumnBean;
 
     @Override
     protected void initViewData() {
         setTitle("专栏");
         rightVisible(R.mipmap.icon_share);
+
+        isShowDialog(true);
+
+        mColumnBean = getIntent().getParcelableExtra("columnBean");
+
+        if (mColumnBean != null) {
+            GlideUtils.LoadImage(this, mColumnBean.getImg(), mIvUserImg);
+            mTvTitle.setText(mColumnBean.getName());
+            mTvContent.setText(mColumnBean.getIntroduce());
+            mColumnId = mColumnBean.getID();
+        }
+
+        mGetReadPresenter = new GetReadPresenter(this);
+
+        mGetReadPresenter.getReadList(true, "", mColumnId);
 
         mTvSearch.setOnEditorActionListener((view, keyCode, event) -> {
             if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
@@ -63,9 +95,8 @@ public class ColumnActivity extends BaseActivity {
 
         mRvProductList.setLayoutManager(new LinearLayoutManager(this));
         mRvProductList.setNestedScrollingEnabled(false);
-        ResourceListAdapter resourceListAdapter = new ResourceListAdapter(this, R.layout.item_information_resource_list);
-        resourceListAdapter.setDataArray(TestDataUtils.initTestData(15));
-        mRvProductList.setAdapter(resourceListAdapter);
+        mResourceListAdapter = new ResourceListAdapter(this, R.layout.item_resource_list);
+        mRvProductList.setAdapter(mResourceListAdapter);
     }
 
     @Override
@@ -73,8 +104,16 @@ public class ColumnActivity extends BaseActivity {
         return R.layout.activity_column;
     }
 
-    public static void start(Context context) {
+    public static void start(Context context, String columnId) {
         Intent starter = new Intent(context, ColumnActivity.class);
+        starter.putExtra("columnId", columnId);
+        context.startActivity(starter);
+    }
+
+
+    public static void start(Context context, ColumnBean.ResultdataBean columnBean) {
+        Intent starter = new Intent(context, ColumnActivity.class);
+        starter.putExtra("columnBean", columnBean);
         context.startActivity(starter);
     }
 
@@ -86,4 +125,30 @@ public class ColumnActivity extends BaseActivity {
         }
         mPopShare.show();
     }
+
+    @Override
+    public void getReadSuccess(boolean isRefresh, ReadListBean.ResultdataBean bean) {
+        if (isRefresh) {
+            mResourceListAdapter.setDataArray(bean.getRead());
+        } else {
+            List<ReadListBean.ResultdataBean.ReadBean> datas = mResourceListAdapter.getDatas();
+            if (datas.size() == bean.getPagination().getRecords()) {
+
+            }
+            datas.addAll(bean.getRead());
+            mResourceListAdapter.setDataArray(datas);
+        }
+
+        mResourceListAdapter.notifyDataSetChanged();
+
+        showEmpty(mResourceListAdapter, mVsEmpty);
+        isShowDialog(false);
+    }
+
+    @Override
+    public void getReadField() {
+        isShowDialog(false);
+    }
+
+
 }

@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.presener.GetColumnPresenter;
+import com.whmnrc.feimei.presener.GetReadPresenter;
 import com.whmnrc.feimei.ui.BaseFragment;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
@@ -76,6 +78,8 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
 
     String[] titles = new String[]{"阅读", "文库", "规格书", "光通资讯"};
     private int headerHeight;
+    public GetColumnPresenter mGetColumnPresenter;
+    public GetReadPresenter mGetReadPresenter;
 
     @Override
     protected int contentViewLayoutID() {
@@ -121,7 +125,6 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
     }
 
 
-
     @OnClick({R.id.iv_user_info})
     public void onClick(View v) {
         switch (v.getId()) {
@@ -135,6 +138,7 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
                 break;
         }
     }
+
 
     public class TableViewPagerAdapter extends FragmentPagerAdapter {
         private List<BaseFragment> mFragments;

@@ -1,13 +1,14 @@
 package com.whmnrc.feimei.presener;
 
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.beans.BaseBean;
+import com.whmnrc.feimei.beans.ColumnBean;
 import com.whmnrc.feimei.network.CommonCallBack;
 import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.ui.PresenterBase;
 import com.whmnrc.feimei.utils.ToastUtils;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author yjyvi
@@ -25,11 +26,11 @@ public class GetColumnPresenter extends PresenterBase {
 
     public void getColumnList() {
         HashMap<String, Object> params = new HashMap<>(2);
-        OKHttpManager.postString(getUrl(R.string.GetColumn), params, new CommonCallBack<BaseBean>() {
+        OKHttpManager.postString(getUrl(R.string.GetColumn), params, new CommonCallBack<ColumnBean>() {
             @Override
-            protected void onSuccess(BaseBean data) {
+            protected void onSuccess(ColumnBean data) {
                 if (data.getType() == 1) {
-                    mGetColumnListener.getColumnSuccess();
+                    mGetColumnListener.getColumnSuccess(data.getResultdata());
                 } else {
                     mGetColumnListener.getColumnField();
                     ToastUtils.showToast(data.getMessage());
@@ -40,7 +41,7 @@ public class GetColumnPresenter extends PresenterBase {
 
 
     public interface GetColumnListener {
-        void getColumnSuccess();
+        void getColumnSuccess(List<ColumnBean.ResultdataBean> resultdataBean);
 
         void getColumnField();
     }

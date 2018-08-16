@@ -34,6 +34,7 @@
                     android:paddingTop="@dimen/dm_15">
 
                     <TextView
+                        android:id="@+id/tv_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="标准规范"
@@ -41,6 +42,7 @@
                         android:textSize="@dimen/dm_14"/>
 
                     <TextView
+                        android:id="@+id/tv_title_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dm_8"
@@ -55,6 +57,7 @@
 
 
                     <TextView
+                        android:id="@+id/tv_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_pop_confirm_blue"

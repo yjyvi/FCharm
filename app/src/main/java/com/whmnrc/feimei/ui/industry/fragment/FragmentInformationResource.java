@@ -15,7 +15,6 @@ import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
-import com.whmnrc.feimei.utils.TestDataUtils;
 
 import butterknife.BindView;
 
@@ -48,7 +47,6 @@ public class FragmentInformationResource extends LazyLoadFragment {
         mRvProductList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRvProductList.setNestedScrollingEnabled(false);
         ResourceListAdapter resourceListAdapter = new ResourceListAdapter(getActivity(), R.layout.item_information_resource_list);
-        resourceListAdapter.setDataArray(TestDataUtils.initTestData(15));
         mRvProductList.setAdapter(resourceListAdapter);
 
 

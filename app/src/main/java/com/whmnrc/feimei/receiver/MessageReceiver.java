@@ -47,7 +47,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 .format(Calendar.getInstance().getTime()));
 //        NotificationService.getInstance(context).save(notific);
         context.sendBroadcast(intent);
-        show(context, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString());
+//        show(context, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString());
         Log.d("LC", "+++++++++++++++++++++++++++++展示通知的回调");
     }
 
@@ -64,7 +64,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             text = "反注册失败" + errorCode;
         }
         Log.d(LogTag, text);
-        show(context, text);
+//        show(context, text);
 
     }
 
@@ -81,7 +81,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             text = "\"" + tagName + "\"设置失败,错误码：" + errorCode;
         }
         Log.d(LogTag, text);
-        show(context, text);
+//        show(context, text);
 
     }
 
@@ -98,7 +98,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             text = "\"" + tagName + "\"删除失败,错误码：" + errorCode;
         }
         Log.d(LogTag, text);
-        show(context, text);
+//        show(context, text);
 
     }
 
@@ -143,7 +143,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         }
         // APP自主处理的过程。。。
         Log.d(LogTag, text);
-        show(context, text);
+//        show(context, text);
     }
 
     //注册的回调
@@ -163,7 +163,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             text = message + "注册失败错误码：" + errorCode;
         }
         Log.d(LogTag, text);
-        show(context, text);
+//        show(context, text);
     }
 
     // 消息透传的回调
@@ -189,7 +189,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         Log.d("LC", "++++++++++++++++透传消息");
         // APP自主处理消息的过程...
         Log.d(LogTag, text);
-        show(context, text);
+//        show(context, text);
     }
 
 }

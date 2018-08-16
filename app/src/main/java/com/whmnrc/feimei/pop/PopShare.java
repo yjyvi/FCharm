@@ -105,12 +105,7 @@ public class PopShare implements View.OnClickListener {
         // 刷新状态
         mPopupWindow.update();
 
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                PopUtils.setBackgroundAlpha((Activity) mContext, 1f);
-            }
-        });
+        mPopupWindow.setOnDismissListener(() -> PopUtils.setBackgroundAlpha((Activity) mContext, 1f));
     }
 
     @Override

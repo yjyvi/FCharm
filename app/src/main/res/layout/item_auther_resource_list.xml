@@ -6,18 +6,18 @@
                 android:orientation="vertical">
 
     <ImageView
-        android:src="@color/normal_gray"
+        android:id="@+id/iv_user_img"
         android:layout_width="@dimen/dm_75"
         android:layout_height="@dimen/dm_75"/>
 
 
     <TextView
+        android:id="@+id/tv_name"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dm_22"
         android:layout_alignParentBottom="true"
         android:background="#5666"
         android:gravity="center"
         android:textSize="@dimen/dm_11"
-        android:text="某某某"
         android:textColor="@color/white"/>
 </RelativeLayout>

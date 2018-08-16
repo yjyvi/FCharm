@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
-import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -58,50 +57,52 @@ public class ProductSpecificationsActivity extends BaseActivity {
         if (mCommodity == null) {
             return;
         }
-        mWbContent.post(new Runnable() {
+        mWbContent.post(() -> loadDetailsUrl());
+
+    }
+
+    /**
+     * 加载Url
+     */
+    private void loadDetailsUrl() {
+        mWbContent.loadUrl(mCommodity.getRegulationBookID());
+        WebSettings settings = mWbContent.getSettings();
+        settings.setFixedFontFamily("monospace");
+        settings.setJavaScriptEnabled(true);
+        settings.setUseWideViewPort(true);
+        settings.setDefaultTextEncodingName("utf-8");
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setLoadWithOverviewMode(true);
+
+
+        //去除WebView的焦点事件
+        mWbContent.setFocusableInTouchMode(false);
+
+        mWbContent.setOnTouchListener((v, event) -> false);
+
+        //去掉超连接事件
+        mWbContent.setWebViewClient(new WebViewClient() {
             @Override
-            public void run() {
-                mWbContent.loadUrl(mCommodity.getRegulationBookID());
-                WebSettings settings = mWbContent.getSettings();
-                settings.setFixedFontFamily("monospace");
-                settings.setJavaScriptEnabled(true);
-                settings.setUseWideViewPort(true);
-                settings.setDefaultTextEncodingName("utf-8");
-                settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-                settings.setLoadWithOverviewMode(true);
-
-
-                //去除WebView的焦点事件
-                mWbContent.setFocusableInTouchMode(false);
-
-                mWbContent.setOnTouchListener((v, event) -> false);
-
-                //去掉超连接事件
-                mWbContent.setWebViewClient(new WebViewClient() {
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        return true;
-                    }
-                });
-
-                //取消长按复制事件
-                mWbContent.setOnLongClickListener(v -> true);
-
-                mWbContent.setWebChromeClient(new WebChromeClient() {
-
-                    @Override
-                    public void onProgressChanged(WebView view, int newProgress) {
-                        super.onProgressChanged(view, newProgress);
-
-                        if (newProgress == 100) {
-                            //加载完网页进度条消失
-                            isShowDialog(false);
-                        }
-                    }
-                });
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return true;
             }
         });
 
+        //取消长按复制事件
+        mWbContent.setOnLongClickListener(v -> true);
+
+        mWbContent.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+
+                if (newProgress == 100) {
+                    //加载完网页进度条消失
+                    isShowDialog(false);
+                }
+            }
+        });
     }
 
     @Override

@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.adapter.ResourceListAdapter;
+import com.whmnrc.feimei.adapter.ResourceFileListAdapter;
 import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.home.SearchActivity;
@@ -47,8 +47,8 @@ public class FragmentFileResource extends LazyLoadFragment {
 
         mRvProductList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRvProductList.setNestedScrollingEnabled(false);
-        ResourceListAdapter resourceListAdapter = new ResourceListAdapter(getActivity(), R.layout.item_library_resource_list);
-        resourceListAdapter.setDataArray(TestDataUtils.initTestData(15));
+        ResourceFileListAdapter resourceListAdapter = new ResourceFileListAdapter(getActivity(), R.layout.item_library_resource_list);
+        resourceListAdapter.setDataArray(TestDataUtils.initTestData(4));
         mRvProductList.setAdapter(resourceListAdapter);
 
 

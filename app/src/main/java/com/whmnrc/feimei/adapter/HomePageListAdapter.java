@@ -72,7 +72,7 @@ public class HomePageListAdapter extends CommonAdapter {
                 } else if (selectPosition == 2) {
                     OrganizationDetailsActivity.start(view.getContext(),"");
                 } else {
-                    ColumnActivity.start(view.getContext());
+                    ColumnActivity.start(view.getContext(), "");
                 }
 
             }

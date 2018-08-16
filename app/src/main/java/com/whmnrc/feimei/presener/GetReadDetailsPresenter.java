@@ -1,7 +1,7 @@
 package com.whmnrc.feimei.presener;
 
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.beans.BaseBean;
+import com.whmnrc.feimei.beans.ReadDetailsBean;
 import com.whmnrc.feimei.network.CommonCallBack;
 import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.ui.PresenterBase;
@@ -31,11 +31,11 @@ public class GetReadDetailsPresenter extends PresenterBase {
         params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
         params.put("OtherID", readId);
 
-        OKHttpManager.postString(getUrl(R.string.GetReadDetails), params, new CommonCallBack<BaseBean>() {
+        OKHttpManager.postString(getUrl(R.string.GetReadDetails), params, new CommonCallBack<ReadDetailsBean>() {
             @Override
-            protected void onSuccess(BaseBean data) {
+            protected void onSuccess(ReadDetailsBean data) {
                 if (data.getType() == 1) {
-                    mGetReadDetailsListener.getReadDetailsSuccess();
+                    mGetReadDetailsListener.getReadDetailsSuccess(data.getResultdata());
                 } else {
                     mGetReadDetailsListener.getReadDetailsField();
                     ToastUtils.showToast(data.getMessage());
@@ -46,7 +46,7 @@ public class GetReadDetailsPresenter extends PresenterBase {
 
 
     public interface GetReadDetailsListener {
-        void getReadDetailsSuccess();
+        void getReadDetailsSuccess(ReadDetailsBean.ResultdataBean readDetailsBean);
 
         void getReadDetailsField();
     }

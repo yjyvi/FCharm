@@ -87,7 +87,7 @@ public class FragmentReadResource extends LazyLoadFragment implements GetReadPre
                 if (!TextUtils.isEmpty(mSearchContent)) {
                     SearchConditionBean searchConditionBean = new SearchConditionBean();
                     searchConditionBean.setContent(mSearchContent);
-                    SearchActivity.start(getActivity(), SearchActivity.SEARCH_RESOURCE, searchConditionBean);
+                    SearchActivity.start(getActivity(), SearchActivity.SEARCH_READ, searchConditionBean);
                     mEtSearchContent.setText("");
                     return true;
                 }

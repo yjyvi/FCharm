@@ -120,21 +120,28 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
         mProductLibraryListAdapter = new ProductLibraryListAdapter(getActivity(), R.layout.item_product_list);
         mRvProductList.setAdapter(mProductLibraryListAdapter);
 
+        mProductLibraryListAdapter.setGoToDetailsListener(position -> {
+            ProductListBean.ResultdataBean.EnterpriseBean enterpriseBean = mProductLibraryListAdapter.getDatas().get(position);
+            enterpriseBean.setClickNumber(enterpriseBean.getClickNumber() + 1);
+            mProductLibraryListAdapter.notifyDataSetChanged();
+        });
+
     }
 
     private void initType() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4);
         mRvType.setLayoutManager(gridLayoutManager);
         mRvType.setNestedScrollingEnabled(false);
-        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.custom_divider));
+        DividerItemDecoration divider = new DividerItemDecoration(mRvType.getContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(mRvType.getContext(), R.drawable.custom_divider));
         mRvType.addItemDecoration(divider);
         mProductLibraryTypeAdapter = new ProductLibraryTypeAdapter(getActivity(), R.layout.item_organization_chart_type);
         mRvType.setAdapter(mProductLibraryTypeAdapter);
         mProductLibraryTypeAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                SearchProductMoreActivity.start(view.getContext(), mProductLibraryTypeAdapter.getDatas().get(position).getID());
+                ProductTypeBean.ResultdataBean resultdataBean = mProductLibraryTypeAdapter.getDatas().get(position);
+                SearchProductMoreActivity.start(view.getContext(), resultdataBean.getID());
             }
 
             @Override

@@ -230,7 +230,7 @@ public class ResourcesFileBean {
             private String FreeConten;
             private String ChargeConten;
             private int ChargePage;
-            private int Price;
+            private double Price;
             private int ClickNumber;
             private int Type;
             private String FilePath;
@@ -247,7 +247,7 @@ public class ResourcesFileBean {
                 FreeConten = in.readString();
                 ChargeConten = in.readString();
                 ChargePage = in.readInt();
-                Price = in.readInt();
+                Price = in.readDouble();
                 ClickNumber = in.readInt();
                 Type = in.readInt();
                 FilePath = in.readString();
@@ -266,7 +266,7 @@ public class ResourcesFileBean {
                 dest.writeString(FreeConten);
                 dest.writeString(ChargeConten);
                 dest.writeInt(ChargePage);
-                dest.writeInt(Price);
+                dest.writeDouble(Price);
                 dest.writeInt(ClickNumber);
                 dest.writeInt(Type);
                 dest.writeString(FilePath);
@@ -356,11 +356,11 @@ public class ResourcesFileBean {
                 this.ChargePage = ChargePage;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return Price;
             }
 
-            public void setPrice(int Price) {
+            public void setPrice(double Price) {
                 this.Price = Price;
             }
 

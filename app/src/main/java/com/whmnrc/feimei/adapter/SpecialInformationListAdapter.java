@@ -10,6 +10,7 @@ import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
 import com.whmnrc.feimei.beans.GetRecruitBean;
 import com.whmnrc.feimei.ui.CommonH5WebView;
 import com.whmnrc.feimei.utils.TimeUtils;
+import com.whmnrc.imp.GoToDetailsListener;
 
 /**
  * @author yjyvi
@@ -59,7 +60,4 @@ public class SpecialInformationListAdapter extends CommonAdapter<GetRecruitBean.
     }
 
 
-    public interface GoToDetailsListener {
-        void toDetails(int position);
-    }
 }

@@ -10,14 +10,21 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ResourceBookListAdapter;
 import com.whmnrc.feimei.beans.RegulationBookListBean;
 import com.whmnrc.feimei.beans.SearchConditionBean;
+import com.whmnrc.feimei.presener.AddOrDelCollectionPresenter;
 import com.whmnrc.feimei.presener.GetRegulationBookPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -27,7 +34,7 @@ import butterknife.BindView;
  * 规格书
  */
 
-public class FragmentBookResource extends LazyLoadFragment implements GetRegulationBookPresenter.GetBookListener {
+public class FragmentBookResource extends LazyLoadFragment implements GetRegulationBookPresenter.GetBookListener, AddOrDelCollectionPresenter.AddOrDelCollectionListener {
 
     @BindView(R.id.et_search_content)
     EditText mEtSearchContent;
@@ -37,8 +44,12 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
     RecyclerView mRvProductList;
     @BindView(R.id.ll_filter)
     LinearLayout mLlFilter;
+    @BindView(R.id.refresh)
+    SmartRefreshLayout mRefresh;
     public ResourceBookListAdapter mResourceBookListAdapter;
     public GetRegulationBookPresenter mGetRegulationBookPresenter;
+    private AddOrDelCollectionPresenter mAddOrDelCollectionPresenter;
+    private int mCollectionPosition;
 
     @Override
     protected int contentViewLayoutID() {
@@ -52,11 +63,39 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
         mGetRegulationBookPresenter = new GetRegulationBookPresenter(this);
         mGetRegulationBookPresenter.getBookList();
 
+        mAddOrDelCollectionPresenter = new AddOrDelCollectionPresenter(this);
+
         mRvProductList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRvProductList.setNestedScrollingEnabled(false);
         mResourceBookListAdapter = new ResourceBookListAdapter(getActivity(), R.layout.item_library_resource_list);
         mRvProductList.setAdapter(mResourceBookListAdapter);
 
+        mRefresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore();
+                mGetRegulationBookPresenter.getBookList(false, "", "");
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                mRefresh.setEnableLoadMore(true);
+                refreshLayout.finishRefresh();
+                mGetRegulationBookPresenter.getBookList();
+            }
+        });
+
+        mResourceBookListAdapter.setBookCollectionListener(position -> {
+            this.mCollectionPosition = position;
+            RegulationBookListBean.ResultdataBean.ReadBean readBean = mResourceBookListAdapter.getDatas().get(position);
+            if (readBean.getIsCollection() == 1) {
+                ArrayList<String> readIds = new ArrayList<>();
+                readIds.add(readBean.getID());
+                mAddOrDelCollectionPresenter.delCollection(readIds);
+            } else {
+                mAddOrDelCollectionPresenter.addCollection(readBean.getID(), AddOrDelCollectionPresenter.SPECIFICATION_COLLECTION);
+            }
+        });
 
         mEtSearchContent.setOnEditorActionListener((view, keyCode, event) -> {
             if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
@@ -67,7 +106,7 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
                 if (!TextUtils.isEmpty(mSearchContent)) {
                     SearchConditionBean searchConditionBean = new SearchConditionBean();
                     searchConditionBean.setContent(mSearchContent);
-                    SearchActivity.start(getActivity(), SearchActivity.SEARCH_RESOURCE, searchConditionBean);
+                    SearchActivity.start(getActivity(), SearchActivity.SEARCH_BOOK, searchConditionBean);
                     mEtSearchContent.setText("");
                     return true;
                 }
@@ -91,12 +130,37 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
 
     @Override
     public void getBookSuccess(boolean isRefresh, RegulationBookListBean.ResultdataBean bean) {
-        mResourceBookListAdapter.setDataArray(bean.getRead());
+        if (isRefresh) {
+            mResourceBookListAdapter.setDataArray(bean.getRead());
+        } else {
+            List<RegulationBookListBean.ResultdataBean.ReadBean> datas = mResourceBookListAdapter.getDatas();
+            if (datas.size() == bean.getPagination().getRecords()) {
+                mRefresh.setEnableLoadMore(false);
+            }
+            datas.addAll(bean.getRead());
+            mResourceBookListAdapter.setDataArray(datas);
+        }
+
         mResourceBookListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void getBookField() {
+
+    }
+
+    @Override
+    public void collectionSuccess(boolean isAdd) {
+        if (isAdd) {
+            mResourceBookListAdapter.getDatas().get(mCollectionPosition).setIsCollection(1);
+        } else {
+            mResourceBookListAdapter.getDatas().get(mCollectionPosition).setIsCollection(0);
+        }
+        mResourceBookListAdapter.notifyItemChanged(mCollectionPosition);
+    }
+
+    @Override
+    public void collectionCodeField() {
 
     }
 }

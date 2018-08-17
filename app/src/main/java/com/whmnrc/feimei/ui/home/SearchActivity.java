@@ -19,10 +19,14 @@ import com.whmnrc.feimei.adapter.SearchResultListAdapter;
 import com.whmnrc.feimei.beans.EnterpriseListBean;
 import com.whmnrc.feimei.beans.GetRecruitBean;
 import com.whmnrc.feimei.beans.ProductListBean;
+import com.whmnrc.feimei.beans.ReadListBean;
+import com.whmnrc.feimei.beans.RegulationBookListBean;
 import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.presener.GetEnterprisePresenter;
 import com.whmnrc.feimei.presener.GetProductListPresenter;
+import com.whmnrc.feimei.presener.GetReadPresenter;
 import com.whmnrc.feimei.presener.GetRecruitPresenter;
+import com.whmnrc.feimei.presener.GetRegulationBookPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 
 import butterknife.BindView;
@@ -34,7 +38,7 @@ import butterknife.OnClick;
  * 综合搜索页面
  */
 
-public class SearchActivity extends BaseActivity implements GetRecruitPresenter.GetRecruitListener, GetProductListPresenter.GetProductListListener, GetEnterprisePresenter.GetEnterpriseListener {
+public class SearchActivity extends BaseActivity implements GetRecruitPresenter.GetRecruitListener, GetProductListPresenter.GetProductListListener, GetEnterprisePresenter.GetEnterpriseListener, GetReadPresenter.GetReadListener, GetRegulationBookPresenter.GetBookListener {
     @BindView(R.id.et_search_content)
     EditText mEtSearchContent;
     @BindView(R.id.vs_empty)
@@ -62,17 +66,25 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
      */
     public static final int SEARCH_ORG = 2;
     /**
-     * 行业资源搜索
+     * 行业资源-文库
      */
-    public static final int SEARCH_RESOURCE = 3;
+    public static final int SEARCH_FILE = 3;
     /**
-     * 专栏搜索
+     * 行业资源-阅读
      */
-    public static final int SEARCH_COLUMN = 4;
+    public static final int SEARCH_READ = 4;
+    /**
+     * 行业资源-规格书
+     */
+    public static final int SEARCH_BOOK = 5;
+    /**
+     * 行业资源-光通资迅
+     */
+    public static final int SEARCH_INFORMATION = 6;
     /**
      * 职业搜索
      */
-    public static final int SEARCH_SPECIAL = 5;
+    public static final int SEARCH_SPECIAL = 7;
     public int mType;
     private GetRecruitPresenter mGetRecruitPresenter;
     private GetProductListPresenter mGetProductListPresenter;
@@ -80,6 +92,8 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
     public SearchConditionBean mSearchConditionBean;
     public SearchResultListAdapter mAdapter;
     private String mSearchContent;
+    private GetReadPresenter mGetReadPresenter;
+    private GetRegulationBookPresenter mGetRegulationBookPresenter;
 
     @Override
     protected void initViewData() {
@@ -149,9 +163,19 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
                         mSearchConditionBean.getIndustryId());
 
                 break;
-            case SEARCH_RESOURCE:
+            case SEARCH_READ:
+                mGetReadPresenter = new GetReadPresenter(this);
+                mAdapter = new SearchResultListAdapter(this, R.layout.item_resource_list, mType);
+                mGetReadPresenter.getReadList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getColumnId());
                 break;
-            case SEARCH_COLUMN:
+            case SEARCH_FILE:
+
+                break;
+            case SEARCH_BOOK:
+                mGetRegulationBookPresenter = new GetRegulationBookPresenter(this);
+                mGetRegulationBookPresenter.getBookList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getColumnId());
+                break;
+            case SEARCH_INFORMATION:
                 break;
             case SEARCH_SPECIAL:
 
@@ -233,6 +257,28 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
 
     @Override
     public void getEnterpriseField() {
+
+    }
+
+    @Override
+    public void getReadSuccess(boolean isRefresh, ReadListBean.ResultdataBean bean) {
+        mAdapter.setDataArray(bean.getRead());
+        mAdapter.notifyDataSetChanged();
+        showEmpty(mAdapter, mVsEmpty);
+    }
+
+    @Override
+    public void getReadField() {
+
+    }
+
+    @Override
+    public void getBookSuccess(boolean isRefresh, RegulationBookListBean.ResultdataBean bean) {
+
+    }
+
+    @Override
+    public void getBookField() {
 
     }
 }

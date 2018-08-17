@@ -10,8 +10,10 @@ import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
 import com.whmnrc.feimei.beans.GetRecommendEnterpriseBean;
 import com.whmnrc.feimei.beans.GetRecruitBean;
 import com.whmnrc.feimei.beans.ProductListBean;
+import com.whmnrc.feimei.beans.ReadListBean;
 import com.whmnrc.feimei.ui.CommonH5WebView;
 import com.whmnrc.feimei.ui.home.SearchActivity;
+import com.whmnrc.feimei.ui.industry.IndustryDetailsActivity;
 import com.whmnrc.feimei.ui.organization.OrganizationDetailsActivity;
 import com.whmnrc.feimei.ui.organization.SearchBusinessMoreActivity;
 import com.whmnrc.feimei.ui.product.ProductDetailsActivity;
@@ -30,6 +32,7 @@ public class SearchResultListAdapter extends CommonAdapter {
     private GetRecruitBean.ResultdataBean.RecruitBean mRecruitBean;
     private ProductListBean.ResultdataBean.EnterpriseBean mEnterpriseBean;
     private GetRecommendEnterpriseBean.ResultdataBean mOrgBean;
+    public ReadListBean.ResultdataBean.ReadBean mReadBean;
 
     public SearchResultListAdapter(Context context, int layoutId, int positionType) {
         super(context, layoutId);
@@ -43,7 +46,7 @@ public class SearchResultListAdapter extends CommonAdapter {
             case SearchActivity.SEARCH_ALL:
                 break;
             case SearchActivity.SEARCH_PRODUCT:
-                mEnterpriseBean= (ProductListBean.ResultdataBean.EnterpriseBean) goodsBean;
+                mEnterpriseBean = (ProductListBean.ResultdataBean.EnterpriseBean) goodsBean;
                 holder.setText(R.id.tv_goods_name, mEnterpriseBean.getName());
                 holder.setText(R.id.tv_rows, String.format("已浏览：%s人", mEnterpriseBean.getClickNumber()));
                 if (mEnterpriseBean.getPrice() <= 0) {
@@ -75,19 +78,42 @@ public class SearchResultListAdapter extends CommonAdapter {
                 holder.setText(R.id.tv_desc, "主营：" + mOrgBean.getMainExplain());
                 holder.setText(R.id.tv_address, mOrgBean.getProvincial() + mOrgBean.getCity());
 
-                holder.itemView.setOnClickListener(v -> OrganizationDetailsActivity.start(v.getContext(),mOrgBean.getID()));
+                holder.itemView.setOnClickListener(v -> OrganizationDetailsActivity.start(v.getContext(), mOrgBean.getID()));
 
                 holder.setOnClickListener(R.id.tv_more, v -> SearchBusinessMoreActivity.start(v.getContext()));
 
-                if (position == getDatas().size()-1) {
+                if (position == getDatas().size() - 1) {
                     holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
-                }else {
+                } else {
                     holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
                 }
 
                 break;
-            case SearchActivity.SEARCH_RESOURCE:
-            case SearchActivity.SEARCH_COLUMN:
+            case SearchActivity.SEARCH_BOOK:
+                break;
+            case SearchActivity.SEARCH_FILE:
+                break;
+            case SearchActivity.SEARCH_INFORMATION:
+                break;
+
+            case SearchActivity.SEARCH_READ:
+                mReadBean = (ReadListBean.ResultdataBean.ReadBean) goodsBean;
+                holder.setText(R.id.tv_name, mReadBean.getName());
+                holder.setText(R.id.tv_title, mReadBean.getTitle());
+                holder.setText(R.id.tv_desc, mReadBean.getSubtitle());
+                holder.setText(R.id.tv_time, TimeUtils.getDateToString(Long.parseLong(mReadBean.getCreateTime())));
+                GlideUtils.LoadImage(mContext, mReadBean.getImg(), holder.getView(R.id.iv_img));
+
+                holder.itemView.setOnClickListener((v) -> {
+                            IndustryDetailsActivity.start(mContext, mReadBean.getID(), IndustryDetailsActivity.READ_DETAILS_TYPE);
+                        }
+                );
+
+                if (position == getDatas().size() - 1) {
+                    holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
+                } else {
+                    holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
+                }
                 break;
             case SearchActivity.SEARCH_SPECIAL:
                 mRecruitBean = (GetRecruitBean.ResultdataBean.RecruitBean) goodsBean;

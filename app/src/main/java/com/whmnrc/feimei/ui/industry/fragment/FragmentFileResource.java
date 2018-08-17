@@ -10,6 +10,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ResourceFileListAdapter;
 import com.whmnrc.feimei.beans.ResourcesFileBean;
@@ -18,6 +21,8 @@ import com.whmnrc.feimei.presener.GetLibraryPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -37,6 +42,8 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
     RecyclerView mRvProductList;
     @BindView(R.id.ll_filter)
     LinearLayout mLlFilter;
+    @BindView(R.id.refresh)
+    SmartRefreshLayout mRefresh;
     public ResourceFileListAdapter mResourceListAdapter;
     private GetLibraryPresenter mGetLibraryPresenter;
 
@@ -49,6 +56,20 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
     protected void initViewData() {
         mLlFilter.setVisibility(View.GONE);
 
+        mRefresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore();
+                mGetLibraryPresenter.getLibraryList(false, "");
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                mRefresh.setEnableLoadMore(true);
+                refreshLayout.finishRefresh();
+                mGetLibraryPresenter.getLibraryList();
+            }
+        });
 
         mGetLibraryPresenter = new GetLibraryPresenter(this);
         mGetLibraryPresenter.getLibraryList();
@@ -68,7 +89,7 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
                 if (!TextUtils.isEmpty(mSearchContent)) {
                     SearchConditionBean searchConditionBean = new SearchConditionBean();
                     searchConditionBean.setContent(mSearchContent);
-                    SearchActivity.start(getActivity(), SearchActivity.SEARCH_RESOURCE, searchConditionBean);
+                    SearchActivity.start(getActivity(), SearchActivity.SEARCH_FILE, searchConditionBean);
                     mEtSearchContent.setText("");
                     return true;
                 }
@@ -92,7 +113,18 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
 
     @Override
     public void getReadSuccess(boolean isRefresh, ResourcesFileBean.ResultdataBean bean) {
-        mResourceListAdapter.setDataArray(bean.getLibrarys());
+        if (isRefresh) {
+            mResourceListAdapter.setDataArray(bean.getLibrarys());
+        } else {
+            List<ResourcesFileBean.ResultdataBean.LibrarysBean> datas = mResourceListAdapter.getDatas();
+            if (datas.size() == bean.getPagination().getRecords()) {
+                mRefresh.setEnableLoadMore(false);
+            }
+
+            datas.addAll(bean.getLibrarys());
+            mResourceListAdapter.setDataArray(datas);
+        }
+
         mResourceListAdapter.notifyDataSetChanged();
     }
 

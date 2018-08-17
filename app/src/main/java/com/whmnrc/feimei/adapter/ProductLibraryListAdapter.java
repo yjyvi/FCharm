@@ -7,6 +7,7 @@ import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
 import com.whmnrc.feimei.beans.ProductListBean;
 import com.whmnrc.feimei.ui.product.ProductDetailsActivity;
+import com.whmnrc.imp.GoToDetailsListener;
 import com.whmnrc.mylibrary.utils.GlideUtils;
 
 /**
@@ -18,6 +19,13 @@ public class ProductLibraryListAdapter extends CommonAdapter<ProductListBean.Res
     public ProductLibraryListAdapter(Context context, int layoutId) {
         super(context, layoutId);
     }
+
+    private GoToDetailsListener mGoToDetailsListener;
+
+    public void setGoToDetailsListener(GoToDetailsListener goToDetailsListener) {
+        mGoToDetailsListener = goToDetailsListener;
+    }
+
 
     @Override
     public void convert(ViewHolder holder, ProductListBean.ResultdataBean.EnterpriseBean o, int position) {
@@ -34,7 +42,17 @@ public class ProductLibraryListAdapter extends CommonAdapter<ProductListBean.Res
             holder.setText(R.id.tv_price, String.format("￥%s", o.getPrice()));
         }
         GlideUtils.LoadImage(mContext, o.getImg(), holder.getView(R.id.iv_goods_img));
-        holder.itemView.setOnClickListener(v -> ProductDetailsActivity.start(v.getContext(), o.getID()));
+        holder.itemView.setOnClickListener(v -> {
+                    ProductDetailsActivity.start(v.getContext(), o.getID());
+
+                    holder.itemView.postDelayed(() -> {
+                        if (mGoToDetailsListener != null) {
+                            mGoToDetailsListener.toDetails(position);
+                        }
+                    }, 500);
+
+                }
+        );
     }
 
 

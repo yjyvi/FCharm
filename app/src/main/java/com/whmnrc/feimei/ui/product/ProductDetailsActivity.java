@@ -270,7 +270,7 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                 mIvCollection.setSelected(!mIvCollection.isSelected());
                 break;
             case R.id.tv_product_specifications:
-                ProductSpecificationsActivity.start(view.getContext(),mProductDetailsBean.getCommodity());
+//                ProductSpecificationsActivity.start(view.getContext(),mProductDetailsBean.getCommodity());
                 break;
             case R.id.tv_organization_name:
                 OrganizationDetailsActivity.start(view.getContext(), mProductDetailsBean.getCommodity().getEnterprise_ID());

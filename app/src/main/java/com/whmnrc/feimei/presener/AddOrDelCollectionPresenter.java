@@ -1,5 +1,6 @@
 package com.whmnrc.feimei.presener;
 
+import com.alibaba.fastjson.JSON;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.beans.BaseBean;
 import com.whmnrc.feimei.network.CommonCallBack;
@@ -66,22 +67,28 @@ public class AddOrDelCollectionPresenter extends PresenterBase {
         });
     }
 
-    public void delCollection(Object productIds, int type) {
+    public void delCollection(Object productIds) {
         HashMap<String, Object> params = new HashMap<>(4);
         params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
         params.put("CollectionID", productIds);
-
-        OKHttpManager.postString(getUrl(R.string.DelCollection), params, new CommonCallBack<BaseBean>() {
+        OKHttpManager.postString(getUrl(R.string.DelCollection), params, new OKHttpManager.ObjectCallback() {
             @Override
-            protected void onSuccess(BaseBean data) {
-                if (data.getType() == 1) {
+            public void onSuccess(String st) {
+                BaseBean baseBean = JSON.parseObject(st, BaseBean.class);
+                if (baseBean.getType() == 1) {
                     mAddOrDelCollectionListener.collectionSuccess(false);
                 } else {
                     mAddOrDelCollectionListener.collectionCodeField();
+                    ToastUtils.showToast(baseBean.getMessage());
                 }
-                ToastUtils.showToast(data.getMessage());
+            }
+
+            @Override
+            public void onFailure(int code, String errorMsg) {
+                mAddOrDelCollectionListener.collectionCodeField();
             }
         });
+
     }
 
 

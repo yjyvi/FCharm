@@ -51,6 +51,7 @@ public class CommonH5WebView extends BaseActivity {
         activity.startActivity(intent);
     }
 
+
     @Override
     public int setLayoutId() {
         return R.layout.activity_my_binbei;
@@ -64,6 +65,7 @@ public class CommonH5WebView extends BaseActivity {
         isShowDialog(true);
         mTitle = getIntent().getStringExtra("title");
         mH5Url = getIntent().getStringExtra("h5Url");
+
 
         findViewById(R.id.rl_right).setOnClickListener(v -> {
             if (mPopShare == null) {

@@ -1,5 +1,8 @@
 package com.whmnrc.feimei.beans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -53,7 +56,10 @@ public class RegulationBookListBean {
         this.resultdata = resultdata;
     }
 
-    public static class ResultdataBean {
+    public static class ResultdataBean implements Parcelable {
+        public ResultdataBean() {
+        }
+
         /**
          * Pagination : {"rows":10,"page":1,"sidx":"CreateTime","sord":"desc","records":3,"total":1,"conditionJson":""}
          * Read : [{"ID":"e72396b2-ce72-4bcc-8352-c8d6348da573","Name":"EXO2904 Datasheet-EN","Subtitle":"1.25-29Gbps x 4ch any date rate BERT","CreateTime":"2018/8/12 0:00:00","ClickNumber":2,"Type":2,"Conten":"https://www.optic-female.cn/AppPage/Registration?ID=e72396b2-ce72-4bcc-8352-c8d6348da573","FilePath":"http://www.optic-female.cn/Upload/file/2018-08-12/6157e640-1074-4963-ae98-573395f24643.pdf","IsCollection":0},{"ID":"d39d142a-1df8-4e81-b3ac-a948fe9755b0","Name":"EXO2904 手册 _ 中文","Subtitle":"1.25-29Gbps 4通道任意速率误码仪","CreateTime":"2018/8/12 0:00:00","ClickNumber":1,"Type":2,"Conten":"https://www.optic-female.cn/AppPage/Registration?ID=d39d142a-1df8-4e81-b3ac-a948fe9755b0","FilePath":"http://www.optic-female.cn/Upload/file/2018-08-12/415c017d-e3e9-435e-9bae-778a845fa4e9.pdf","IsCollection":0},{"ID":"6ea9695d-752f-4daa-8e7c-7e2f7662c9e4","Name":"测试","Subtitle":"测试副标题","CreateTime":"2018/8/8 0:00:00","ClickNumber":0,"Type":1,"Conten":"https://www.optic-female.cn/AppPage/Registration?ID=6ea9695d-752f-4daa-8e7c-7e2f7662c9e4","FilePath":"http://www.optic-female.cn/Upload/file/2018-08-10/020314a0-38fc-46b3-8a59-7699d2e25066.doc","IsCollection":0}]
@@ -61,6 +67,32 @@ public class RegulationBookListBean {
 
         private PaginationBean Pagination;
         private List<ReadBean> Read;
+
+        protected ResultdataBean(Parcel in) {
+            Read = in.createTypedArrayList(ReadBean.CREATOR);
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeTypedList(Read);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<ResultdataBean> CREATOR = new Creator<ResultdataBean>() {
+            @Override
+            public ResultdataBean createFromParcel(Parcel in) {
+                return new ResultdataBean(in);
+            }
+
+            @Override
+            public ResultdataBean[] newArray(int size) {
+                return new ResultdataBean[size];
+            }
+        };
 
         public PaginationBean getPagination() {
             return Pagination;
@@ -78,7 +110,7 @@ public class RegulationBookListBean {
             this.Read = Read;
         }
 
-        public static class PaginationBean {
+        public static class PaginationBean  {
             /**
              * rows : 10
              * page : 1
@@ -154,7 +186,11 @@ public class RegulationBookListBean {
             }
         }
 
-        public static class ReadBean {
+        public static class ReadBean implements Parcelable {
+
+            public ReadBean() {
+            }
+
             /**
              * ID : e72396b2-ce72-4bcc-8352-c8d6348da573
              * Name : EXO2904 Datasheet-EN
@@ -176,6 +212,48 @@ public class RegulationBookListBean {
             private String Conten;
             private String FilePath;
             private int IsCollection;
+
+            protected ReadBean(Parcel in) {
+                ID = in.readString();
+                Name = in.readString();
+                Subtitle = in.readString();
+                CreateTime = in.readString();
+                ClickNumber = in.readInt();
+                Type = in.readInt();
+                Conten = in.readString();
+                FilePath = in.readString();
+                IsCollection = in.readInt();
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(ID);
+                dest.writeString(Name);
+                dest.writeString(Subtitle);
+                dest.writeString(CreateTime);
+                dest.writeInt(ClickNumber);
+                dest.writeInt(Type);
+                dest.writeString(Conten);
+                dest.writeString(FilePath);
+                dest.writeInt(IsCollection);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<ReadBean> CREATOR = new Creator<ReadBean>() {
+                @Override
+                public ReadBean createFromParcel(Parcel in) {
+                    return new ReadBean(in);
+                }
+
+                @Override
+                public ReadBean[] newArray(int size) {
+                    return new ReadBean[size];
+                }
+            };
 
             public String getID() {
                 return ID;

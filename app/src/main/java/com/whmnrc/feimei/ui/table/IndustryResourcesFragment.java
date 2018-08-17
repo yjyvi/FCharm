@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.presener.GetColumnPresenter;
-import com.whmnrc.feimei.presener.GetReadPresenter;
 import com.whmnrc.feimei.ui.BaseFragment;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
@@ -79,8 +77,7 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
 
     String[] titles = new String[]{"阅读", "文库", "规格书", "光通资讯"};
     private int headerHeight;
-    public GetColumnPresenter mGetColumnPresenter;
-    public GetReadPresenter mGetReadPresenter;
+
 
     @Override
     protected int contentViewLayoutID() {
@@ -93,9 +90,6 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-
-
-//        mRefresh.setOnRefreshLoadMoreListener(this);
 
         initFragment();
 
@@ -161,7 +155,7 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
 
     private void initTab() {
         viewPager.setAdapter(new TableViewPagerAdapter(getFragmentManager()));
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
         CommonNavigator commonNavigator = new CommonNavigator(getActivity());
         commonNavigator.setAdjustMode(true);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {

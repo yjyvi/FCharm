@@ -2,6 +2,8 @@ package com.whmnrc.feimei.ui.industry;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -21,6 +23,7 @@ import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.PayActivity;
 import com.whmnrc.feimei.ui.mine.PayVipActivity;
+import com.whmnrc.feimei.ui.product.ProductSpecificationsActivity;
 import com.whmnrc.feimei.utils.TimeUtils;
 
 import java.util.ArrayList;
@@ -69,6 +72,9 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
     public PopReadComment mPopReadComment;
     public AddOrDelCollectionPresenter mAddOrDelCollectionPresenter;
     public ResourcesFileBean.ResultdataBean.LibrarysBean mLibrarysBean;
+    private String downloadUrl;
+    private String downloadFileName;
+    private int mPosition;
 
 
     @Override
@@ -78,7 +84,7 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
         rightVisible(R.mipmap.icon_share);
 
         mType = getIntent().getIntExtra("type", -1);
-
+        mPosition = getIntent().getIntExtra("position", -1);
 
         mAddOrDelCollectionPresenter = new AddOrDelCollectionPresenter(this);
 
@@ -91,10 +97,29 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
 
         if (mType == FILE_DETAILS_TYPE) {
             mTvDownloadCount.setVisibility(View.VISIBLE);
+
             mLibrarysBean = getIntent().getParcelableExtra("librarysBean");
             if (mLibrarysBean != null) {
                 String url;
+
+                if (UserManager.getUserIsVip() || mLibrarysBean.getIsPay() == 1) {
+                    Drawable drawable = ContextCompat.getDrawable(mTvDownloadCount.getContext(), R.mipmap.icon_read_download2);
+                    if (drawable != null) {
+                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                        mTvDownloadCount.setCompoundDrawables(drawable, null, null, null);
+                    }
+                } else {
+                    Drawable drawable = ContextCompat.getDrawable(mTvDownloadCount.getContext(), R.mipmap.icon_read_download);
+                    if (drawable != null) {
+                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                        mTvDownloadCount.setCompoundDrawables(drawable, null, null, null);
+                    }
+                }
+
+
                 mReadId = mLibrarysBean.getID();
+                downloadUrl = mLibrarysBean.getFilePath();
+                downloadFileName = mLibrarysBean.getName();
                 if (UserManager.getUserIsVip()) {
                     url = mLibrarysBean.getChargeConten();
                 } else {
@@ -115,6 +140,7 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
             }
         } else {
             mTvDownloadCount.setVisibility(View.GONE);
+
             mReadId = getIntent().getStringExtra("readId");
             mGetReadDetailsPresenter = new GetReadDetailsPresenter(this);
             mGetReadDetailsPresenter.getReadDetails(mReadId);
@@ -134,10 +160,11 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
         context.startActivity(starter);
     }
 
-    public static void startFielDetails(Context context, ResourcesFileBean.ResultdataBean.LibrarysBean librarysBean, int type) {
+    public static void startFielDetails(Context context, ResourcesFileBean.ResultdataBean.LibrarysBean librarysBean, int type, int position) {
         Intent starter = new Intent(context, IndustryDetailsActivity.class);
         starter.putExtra("librarysBean", librarysBean);
         starter.putExtra("type", type);
+        starter.putExtra("position", position);
         context.startActivity(starter);
     }
 
@@ -165,6 +192,24 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
                 }
                 break;
             case R.id.tv_download_count:
+                if (mType == READ_DETAILS_TYPE) {
+                    return;
+                }
+
+                if (UserManager.getUserIsVip() || mLibrarysBean.getIsPay() == 1) {
+                    mTvDownloadCount.setEnabled(false);
+                    ProductSpecificationsActivity.showDownloadPop(IndustryDetailsActivity.this, mTvDownloadCount, downloadUrl, downloadFileName, 1, mReadId, new ProductSpecificationsActivity.DownloadListener() {
+                        @Override
+                        public void downloadSuccess() {
+                            mTvDownloadCount.setEnabled(true);
+                        }
+
+                        @Override
+                        public void downloadField() {
+                            mTvDownloadCount.setEnabled(true);
+                        }
+                    });
+                }
                 break;
             case R.id.tv_comment_count:
                 if (mPopReadComment == null) {
@@ -188,7 +233,7 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
                 if (isCollection == 1) {
                     ArrayList<String> readIds = new ArrayList<>();
                     readIds.add(mReadId);
-                    mAddOrDelCollectionPresenter.delCollection(readIds, AddOrDelCollectionPresenter.FILE_COLLECTION);
+                    mAddOrDelCollectionPresenter.delCollection(readIds);
                 } else {
                     mAddOrDelCollectionPresenter.addCollection(mReadId, AddOrDelCollectionPresenter.FILE_COLLECTION);
                 }
@@ -288,11 +333,32 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
     public void collectionSuccess(boolean isAdd) {
         mTvCollection.setSelected(isAdd);
         mTvCollection.setText(isAdd ? "已收藏" : "收藏");
-        mReadDetailsBean.setIsCollection(isAdd ? 1 : 0);
+        if (mReadDetailsBean != null) {
+            mReadDetailsBean.setIsCollection(isAdd ? 1 : 0);
+        }
+
+        if (mLibrarysBean != null) {
+            mLibrarysBean.setIsCollection(isAdd ? 1 : 0);
+        }
+
+        if (mCollectionListener != null) {
+            mCollectionListener.collectionSuccess(isAdd);
+        }
     }
 
     @Override
     public void collectionCodeField() {
 
+    }
+
+
+    public static CollectionListener mCollectionListener;
+
+    public static void setCollectionListener(CollectionListener collectionListener) {
+        mCollectionListener = collectionListener;
+    }
+
+    public interface CollectionListener {
+        void collectionSuccess(boolean isCollection);
     }
 }

@@ -66,6 +66,11 @@ public class SearchConditionBean implements Parcelable {
      */
     private String content;
 
+    /**
+     * 栏目ID
+     */
+    private String columnId;
+
 
     public SearchConditionBean() {
     }
@@ -84,6 +89,7 @@ public class SearchConditionBean implements Parcelable {
         mIndustryPid = in.readString();
         content = in.readString();
         enterpriseTypeID = in.readString();
+        columnId = in.readString();
     }
 
     public static final Creator<SearchConditionBean> CREATOR = new Creator<SearchConditionBean>() {
@@ -105,6 +111,14 @@ public class SearchConditionBean implements Parcelable {
 
     public void setEnterpriseTypeID(String enterpriseTypeID) {
         this.enterpriseTypeID = enterpriseTypeID;
+    }
+
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(String columnId) {
+        this.columnId = columnId;
     }
 
     public String getContent() {
@@ -224,5 +238,6 @@ public class SearchConditionBean implements Parcelable {
         dest.writeString(mIndustryPid);
         dest.writeString(content);
         dest.writeString(enterpriseTypeID);
+        dest.writeString(columnId);
     }
 }

@@ -9,6 +9,7 @@ import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
 import com.whmnrc.feimei.beans.ResourcesFileBean;
 import com.whmnrc.feimei.ui.industry.IndustryDetailsActivity;
 import com.whmnrc.feimei.ui.mine.PayActivity;
+import com.whmnrc.feimei.utils.BookFileTypeUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
 import com.whmnrc.mylibrary.utils.GlideUtils;
 
@@ -34,10 +35,12 @@ public class ResourceFileListAdapter extends CommonAdapter<ResourcesFileBean.Res
             GlideUtils.LoadImage(mContext, "", holder.getView(R.id.iv_video_img));
         } else {
             holder.setVisible(R.id.iv_video_img, false);
-
         }
+
+        BookFileTypeUtils.showFileType(holder.getView(R.id.tv_name), readBean.getType());
+
         holder.setText(R.id.tv_desc, readBean.getSubtitle());
-        holder.setText(R.id.tv_price, String.valueOf(readBean.getPrice()));
+        holder.setText(R.id.tv_price, String.format("收费：%s", readBean.getPrice()));
         holder.setText(R.id.tv_download_count, String.format("%s次下载", readBean.getDownloadNumber()));
         holder.setText(R.id.tv_time, TimeUtils.getDateToString(Long.parseLong(readBean.getCreateTime())));
 
@@ -46,13 +49,17 @@ public class ResourceFileListAdapter extends CommonAdapter<ResourcesFileBean.Res
             holder.getView(R.id.tv_is_download).setVisibility(View.INVISIBLE);
         } else {
             holder.getView(R.id.tv_is_download).setOnClickListener(v -> {
-                PayActivity.start(v.getContext(), PayActivity.RESOURCE_PAY, "12");
+                PayActivity.start(v.getContext(), PayActivity.RESOURCE_PAY, String.valueOf(readBean.getPrice()));
 
             });
         }
 
         holder.itemView.setOnClickListener(v -> {
-            IndustryDetailsActivity.startFielDetails(mContext, readBean, IndustryDetailsActivity.FILE_DETAILS_TYPE);
+            IndustryDetailsActivity.startFielDetails(mContext, readBean, IndustryDetailsActivity.FILE_DETAILS_TYPE, position);
+            IndustryDetailsActivity.setCollectionListener(isCollection -> {
+                readBean.setIsCollection(isCollection ? 1 : 0);
+                notifyItemChanged(position);
+            });
         });
 
     }

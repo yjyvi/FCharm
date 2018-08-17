@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,15 +19,18 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.beans.ProductDetailsBean;
+import com.whmnrc.feimei.beans.RegulationBookListBean;
 import com.whmnrc.feimei.pop.PopShare;
 import com.whmnrc.feimei.pop.PopUtils;
+import com.whmnrc.feimei.presener.DownloadFilePresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -36,25 +41,28 @@ import okhttp3.Call;
  * @data 2018/8/10.
  */
 
-public class ProductSpecificationsActivity extends BaseActivity {
+public class ProductSpecificationsActivity extends BaseActivity implements DownloadFilePresenter.DownloadFileListener {
     @BindView(R.id.web_content)
     WebView mWbContent;
-    public ProductDetailsBean.ResultdataBean.CommodityBean mCommodity;
+    public RegulationBookListBean.ResultdataBean.ReadBean mReadBean;
     @BindView(R.id.ll_commit)
     LinearLayout mLlCommit;
 
 
     private PopShare mPopShare;
+    public static DownloadFilePresenter mDownloadFilePresenter;
+    public int mType;
 
     @Override
     protected void initViewData() {
-
+        mDownloadFilePresenter = new DownloadFilePresenter(this);
 
         isShowDialog(true);
-        mCommodity = getIntent().getParcelableExtra("commodity");
+        mReadBean = getIntent().getParcelableExtra("readBean");
+        mType = getIntent().getIntExtra("type", -1);
         setTitle("行业资源");
         rightVisible(R.mipmap.icon_share);
-        if (mCommodity == null) {
+        if (mReadBean == null) {
             return;
         }
         mWbContent.post(() -> loadDetailsUrl());
@@ -65,7 +73,7 @@ public class ProductSpecificationsActivity extends BaseActivity {
      * 加载Url
      */
     private void loadDetailsUrl() {
-        mWbContent.loadUrl(mCommodity.getRegulationBookID());
+        mWbContent.loadUrl(mReadBean.getConten());
         WebSettings settings = mWbContent.getSettings();
         settings.setFixedFontFamily("monospace");
         settings.setJavaScriptEnabled(true);
@@ -110,9 +118,10 @@ public class ProductSpecificationsActivity extends BaseActivity {
         return R.layout.activity_product_specifications;
     }
 
-    public static void start(Context context, ProductDetailsBean.ResultdataBean.CommodityBean commodity) {
+    public static void start(Context context, RegulationBookListBean.ResultdataBean.ReadBean readBean, int type) {
         Intent starter = new Intent(context, ProductSpecificationsActivity.class);
-        starter.putExtra("commodity", commodity);
+        starter.putExtra("readBean", readBean);
+        starter.putExtra("type", type);
         context.startActivity(starter);
     }
 
@@ -122,13 +131,27 @@ public class ProductSpecificationsActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.rl_right:
                 mPopShare = new PopShare(ProductSpecificationsActivity.this,
-                        mCommodity.getName(),
-                        mCommodity.getImg(),
-                        mCommodity.getRegulationBookID(), " ");
+                        mReadBean.getName(),
+                        "",
+                        mReadBean.getConten(), mReadBean.getSubtitle());
                 mPopShare.show();
                 break;
             case R.id.ll_commit:
-                showDownloadPop(ProductSpecificationsActivity.this, mWbContent, mCommodity.getRegulationBookID(), mCommodity.getName());
+                mLlCommit.setEnabled(false);
+                mLlCommit.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.normal_gray));
+                showDownloadPop(ProductSpecificationsActivity.this, mWbContent, mReadBean.getFilePath(), mReadBean.getName(), mType, mReadBean.getID(), new DownloadListener() {
+                    @Override
+                    public void downloadSuccess() {
+                        mLlCommit.setEnabled(true);
+                        mLlCommit.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.normal_blue_text_color));
+                    }
+
+                    @Override
+                    public void downloadField() {
+                        mLlCommit.setEnabled(true);
+                        mLlCommit.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.normal_blue_text_color));
+                    }
+                });
                 break;
             default:
                 break;
@@ -143,7 +166,7 @@ public class ProductSpecificationsActivity extends BaseActivity {
      * @param contentView
      * @param url
      */
-    public static void showDownloadPop(final Context context, View contentView, final String url, String name) {
+    public static void showDownloadPop(final Context context, View contentView, final String url, String name, int fileType, String fileId, DownloadListener downloadListener) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
@@ -158,40 +181,71 @@ public class ProductSpecificationsActivity extends BaseActivity {
         PopUtils.showPoPNormal((Activity) context, contentView, popupWindow, Gravity.BOTTOM, null);
 
 
-
         TextView tvPopDownload = (TextView) popView.findViewById(com.whmnrc.mylibrary.R.id.tv_pop_download);
         TextView tvPopCancel = (TextView) popView.findViewById(com.whmnrc.mylibrary.R.id.tv_pop_cancel);
         tvPopDownload.setOnClickListener(v -> {
+            ToastUtils.showToast("开始下载");
             String filePath = Environment.getExternalStorageDirectory() + "/FeiMeiDownload/";
             String fileName = name + getFileNameNoEx(url);
             if (url.contains("http")) {
+
                 OkHttpUtils.get().url(url).build().execute(new FileCallBack(filePath, fileName) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         ToastUtils.showToast("下载失败");
+                        downloadListener.downloadField();
                     }
 
                     @Override
                     public void onResponse(File response, int id) {
-                        ToastUtils.showToast("下载成功");
+                        ToastUtils.showToast(String.format("下载成功,文件已下载到：%s", filePath));
+                        downloadListener.downloadSuccess();
+                        mDownloadFilePresenter.downloadFileReq(fileType, fileId);
                     }
                 });
             }
             popupWindow.dismiss();
         });
-        tvPopCancel.setOnClickListener(v -> popupWindow.dismiss());
+        tvPopCancel.setOnClickListener(v -> {
+            downloadListener.downloadField();
+            popupWindow.dismiss();
+        });
+
+        popupWindow.setOnDismissListener(() -> {
+            PopUtils.setBackgroundAlpha((Activity) context, 1F);
+            downloadListener.downloadField();
+        });
     }
+
+    @Override
+    public void downloadFileSuccess() {
+
+    }
+
+
+    public interface DownloadListener {
+        void downloadSuccess();
+
+        void downloadField();
+    }
+
+
+    private static String suffixes = "avi|mpeg|3gp|mp3|mp4|wav|jpeg|gif|jpg|png|apk|exe|pdf|rar|zip|docx|doc";
 
     /**
      * Java文件操作 获取不带扩展名的文件名
      */
     public static String getFileNameNoEx(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
-            int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length()))) {
-                return filename.substring(0, dot);
-            }
+        //正则判断
+        Pattern pat = Pattern.compile("[\\w]+[\\.](" + suffixes + ")");
+        //条件匹配
+        Matcher mc = pat.matcher(filename);
+        while (mc.find()) {
+            //截取文件名后缀名
+            filename = mc.group();
+            Log.e("substring:", filename);
         }
+
         return filename;
     }
 }

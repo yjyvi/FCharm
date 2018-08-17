@@ -13,6 +13,7 @@
         android:paddingLeft="@dimen/dm_15"
         android:paddingRight="@dimen/dm_15">
 
+
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
@@ -20,7 +21,6 @@
             android:layout_weight="1"
             android:drawableLeft="@mipmap/icon_w"
             android:drawablePadding="@dimen/dm_5"
-            android:text="标准规范"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_12"/>
 
@@ -28,7 +28,7 @@
             android:id="@+id/tv_collection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/icon_collection_false"
+            android:drawableLeft="@drawable/select_collection"
             android:drawablePadding="@dimen/dm_5"
             android:text="收藏"
             android:textColor="@color/normal_blue_text_color"
@@ -43,8 +43,10 @@
         android:layout_height="@dimen/dm_160"
         android:layout_marginLeft="@dimen/dm_15"
         android:layout_marginRight="@dimen/dm_15"
+        android:scaleType="center"
+        android:background="@color/normal_gray"
         android:layout_marginTop="@dimen/dm_10"
-        android:src="@color/normal_gray"/>
+        android:src="@mipmap/icon_video"/>
 
 
     <TextView
@@ -57,7 +59,6 @@
         android:lines="2"
         android:paddingLeft="@dimen/dm_15"
         android:paddingRight="@dimen/dm_15"
-        android:text="任何技术的出现和革新都伴随着资本的狂欢，都伴随着资本的狂欢，任何技术的出现和革新都伴随着资本的狂欢，都伴随着资..."
         android:textColor="@color/normal_gray"
         android:textSize="@dimen/dm_12"/>
 
@@ -76,8 +77,6 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:text="2018-7-24"
             android:textColor="@color/normal_gray"
             android:textSize="@dimen/dm_10"/>
 
@@ -89,7 +88,6 @@
             android:layout_alignTop="@id/tv_time"
             android:layout_marginLeft="@dimen/dm_10"
             android:layout_toRightOf="@id/tv_time"
-            android:text="810次下载"
             android:textSize="@dimen/dm_10"/>
 
         <TextView
@@ -99,7 +97,6 @@
             android:layout_alignTop="@id/tv_time"
             android:layout_marginLeft="@dimen/dm_10"
             android:layout_weight="1"
-            android:text="收费：￥100"
             android:textColor="@color/normal_red"
             android:textSize="@dimen/dm_10"/>
 

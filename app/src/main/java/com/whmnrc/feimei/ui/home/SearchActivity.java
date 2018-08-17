@@ -14,15 +14,21 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.SearchResultListAdapter;
 import com.whmnrc.feimei.beans.EnterpriseListBean;
 import com.whmnrc.feimei.beans.GetRecruitBean;
+import com.whmnrc.feimei.beans.NewsListBean;
 import com.whmnrc.feimei.beans.ProductListBean;
 import com.whmnrc.feimei.beans.ReadListBean;
 import com.whmnrc.feimei.beans.RegulationBookListBean;
+import com.whmnrc.feimei.beans.ResourcesFileBean;
 import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.presener.GetEnterprisePresenter;
+import com.whmnrc.feimei.presener.GetLibraryPresenter;
+import com.whmnrc.feimei.presener.GetNewsPresenter;
 import com.whmnrc.feimei.presener.GetProductListPresenter;
 import com.whmnrc.feimei.presener.GetReadPresenter;
 import com.whmnrc.feimei.presener.GetRecruitPresenter;
@@ -38,7 +44,7 @@ import butterknife.OnClick;
  * 综合搜索页面
  */
 
-public class SearchActivity extends BaseActivity implements GetRecruitPresenter.GetRecruitListener, GetProductListPresenter.GetProductListListener, GetEnterprisePresenter.GetEnterpriseListener, GetReadPresenter.GetReadListener, GetRegulationBookPresenter.GetBookListener {
+public class SearchActivity extends BaseActivity implements GetRecruitPresenter.GetRecruitListener, GetProductListPresenter.GetProductListListener, GetEnterprisePresenter.GetEnterpriseListener, GetReadPresenter.GetReadListener, GetRegulationBookPresenter.GetBookListener, GetLibraryPresenter.GetLibraryListener, GetNewsPresenter.GetNewsListener {
     @BindView(R.id.et_search_content)
     EditText mEtSearchContent;
     @BindView(R.id.vs_empty)
@@ -94,6 +100,8 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
     private String mSearchContent;
     private GetReadPresenter mGetReadPresenter;
     private GetRegulationBookPresenter mGetRegulationBookPresenter;
+    private GetLibraryPresenter mGetLibraryPresenter;
+    private GetNewsPresenter mGetNewsPresenter;
 
     @Override
     protected void initViewData() {
@@ -128,6 +136,18 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
                 return false;
             });
         }
+
+        mRefresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore();
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                refreshLayout.finishRefresh();
+            }
+        });
 
         if (mSearchConditionBean == null) {
             return;
@@ -169,18 +189,22 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
                 mGetReadPresenter.getReadList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getColumnId());
                 break;
             case SEARCH_FILE:
-
+                mAdapter = new SearchResultListAdapter(this, R.layout.item_library_resource_list, mType);
+                mGetLibraryPresenter = new GetLibraryPresenter(this);
+                mGetLibraryPresenter.getLibraryList(true, mSearchConditionBean.getContent());
                 break;
             case SEARCH_BOOK:
+                mAdapter = new SearchResultListAdapter(this, R.layout.item_library_resource_list, mType);
                 mGetRegulationBookPresenter = new GetRegulationBookPresenter(this);
                 mGetRegulationBookPresenter.getBookList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getColumnId());
                 break;
             case SEARCH_INFORMATION:
+                mAdapter = new SearchResultListAdapter(this, R.layout.item_information_resource_list, mType);
+                mGetNewsPresenter = new GetNewsPresenter(this);
+                mGetNewsPresenter.getNewsList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getCurrentNewType());
                 break;
             case SEARCH_SPECIAL:
-
                 mAdapter = new SearchResultListAdapter(this, R.layout.item_recruitment_list, mType);
-
                 mGetRecruitPresenter = new GetRecruitPresenter(this);
                 mGetRecruitPresenter.getRecruit(true,
                         mSearchConditionBean.getContent(),
@@ -268,17 +292,38 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
     }
 
     @Override
+    public void getReadSuccess(boolean isRefresh, ResourcesFileBean.ResultdataBean bean) {
+        mAdapter.setDataArray(bean.getLibrarys());
+        mAdapter.notifyDataSetChanged();
+        showEmpty(mAdapter, mVsEmpty);
+    }
+
+    @Override
     public void getReadField() {
 
     }
 
     @Override
     public void getBookSuccess(boolean isRefresh, RegulationBookListBean.ResultdataBean bean) {
-
+        mAdapter.setDataArray(bean.getRead());
+        mAdapter.notifyDataSetChanged();
+        showEmpty(mAdapter, mVsEmpty);
     }
 
     @Override
     public void getBookField() {
+
+    }
+
+    @Override
+    public void getNewsSuccess(boolean isRefresh, NewsListBean.ResultdataBean bean) {
+        mAdapter.setDataArray(bean.getNews());
+        mAdapter.notifyDataSetChanged();
+        showEmpty(mAdapter, mVsEmpty);
+    }
+
+    @Override
+    public void getNewsField() {
 
     }
 }

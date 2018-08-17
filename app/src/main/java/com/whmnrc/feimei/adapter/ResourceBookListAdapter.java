@@ -22,6 +22,11 @@ public class ResourceBookListAdapter extends CommonAdapter<RegulationBookListBea
         super(context, layoutId);
     }
 
+
+    public interface BookCollectionListener {
+        void clickCollection(int position);
+    }
+
     private BookCollectionListener mBookCollectionListener;
 
     public void setBookCollectionListener(BookCollectionListener bookCollectionListener) {
@@ -30,6 +35,13 @@ public class ResourceBookListAdapter extends CommonAdapter<RegulationBookListBea
 
     @Override
     public void convert(ViewHolder holder, RegulationBookListBean.ResultdataBean.ReadBean readBean, int position) {
+
+        if (getDatas().size() - 1 == position) {
+            holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
+        } else {
+            holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
+        }
+
         holder.setText(R.id.tv_name, readBean.getName());
         holder.setText(R.id.tv_collection, readBean.getIsCollection() == 1 ? "已收藏" : "收藏");
         holder.getView(R.id.tv_collection).setSelected(readBean.getIsCollection() == 1);
@@ -68,9 +80,6 @@ public class ResourceBookListAdapter extends CommonAdapter<RegulationBookListBea
 
     }
 
-    public interface BookCollectionListener {
-        void clickCollection(int position);
-    }
 
 
 }

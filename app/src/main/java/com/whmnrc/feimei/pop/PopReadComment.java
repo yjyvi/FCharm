@@ -21,6 +21,7 @@ import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
 import com.whmnrc.feimei.beans.CommentListBean;
 import com.whmnrc.feimei.beans.ProductTypeBean;
 import com.whmnrc.feimei.presener.GetCommentPresenter;
+import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.CommentActivity;
 
 import java.util.ArrayList;
@@ -122,6 +123,11 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
         mPopupWindow.setTouchable(true);
 
         view.findViewById(R.id.tv_send_comment).setOnClickListener(v -> {
+
+            if (!UserManager.getIsLogin(mContext)) {
+                return;
+            }
+
             CommentActivity.start(mContext, mReadId);
             CommentActivity.setCommentListener(() -> mGetCommentPresenter.getComment(mReadId, true));
         });

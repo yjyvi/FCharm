@@ -85,7 +85,8 @@ public class ColumnActivity extends BaseActivity implements GetReadPresenter.Get
                 if (!TextUtils.isEmpty(mSearchContent)) {
                     SearchConditionBean searchConditionBean = new SearchConditionBean();
                     searchConditionBean.setContent(mSearchContent);
-                    SearchActivity.start(view.getContext(), SearchActivity.SEARCH_COLUMN, searchConditionBean);
+                    searchConditionBean.setColumnId(mColumnId);
+                    SearchActivity.start(view.getContext(), SearchActivity.SEARCH_READ, searchConditionBean);
                     mTvSearch.setText("");
                     return true;
                 }

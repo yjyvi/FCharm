@@ -56,6 +56,8 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
     TextView mTvReadPageHint;
     @BindView(R.id.tv_join_vip)
     TextView mTvJoinVip;
+    @BindView(R.id.tv_price)
+    TextView mTvPrice;
 
     public PopShare mPopShare;
     public PopAppreciate mPopAppreciate;
@@ -120,9 +122,11 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
                 mReadId = mLibrarysBean.getID();
                 downloadUrl = mLibrarysBean.getFilePath();
                 downloadFileName = mLibrarysBean.getName();
-                if (UserManager.getUserIsVip()) {
+                if (UserManager.getUserIsVip() || mLibrarysBean.getIsPay() == 1) {
+                    mTvReadPageHint.setVisibility(View.GONE);
                     url = mLibrarysBean.getChargeConten();
                 } else {
+                    mTvReadPageHint.setVisibility(View.VISIBLE);
                     url = mLibrarysBean.getFreeConten();
                 }
 
@@ -131,7 +135,7 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
                 mTvTitle.setText(mLibrarysBean.getTitle());
                 mTvTimeBrowse.setText(String.format("%s 阅读%s", TimeUtils.getDateToString(Long.parseLong(mLibrarysBean.getCreateTime())), mLibrarysBean.getClickNumber()));
                 mTvDownloadCount.setText(String.valueOf(mLibrarysBean.getDownloadNumber()));
-//                mTvCommentCount.setText(String.valueOf(mLibrarysBean.getCommentCount()));
+                mTvCommentCount.setText(String.valueOf(mLibrarysBean.getCommentCount()));
 
                 mTvCollection.setSelected(mLibrarysBean.getIsCollection() == 1);
                 mTvCollection.setText(mLibrarysBean.getIsCollection() == 1 ? "已收藏" : "收藏");
@@ -180,6 +184,11 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
                 mPopShare.show();
                 break;
             case R.id.iv_zan:
+
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
                 if (mPopAppreciate == null) {
                     mPopAppreciate = new PopAppreciate(IndustryDetailsActivity.this);
                 }
@@ -187,11 +196,19 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
                 mPopAppreciate.setPopHintListener(() -> PayActivity.start(view.getContext(), PayActivity.ONE_PAY, "20"));
                 break;
             case R.id.tv_join_vip:
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
                 if (!UserManager.getUserIsVip()) {
                     PayVipActivity.start(view.getContext());
                 }
                 break;
             case R.id.tv_download_count:
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
                 if (mType == READ_DETAILS_TYPE) {
                     return;
                 }
@@ -220,6 +237,11 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
 
                 break;
             case R.id.tv_collection:
+
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
                 int isCollection = 0;
 
                 if (mReadDetailsBean != null) {
@@ -259,9 +281,13 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
         this.mReadDetailsBean = readDetailsBean;
         if (readDetailsBean != null) {
             String url;
-            if (UserManager.getUserIsVip()) {
+            if (UserManager.getUserIsVip() || readDetailsBean.getIsPay() == 1) {
                 url = readDetailsBean.getRead().getChargeConten();
+                mTvPrice.setVisibility(View.GONE);
+                mTvReadPageHint.setVisibility(View.GONE);
             } else {
+                mTvPrice.setVisibility(View.VISIBLE);
+                mTvReadPageHint.setVisibility(View.VISIBLE);
                 url = readDetailsBean.getRead().getFreeConten();
             }
 

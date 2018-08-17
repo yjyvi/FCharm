@@ -71,6 +71,11 @@ public class SearchConditionBean implements Parcelable {
      */
     private String columnId;
 
+    /**
+     * 资讯类型
+     */
+    private int currentNewType;
+
 
     public SearchConditionBean() {
     }
@@ -90,6 +95,7 @@ public class SearchConditionBean implements Parcelable {
         content = in.readString();
         enterpriseTypeID = in.readString();
         columnId = in.readString();
+        currentNewType = in.readInt();
     }
 
     public static final Creator<SearchConditionBean> CREATOR = new Creator<SearchConditionBean>() {
@@ -104,6 +110,14 @@ public class SearchConditionBean implements Parcelable {
         }
     };
 
+
+    public int getCurrentNewType() {
+        return currentNewType;
+    }
+
+    public void setCurrentNewType(int currentNewType) {
+        this.currentNewType = currentNewType;
+    }
 
     public String getEnterpriseTypeID() {
         return enterpriseTypeID;
@@ -239,5 +253,6 @@ public class SearchConditionBean implements Parcelable {
         dest.writeString(content);
         dest.writeString(enterpriseTypeID);
         dest.writeString(columnId);
+        dest.writeInt(currentNewType);
     }
 }

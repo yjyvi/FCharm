@@ -235,6 +235,7 @@ public class ResourcesFileBean {
             private int Type;
             private String FilePath;
             private int DownloadNumber;
+            private int CommentCount;
             private int IsCollection;
             private int IsPay;
 
@@ -254,6 +255,7 @@ public class ResourcesFileBean {
                 DownloadNumber = in.readInt();
                 IsCollection = in.readInt();
                 IsPay = in.readInt();
+                CommentCount = in.readInt();
             }
 
             @Override
@@ -273,6 +275,7 @@ public class ResourcesFileBean {
                 dest.writeInt(DownloadNumber);
                 dest.writeInt(IsCollection);
                 dest.writeInt(IsPay);
+                dest.writeInt(CommentCount);
             }
 
             @Override
@@ -291,6 +294,14 @@ public class ResourcesFileBean {
                     return new LibrarysBean[size];
                 }
             };
+
+            public int getCommentCount() {
+                return CommentCount;
+            }
+
+            public void setCommentCount(int commentCount) {
+                CommentCount = commentCount;
+            }
 
             public String getID() {
                 return ID;

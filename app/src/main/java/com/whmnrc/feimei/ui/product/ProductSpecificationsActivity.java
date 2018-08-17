@@ -41,7 +41,7 @@ import okhttp3.Call;
  * @data 2018/8/10.
  */
 
-public class ProductSpecificationsActivity extends BaseActivity implements DownloadFilePresenter.DownloadFileListener {
+public class ProductSpecificationsActivity extends BaseActivity {
     @BindView(R.id.web_content)
     WebView mWbContent;
     public RegulationBookListBean.ResultdataBean.ReadBean mReadBean;
@@ -50,12 +50,10 @@ public class ProductSpecificationsActivity extends BaseActivity implements Downl
 
 
     private PopShare mPopShare;
-    public static DownloadFilePresenter mDownloadFilePresenter;
     public int mType;
 
     @Override
     protected void initViewData() {
-        mDownloadFilePresenter = new DownloadFilePresenter(this);
 
         isShowDialog(true);
         mReadBean = getIntent().getParcelableExtra("readBean");
@@ -200,7 +198,11 @@ public class ProductSpecificationsActivity extends BaseActivity implements Downl
                     public void onResponse(File response, int id) {
                         ToastUtils.showToast(String.format("下载成功,文件已下载到：%s", filePath));
                         downloadListener.downloadSuccess();
-                        mDownloadFilePresenter.downloadFileReq(fileType, fileId);
+                        DownloadFilePresenter downloadFilePresenter = new DownloadFilePresenter(() -> {
+
+                        });
+                        downloadFilePresenter.downloadFileReq(fileType, fileId);
+
                     }
                 });
             }
@@ -217,10 +219,6 @@ public class ProductSpecificationsActivity extends BaseActivity implements Downl
         });
     }
 
-    @Override
-    public void downloadFileSuccess() {
-
-    }
 
 
     public interface DownloadListener {
@@ -230,7 +228,7 @@ public class ProductSpecificationsActivity extends BaseActivity implements Downl
     }
 
 
-    private static String suffixes = "avi|mpeg|3gp|mp3|mp4|wav|jpeg|gif|jpg|png|apk|exe|pdf|rar|zip|docx|doc";
+    private static String suffixes = "avi|mpeg|3gp|mp3|mp4|wav|jpeg|gif|jpg|png|apk|exe|pdf|rar|zip|docx|doc|xls|ppt|pptx|xlsx";
 
     /**
      * Java文件操作 获取不带扩展名的文件名

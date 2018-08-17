@@ -85,6 +85,8 @@
     <string name="DownloadNumber">/api/Industry/DownloadNumber</string>
     <!--获取文库-->
     <string name="GetLibrary">/api/Industry/GetLibrary</string>
+    <!--获取光通资讯-->
+    <string name="GetNews">/api/Industry/GetNews</string>
 
 
 </resources>

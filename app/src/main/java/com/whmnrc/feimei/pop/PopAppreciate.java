@@ -81,25 +81,19 @@ public class PopAppreciate {
         });
 
 
-        ivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPopupWindow != null) {
-                    mPopupWindow.dismiss();
-                }
+        ivClose.setOnClickListener(v -> {
+            if (mPopupWindow != null) {
+                mPopupWindow.dismiss();
             }
         });
 
-        tvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPopupWindow != null) {
-                    mPopupWindow.dismiss();
-                }
+        tvConfirm.setOnClickListener(v -> {
+            if (mPopupWindow != null) {
+                mPopupWindow.dismiss();
+            }
 
-                if (mPopHintListener != null) {
-                    mPopHintListener.confirm();
-                }
+            if (mPopHintListener != null) {
+                mPopHintListener.confirm();
             }
         });
 

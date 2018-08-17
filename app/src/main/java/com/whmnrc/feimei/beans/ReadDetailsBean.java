@@ -64,6 +64,15 @@ public class ReadDetailsBean {
         private ReadBean Read;
         private int CommentCount;
         private int IsCollection;
+        private int IsPay;
+
+        public int getIsPay() {
+            return IsPay;
+        }
+
+        public void setIsPay(int isPay) {
+            IsPay = isPay;
+        }
 
         public ReadBean getRead() {
             return Read;

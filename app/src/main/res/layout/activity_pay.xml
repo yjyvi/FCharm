@@ -215,8 +215,10 @@
                     android:layout_height="@dimen/dm_160"
                     android:layout_marginLeft="@dimen/dm_15"
                     android:layout_marginRight="@dimen/dm_15"
+                    android:scaleType="center"
+                    android:background="@color/normal_gray"
                     android:layout_marginTop="@dimen/dm_10"
-                    android:src="@color/normal_gray"/>
+                    android:src="@mipmap/icon_video"/>
 
 
                 <TextView

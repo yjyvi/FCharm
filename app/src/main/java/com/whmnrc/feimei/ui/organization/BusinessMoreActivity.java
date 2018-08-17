@@ -11,6 +11,7 @@ import android.view.ViewStub;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.OtherListAdapter;
+import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
 import com.whmnrc.feimei.beans.OrganizationDetailsBean;
 import com.whmnrc.feimei.ui.BaseActivity;
 
@@ -60,6 +61,18 @@ public class BusinessMoreActivity extends BaseActivity {
         mRvBusinessList.setAdapter(otherListAdapter);
 
         showEmpty(otherListAdapter, mVsEmpty);
+
+        otherListAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                OrganizationDetailsActivity.start(view.getContext(), otherListAdapter.getDatas().get(position).getEnterprise_ID());
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
     }
 
     @Override

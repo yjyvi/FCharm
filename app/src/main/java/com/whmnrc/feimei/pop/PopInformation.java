@@ -78,9 +78,11 @@ public class PopInformation {
         this.showView = showView;
 
         mDataList.add(new InformationTypeBean("全部", -1));
-        mDataList.add(new InformationTypeBean("技术", 0));
-        mDataList.add(new InformationTypeBean("市场", 1));
-        mDataList.add(new InformationTypeBean("其它", 2));
+        mDataList.add(new InformationTypeBean("标准规范", 0));
+        mDataList.add(new InformationTypeBean("行业论文", 1));
+        mDataList.add(new InformationTypeBean("技术文章", 2));
+        mDataList.add(new InformationTypeBean("行业视频", 3));
+        mDataList.add(new InformationTypeBean("其它", 4));
 
         View view = LayoutInflater.from(context).inflate(R.layout.pop_information, null);
         RecyclerView mRvType = view.findViewById(R.id.rv_list);

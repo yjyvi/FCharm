@@ -10,14 +10,23 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.adapter.ResourceListAdapter;
+import com.whmnrc.feimei.adapter.ResourceNewsAdapter;
+import com.whmnrc.feimei.beans.NewsListBean;
 import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.pop.PopInformation;
-import com.whmnrc.feimei.presener.GetLibraryPresenter;
+import com.whmnrc.feimei.presener.AddOrDelCollectionPresenter;
+import com.whmnrc.feimei.presener.GetNewsPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
+import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -27,7 +36,7 @@ import butterknife.BindView;
  * 光通通迅
  */
 
-public class FragmentInformationResource extends LazyLoadFragment {
+public class FragmentInformationResource extends LazyLoadFragment implements GetNewsPresenter.GetNewsListener, AddOrDelCollectionPresenter.AddOrDelCollectionListener {
 
     @BindView(R.id.vs_empty)
     ViewStub mVsEmpty;
@@ -39,10 +48,15 @@ public class FragmentInformationResource extends LazyLoadFragment {
     EditText mEtSearchContent;
     @BindView(R.id.tv_type_name)
     TextView mTvTypeName;
+    @BindView(R.id.refresh)
+    SmartRefreshLayout mRefresh;
 
     private PopInformation mPopInformation;
-    public GetLibraryPresenter mGetLibraryPresenter;
-    public ResourceListAdapter mResourceListAdapter;
+    public ResourceNewsAdapter mResourceNewsAdapter;
+    public GetNewsPresenter mGetNewsPresenter;
+    public int mCollectionPosition;
+    private AddOrDelCollectionPresenter mAddOrDelCollectionPresenter;
+    public int currentNewType = -1;
 
     @Override
     protected int contentViewLayoutID() {
@@ -52,11 +66,53 @@ public class FragmentInformationResource extends LazyLoadFragment {
     @Override
     protected void initViewData() {
 
+        mGetNewsPresenter = new GetNewsPresenter(this);
+        mGetNewsPresenter.getNewsList();
+
+        mAddOrDelCollectionPresenter = new AddOrDelCollectionPresenter(this);
+
+        mRefresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore();
+                mGetNewsPresenter.getNewsList(false, "", -1);
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                mGetNewsPresenter.getNewsList(true, "", currentNewType);
+                refreshLayout.setEnableLoadMore(true);
+                refreshLayout.finishRefresh();
+            }
+        });
 
         mRvProductList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRvProductList.setNestedScrollingEnabled(false);
-        mResourceListAdapter = new ResourceListAdapter(getActivity(), R.layout.item_information_resource_list);
-        mRvProductList.setAdapter(mResourceListAdapter);
+        mResourceNewsAdapter = new ResourceNewsAdapter(getActivity(), R.layout.item_information_resource_list);
+        mRvProductList.setAdapter(mResourceNewsAdapter);
+
+        mResourceNewsAdapter.setNewsCollectionListener(position -> {
+
+            if (!UserManager.getIsLogin(getActivity())) {
+                return;
+            }
+
+            mCollectionPosition = position;
+            NewsListBean.ResultdataBean.NewsBean readBean = mResourceNewsAdapter.getDatas().get(position);
+            if (readBean.getIsCollection() == 1) {
+                ArrayList<String> readIds = new ArrayList<>();
+                readIds.add(readBean.getID());
+                mAddOrDelCollectionPresenter.delCollection(readIds);
+            } else {
+                mAddOrDelCollectionPresenter.addCollection(readBean.getID(), AddOrDelCollectionPresenter.INFORMATION_COLLECTION);
+            }
+        });
+
+        mResourceNewsAdapter.setGoToDetailsListener(position -> {
+            NewsListBean.ResultdataBean.NewsBean newsBean = mResourceNewsAdapter.getDatas().get(position);
+            newsBean.setClickNumber(newsBean.getClickNumber() + 1);
+            mResourceNewsAdapter.notifyItemChanged(position);
+        });
 
         mEtSearchContent.requestFocus();
         mEtSearchContent.setOnEditorActionListener((view, keyCode, event) -> {
@@ -68,6 +124,7 @@ public class FragmentInformationResource extends LazyLoadFragment {
                 if (!TextUtils.isEmpty(mSearchContent)) {
                     SearchConditionBean searchConditionBean = new SearchConditionBean();
                     searchConditionBean.setContent(mSearchContent);
+                    searchConditionBean.setCurrentNewType(currentNewType);
                     SearchActivity.start(getActivity(), SearchActivity.SEARCH_INFORMATION, searchConditionBean);
                     mEtSearchContent.setText("");
                     return true;
@@ -82,6 +139,8 @@ public class FragmentInformationResource extends LazyLoadFragment {
                 mPopInformation = new PopInformation(getActivity(), mLlFilter);
                 mPopInformation.setPopHintListener(bean -> {
                     mTvTypeName.setText(bean.getTypeName());
+                    currentNewType = bean.getType();
+                    mGetNewsPresenter.getNewsList(true, "", currentNewType);
                 });
             }
 
@@ -103,4 +162,39 @@ public class FragmentInformationResource extends LazyLoadFragment {
     }
 
 
+    @Override
+    public void getNewsSuccess(boolean isRefresh, NewsListBean.ResultdataBean bean) {
+        if (isRefresh) {
+            mResourceNewsAdapter.setDataArray(bean.getNews());
+        } else {
+            List<NewsListBean.ResultdataBean.NewsBean> datas = mResourceNewsAdapter.getDatas();
+
+            if (datas.size() == bean.getPagination().getRecords()) {
+                mRefresh.setEnableLoadMore(false);
+            }
+
+            datas.addAll(bean.getNews());
+            mResourceNewsAdapter.setDataArray(datas);
+        }
+        mResourceNewsAdapter.notifyDataSetChanged();
+
+        showEmpty(mResourceNewsAdapter, mVsEmpty);
+
+    }
+
+    @Override
+    public void getNewsField() {
+
+    }
+
+    @Override
+    public void collectionSuccess(boolean isAdd) {
+        mResourceNewsAdapter.getDatas().get(mCollectionPosition).setIsCollection(isAdd ? 1 : 0);
+        mResourceNewsAdapter.notifyItemChanged(mCollectionPosition);
+    }
+
+    @Override
+    public void collectionCodeField() {
+
+    }
 }

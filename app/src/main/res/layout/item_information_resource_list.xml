@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/dm_15"
                 android:paddingRight="@dimen/dm_15"
@@ -26,11 +27,11 @@
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:lineSpacingExtra="@dimen/dm_5"
             android:layout_marginTop="@dimen/dm_5"
             android:layout_weight="1"
+            android:ellipsize="end"
+            android:lineSpacingExtra="@dimen/dm_5"
+            android:lines="2"
             android:text="动力电池巨头通讯资讯动力电池巨头通讯资讯动力电池巨头通"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_12"/>
@@ -40,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dm_5"
-            android:drawableLeft="@mipmap/icon_collection_false"
+            android:drawableLeft="@drawable/select_collection"
             android:drawablePadding="@dimen/dm_5"
             android:text="收藏"
             android:textColor="@color/normal_blue_text_color"
@@ -49,6 +50,7 @@
 
 
     <TextView
+        android:id="@+id/tv_news_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/iv_img"
@@ -65,6 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/iv_img"
+        android:layout_marginBottom="@dimen/dm_5"
         android:layout_alignParentRight="true"
         android:text="810已阅读"
         android:textSize="@dimen/dm_10"/>
@@ -74,6 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/iv_img"
+        android:layout_marginBottom="@dimen/dm_5"
         android:layout_marginRight="@dimen/dm_15"
         android:layout_toLeftOf="@id/tv_download_count"
         android:text="2018-7-24"
@@ -81,6 +85,7 @@
 
 
     <View
+        android:id="@+id/v_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dm_0.5"
         android:layout_below="@id/iv_img"

@@ -37,7 +37,6 @@ public class DownloadFilePresenter extends PresenterBase {
                 if (data.getType() == 1) {
                     mDownloadFileListener.downloadFileSuccess();
                 } else {
-//                    mDownloadFileListener.downloadFileField();
                     ToastUtils.showToast(data.getMessage());
                 }
             }
@@ -47,8 +46,6 @@ public class DownloadFilePresenter extends PresenterBase {
 
     public interface DownloadFileListener {
         void downloadFileSuccess();
-
-//        void downloadFileField();
     }
 
 }

@@ -156,9 +156,9 @@ public class PopShare implements View.OnClickListener {
      */
     public void dismiss() {
         mPopupWindow.dismiss();
-        if (sBitmap != null) {
-            sBitmap.recycle();
-        }
+//        if (sBitmap != null) {
+//            sBitmap.recycle();
+//        }
     }
 
 

@@ -95,8 +95,8 @@ public class LoginActivity extends BaseActivity implements LoginPresenter.LoginL
         mIsExit = getIntent().getBooleanExtra("isExit", false);
         mEmailLoginPresenter = new LoginPresenter(this);
 
-        mEtPhoneNumber.setText("13554542559");
-        mEtPwd.setText("123456");
+//        mEtPhoneNumber.setText("13554542559");
+//        mEtPwd.setText("123456");
 
         isAccountLogin(true);
     }

@@ -20,6 +20,7 @@ import com.whmnrc.feimei.beans.SearchConditionBean;
 import com.whmnrc.feimei.presener.AddOrDelCollectionPresenter;
 import com.whmnrc.feimei.presener.GetRegulationBookPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
+import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
 
@@ -86,7 +87,12 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
         });
 
         mResourceBookListAdapter.setBookCollectionListener(position -> {
-            this.mCollectionPosition = position;
+
+            if (!UserManager.getIsLogin(getActivity())) {
+                return;
+            }
+
+            mCollectionPosition = position;
             RegulationBookListBean.ResultdataBean.ReadBean readBean = mResourceBookListAdapter.getDatas().get(position);
             if (readBean.getIsCollection() == 1) {
                 ArrayList<String> readIds = new ArrayList<>();
@@ -151,11 +157,7 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
 
     @Override
     public void collectionSuccess(boolean isAdd) {
-        if (isAdd) {
-            mResourceBookListAdapter.getDatas().get(mCollectionPosition).setIsCollection(1);
-        } else {
-            mResourceBookListAdapter.getDatas().get(mCollectionPosition).setIsCollection(0);
-        }
+        mResourceBookListAdapter.getDatas().get(mCollectionPosition).setIsCollection(isAdd ? 1 : 0);
         mResourceBookListAdapter.notifyItemChanged(mCollectionPosition);
     }
 

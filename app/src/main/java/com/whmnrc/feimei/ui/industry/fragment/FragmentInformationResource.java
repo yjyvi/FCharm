@@ -8,10 +8,13 @@ import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ResourceListAdapter;
 import com.whmnrc.feimei.beans.SearchConditionBean;
+import com.whmnrc.feimei.pop.PopInformation;
+import com.whmnrc.feimei.presener.GetLibraryPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
@@ -21,6 +24,7 @@ import butterknife.BindView;
 /**
  * @author yjyvi
  * @data 2018/7/24.
+ * 光通通迅
  */
 
 public class FragmentInformationResource extends LazyLoadFragment {
@@ -33,6 +37,12 @@ public class FragmentInformationResource extends LazyLoadFragment {
     LinearLayout mLlFilter;
     @BindView(R.id.et_search_content)
     EditText mEtSearchContent;
+    @BindView(R.id.tv_type_name)
+    TextView mTvTypeName;
+
+    private PopInformation mPopInformation;
+    public GetLibraryPresenter mGetLibraryPresenter;
+    public ResourceListAdapter mResourceListAdapter;
 
     @Override
     protected int contentViewLayoutID() {
@@ -43,13 +53,12 @@ public class FragmentInformationResource extends LazyLoadFragment {
     protected void initViewData() {
 
 
-
         mRvProductList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRvProductList.setNestedScrollingEnabled(false);
-        ResourceListAdapter resourceListAdapter = new ResourceListAdapter(getActivity(), R.layout.item_information_resource_list);
-        mRvProductList.setAdapter(resourceListAdapter);
+        mResourceListAdapter = new ResourceListAdapter(getActivity(), R.layout.item_information_resource_list);
+        mRvProductList.setAdapter(mResourceListAdapter);
 
-
+        mEtSearchContent.requestFocus();
         mEtSearchContent.setOnEditorActionListener((view, keyCode, event) -> {
             if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
                 // 先隐藏键盘
@@ -66,6 +75,18 @@ public class FragmentInformationResource extends LazyLoadFragment {
             }
             return false;
         });
+
+
+        mLlFilter.setOnClickListener(v -> {
+            if (mPopInformation == null) {
+                mPopInformation = new PopInformation(getActivity(), mLlFilter);
+                mPopInformation.setPopHintListener(bean -> {
+                    mTvTypeName.setText(bean.getTypeName());
+                });
+            }
+
+            mPopInformation.show();
+        });
     }
 
     /**
@@ -80,4 +101,6 @@ public class FragmentInformationResource extends LazyLoadFragment {
         fragmentResource.setArguments(bundle);
         return fragmentResource;
     }
+
+
 }

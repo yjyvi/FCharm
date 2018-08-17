@@ -1,5 +1,8 @@
 package com.whmnrc.feimei.beans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author yjyvi
  * @data 2018/8/16.
@@ -86,7 +89,10 @@ public class ReadDetailsBean {
             this.IsCollection = IsCollection;
         }
 
-        public static class ReadBean {
+        public static class ReadBean implements Parcelable{
+            public ReadBean() {
+            }
+
             /**
              * ID : 7e11101c-1f83-4963-aea4-fd44e0e01bf5
              * Title : 测试标题
@@ -101,6 +107,8 @@ public class ReadDetailsBean {
              * Img : http://www.optic-female.cn/Resource/PhotoFile/20ba5c34-41ae-4c4e-a38c-6e30fde3f8c4.jpg
              */
 
+
+
             private String ID;
             private String Title;
             private String Subtitle;
@@ -112,6 +120,52 @@ public class ReadDetailsBean {
             private int Price;
             private int ClickNumber;
             private String Img;
+
+            protected ReadBean(Parcel in) {
+                ID = in.readString();
+                Title = in.readString();
+                Subtitle = in.readString();
+                Name = in.readString();
+                CreateTime = in.readString();
+                FreeConten = in.readString();
+                ChargeConten = in.readString();
+                ChargePage = in.readInt();
+                Price = in.readInt();
+                ClickNumber = in.readInt();
+                Img = in.readString();
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(ID);
+                dest.writeString(Title);
+                dest.writeString(Subtitle);
+                dest.writeString(Name);
+                dest.writeString(CreateTime);
+                dest.writeString(FreeConten);
+                dest.writeString(ChargeConten);
+                dest.writeInt(ChargePage);
+                dest.writeInt(Price);
+                dest.writeInt(ClickNumber);
+                dest.writeString(Img);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<ReadBean> CREATOR = new Creator<ReadBean>() {
+                @Override
+                public ReadBean createFromParcel(Parcel in) {
+                    return new ReadBean(in);
+                }
+
+                @Override
+                public ReadBean[] newArray(int size) {
+                    return new ReadBean[size];
+                }
+            };
 
             public String getID() {
                 return ID;

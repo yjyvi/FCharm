@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.beans.RegulationBookListBean;
+import com.whmnrc.feimei.beans.ResourcesFileBean;
 import com.whmnrc.feimei.network.CommonCallBack;
 import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.ui.PresenterBase;
@@ -18,21 +18,21 @@ import java.util.HashMap;
  * @data 2018/5/29.
  */
 
-public class GetRegulationBookPresenter extends PresenterBase {
+public class GetLibraryPresenter extends PresenterBase {
 
-    private GetBookListener mGetBookListener;
+    private GetLibraryListener mGetLibraryListener;
     private int page = 0;
 
-    public GetRegulationBookPresenter(GetBookListener getReadListener) {
-        this.mGetBookListener = getReadListener;
+    public GetLibraryPresenter(GetLibraryListener getLibraryListener) {
+        this.mGetLibraryListener = getLibraryListener;
     }
 
-    public void getBookList() {
-        getBookList(true, "", "");
+    public void getLibraryList() {
+        getLibraryList(true, "");
     }
 
 
-    public void getBookList(boolean isRefresh, String searchContent, String columnId) {
+    public void getLibraryList(boolean isRefresh, String searchContent) {
         HashMap<String, Object> params = new HashMap<>(8);
         params.put("rows", 10);
         params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
@@ -49,18 +49,16 @@ public class GetRegulationBookPresenter extends PresenterBase {
         if (!TextUtils.isEmpty(searchContent)) {
             conditionJson.put("Name", searchContent);
         }
-        if (!TextUtils.isEmpty(columnId)) {
-            conditionJson.put("ColumnID", columnId);
-        }
+
         params.put("conditionJson", JSON.toJSONString(conditionJson));
 
-        OKHttpManager.postString(getUrl(R.string.GetRegulationBook), params, new CommonCallBack<RegulationBookListBean>() {
+        OKHttpManager.postString(getUrl(R.string.GetLibrary), params, new CommonCallBack<ResourcesFileBean>() {
             @Override
-            protected void onSuccess(RegulationBookListBean data) {
+            protected void onSuccess(ResourcesFileBean data) {
                 if (data.getType() == 1) {
-                    mGetBookListener.getBookSuccess(isRefresh, data.getResultdata());
+                    mGetLibraryListener.getReadSuccess(isRefresh, data.getResultdata());
                 } else {
-                    mGetBookListener.getBookField();
+                    mGetLibraryListener.getReadField();
                     ToastUtils.showToast(data.getMessage());
                 }
             }
@@ -68,10 +66,10 @@ public class GetRegulationBookPresenter extends PresenterBase {
     }
 
 
-    public interface GetBookListener {
-        void getBookSuccess(boolean isRefresh, RegulationBookListBean.ResultdataBean bean);
+    public interface GetLibraryListener {
+        void getReadSuccess(boolean isRefresh, ResourcesFileBean.ResultdataBean bean);
 
-        void getBookField();
+        void getReadField();
     }
 
 }

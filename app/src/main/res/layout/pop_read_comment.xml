@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
+              android:background="@color/white"
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
@@ -30,6 +31,7 @@
 
 
         <TextView
+            android:id="@+id/tv_send_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_pop_confirm_blue"
@@ -48,12 +50,34 @@
         android:layout_marginLeft="@dimen/dm_15"
         android:layout_marginRight="@dimen/dm_15"
         android:background="@color/common_line"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_list"
+    <!--Limited time sale商品-->
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"/>
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+
+            <ViewStub
+                android:id="@+id/vs_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout="@layout/layout_empty"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dm_300"
+                android:background="@color/white"/>
+        </LinearLayout>
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

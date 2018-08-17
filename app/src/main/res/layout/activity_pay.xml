@@ -184,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dm_8"
                         android:ellipsize="end"
-                        android:maxLines="2"
+                        android:lines="2"
                         android:textColor="@color/normal_gray"
                         android:textSize="@dimen/dm_11"/>
 
@@ -229,7 +229,6 @@
                     android:lines="2"
                     android:paddingLeft="@dimen/dm_15"
                     android:paddingRight="@dimen/dm_15"
-                    android:text="任何技术的出现和革新都伴随着资本的狂欢，都伴随着资本的狂欢，任何技术的出现和革新都伴随着资本的狂欢，都伴随着资..."
                     android:textColor="@color/normal_gray"
                     android:textSize="@dimen/dm_12"/>
 
@@ -278,6 +277,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_tv_normal"
+                        android:visibility="gone"
                         android:paddingBottom="@dimen/dm_5"
                         android:paddingLeft="@dimen/dm_7"
                         android:paddingRight="@dimen/dm_7"

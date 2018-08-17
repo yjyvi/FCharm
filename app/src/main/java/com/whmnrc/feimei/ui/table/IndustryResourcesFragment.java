@@ -19,6 +19,7 @@ import com.whmnrc.feimei.presener.GetReadPresenter;
 import com.whmnrc.feimei.ui.BaseFragment;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
+import com.whmnrc.feimei.ui.industry.fragment.FragmentBookResource;
 import com.whmnrc.feimei.ui.industry.fragment.FragmentFileResource;
 import com.whmnrc.feimei.ui.industry.fragment.FragmentInformationResource;
 import com.whmnrc.feimei.ui.industry.fragment.FragmentReadResource;
@@ -113,7 +114,7 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
                     mFragments.add(FragmentFileResource.newInstance(1));
                     break;
                 case 2:
-                    mFragments.add(FragmentFileResource.newInstance(2));
+                    mFragments.add(FragmentBookResource.newInstance(2));
                     break;
                 case 3:
                     mFragments.add(FragmentInformationResource.newInstance(3));
@@ -141,11 +142,9 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
 
 
     public class TableViewPagerAdapter extends FragmentPagerAdapter {
-        private List<BaseFragment> mFragments;
 
-        public TableViewPagerAdapter(FragmentManager supportFragmentManager, List<BaseFragment> fragments) {
+        public TableViewPagerAdapter(FragmentManager supportFragmentManager) {
             super(supportFragmentManager);
-            this.mFragments = fragments;
         }
 
         @Override
@@ -161,7 +160,7 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
 
 
     private void initTab() {
-        viewPager.setAdapter(new TableViewPagerAdapter(getFragmentManager(), mFragments));
+        viewPager.setAdapter(new TableViewPagerAdapter(getFragmentManager()));
         viewPager.setOffscreenPageLimit(3);
         CommonNavigator commonNavigator = new CommonNavigator(getActivity());
         commonNavigator.setAdjustMode(true);

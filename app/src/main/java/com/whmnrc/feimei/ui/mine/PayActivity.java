@@ -14,6 +14,8 @@ import com.whmnrc.feimei.CommonConstant;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.beans.OrganizationDetailsBean;
 import com.whmnrc.feimei.beans.ProductDetailsBean;
+import com.whmnrc.feimei.beans.ReadDetailsBean;
+import com.whmnrc.feimei.beans.ResourcesFileBean;
 import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.utils.CodeTimeUtils;
@@ -21,6 +23,7 @@ import com.whmnrc.feimei.utils.TextSpannableUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
 import com.whmnrc.feimei.utils.ToastUtils;
 import com.whmnrc.feimei.utils.pay.PayUtils;
+import com.whmnrc.mylibrary.utils.GlideUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,7 +53,7 @@ public class PayActivity extends BaseActivity {
     RelativeLayout mRlRightTitle;
     @BindView(R.id.fl_title_bar)
     FrameLayout mFlTitleBar;
-//    @BindView(R.id.tv_name)
+    //    @BindView(R.id.tv_name)
 //    TextView mTvName;
     @BindView(R.id.tv_money)
     TextView mTvMoney;
@@ -131,6 +134,8 @@ public class PayActivity extends BaseActivity {
     public int mProductType;
     public OrganizationDetailsBean.ResultdataBean.EnterpriseBean mEnterpriseBean;
     public ProductDetailsBean.ResultdataBean.CommodityBean mCommodityBean;
+    public ReadDetailsBean.ResultdataBean.ReadBean mReadBean;
+    public ResourcesFileBean.ResultdataBean.LibrarysBean mLibrarysBean;
     private PayUtils mPayUtils;
     private int payType;
     private String totalPrice;
@@ -162,7 +167,7 @@ public class PayActivity extends BaseActivity {
                 mRlOrderInfo.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
                 totalPrice = getIntent().getStringExtra("totalPrice");
-                TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length()+ 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length() + 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
                 break;
             case PRODUCT_PAY:
                 mRlProductPay.setVisibility(View.VISIBLE);
@@ -208,10 +213,33 @@ public class PayActivity extends BaseActivity {
                 mRlOrderInfo.setVisibility(View.VISIBLE);
                 mRlProductPay.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
-                totalPrice = getIntent().getStringExtra("totalPrice");
-                TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length()+ 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                mReadBean = getIntent().getParcelableExtra("payData");
+                if (mReadBean != null) {
+                    mTvOrgTitle.setText(mReadBean.getTitle());
+                    mTvOrgDesc.setText(mReadBean.getSubtitle());
+                    mIvImg.setVisibility(View.VISIBLE);
+                    GlideUtils.LoadImage(this, mReadBean.getImg(), mIvImg);
+                    mTvOrgTime.setText(TimeUtils.getDateToString(mReadBean.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+
+                    totalPrice = String.valueOf(mReadBean.getPrice());
+                    TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length() + 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
+
+                }
                 break;
             case RESOURCE_PAY:
+                mLibrarysBean = getIntent().getParcelableExtra("payData");
+                if (mLibrarysBean != null) {
+                    mTvDesc.setText(mLibrarysBean.getSubtitle());
+                    mIvImg.setVisibility(View.VISIBLE);
+                    GlideUtils.LoadImage(this, mLibrarysBean.getFilePath(), mIvVideoImg);
+                    mTvTime.setText(TimeUtils.getDateToString(mLibrarysBean.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+                    mTvDownloadCount.setText(String.format("%s次下载", mLibrarysBean.getDownloadNumber()));
+                    mTvPrice.setText(String.format("￥%s", mLibrarysBean.getPrice()));
+
+                    totalPrice = String.valueOf(mLibrarysBean.getPrice());
+                    TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length() + 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
+
+                }
                 mLlResourcePay.setVisibility(View.VISIBLE);
                 mRlOnePay.setVisibility(View.VISIBLE);
                 mRlOrderInfo.setVisibility(View.VISIBLE);
@@ -253,6 +281,34 @@ public class PayActivity extends BaseActivity {
         Intent starter = new Intent(context, PayActivity.class);
         starter.putExtra("productType", productType);
         starter.putExtra("totalPrice", totalPrice);
+        starter.putExtra("payData", bean);
+        context.startActivity(starter);
+    }
+
+    /**
+     * 阅读付费
+     *
+     * @param context
+     * @param productType
+     * @param bean
+     */
+    public static void startRead(Context context, int productType, ReadDetailsBean.ResultdataBean.ReadBean bean) {
+        Intent starter = new Intent(context, PayActivity.class);
+        starter.putExtra("productType", productType);
+        starter.putExtra("payData", bean);
+        context.startActivity(starter);
+    }
+
+    /**
+     * 文库的支付
+     *
+     * @param context
+     * @param productType
+     * @param bean
+     */
+    public static void startFileResource(Context context, int productType, ResourcesFileBean.ResultdataBean.LibrarysBean bean) {
+        Intent starter = new Intent(context, PayActivity.class);
+        starter.putExtra("productType", productType);
         starter.putExtra("payData", bean);
         context.startActivity(starter);
     }

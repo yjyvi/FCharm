@@ -130,6 +130,7 @@
         <!--主界面-->
         <activity
             android:name="com.whmnrc.feimei.ui.HomeTableActivity"
+            android:windowSoftInputMode="adjustPan|adjustNothing"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
 

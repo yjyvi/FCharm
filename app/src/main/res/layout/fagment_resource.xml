@@ -45,6 +45,8 @@
                         android:padding="@dimen/dm_5">
 
                         <TextView
+                            android:layout_marginLeft="@dimen/dm_5"
+                            android:id="@+id/tv_type_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

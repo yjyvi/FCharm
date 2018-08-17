@@ -11,14 +11,19 @@ import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.beans.ReadDetailsBean;
+import com.whmnrc.feimei.beans.ResourcesFileBean;
 import com.whmnrc.feimei.pop.PopAppreciate;
+import com.whmnrc.feimei.pop.PopReadComment;
 import com.whmnrc.feimei.pop.PopShare;
+import com.whmnrc.feimei.presener.AddOrDelCollectionPresenter;
 import com.whmnrc.feimei.presener.GetReadDetailsPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.PayActivity;
 import com.whmnrc.feimei.ui.mine.PayVipActivity;
 import com.whmnrc.feimei.utils.TimeUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,13 +33,10 @@ import butterknife.OnClick;
  * @data 2018/8/2.
  */
 
-public class IndustryDetailsActivity extends BaseActivity implements GetReadDetailsPresenter.GetReadDetailsListener {
+public class IndustryDetailsActivity extends BaseActivity implements GetReadDetailsPresenter.GetReadDetailsListener, AddOrDelCollectionPresenter.AddOrDelCollectionListener {
     @BindView(R.id.web_content)
     WebView mWebContent;
-    public PopShare mPopShare;
-    public PopAppreciate mPopAppreciate;
-    public GetReadDetailsPresenter mGetReadDetailsPresenter;
-    public String mReadId;
+
     @BindView(R.id.tv_title)
     TextView mTvTitle;
     @BindView(R.id.tv_title_name)
@@ -51,21 +53,71 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
     TextView mTvReadPageHint;
     @BindView(R.id.tv_join_vip)
     TextView mTvJoinVip;
+
+    public PopShare mPopShare;
+    public PopAppreciate mPopAppreciate;
+    public GetReadDetailsPresenter mGetReadDetailsPresenter;
+    public String mReadId;
+
     private ReadDetailsBean.ResultdataBean mReadDetailsBean;
+    /**
+     * 阅读
+     */
+    public static final int READ_DETAILS_TYPE = 1;
+    public static final int FILE_DETAILS_TYPE = 2;
+    public int mType;
+    public PopReadComment mPopReadComment;
+    public AddOrDelCollectionPresenter mAddOrDelCollectionPresenter;
+    public ResourcesFileBean.ResultdataBean.LibrarysBean mLibrarysBean;
+
 
     @Override
     protected void initViewData() {
+        isShowDialog(true);
         setTitle("行业资源");
         rightVisible(R.mipmap.icon_share);
-        mReadId = getIntent().getStringExtra("readId");
 
-        mGetReadDetailsPresenter = new GetReadDetailsPresenter(this);
-        mGetReadDetailsPresenter.getReadDetails(mReadId);
+        mType = getIntent().getIntExtra("type", -1);
+
+
+        mAddOrDelCollectionPresenter = new AddOrDelCollectionPresenter(this);
 
         if (UserManager.getUserIsVip()) {
             mTvJoinVip.setVisibility(View.GONE);
         } else {
             mTvJoinVip.setVisibility(View.VISIBLE);
+        }
+
+
+        if (mType == FILE_DETAILS_TYPE) {
+            mTvDownloadCount.setVisibility(View.VISIBLE);
+            mLibrarysBean = getIntent().getParcelableExtra("librarysBean");
+            if (mLibrarysBean != null) {
+                String url;
+                mReadId = mLibrarysBean.getID();
+                if (UserManager.getUserIsVip()) {
+                    url = mLibrarysBean.getChargeConten();
+                } else {
+                    url = mLibrarysBean.getFreeConten();
+                }
+
+                loadDetailsUrl(mWebContent, url);
+                mTvTitleName.setText(String.format("[%s]", mLibrarysBean.getName()));
+                mTvTitle.setText(mLibrarysBean.getTitle());
+                mTvTimeBrowse.setText(String.format("%s 阅读%s", TimeUtils.getDateToString(Long.parseLong(mLibrarysBean.getCreateTime())), mLibrarysBean.getClickNumber()));
+                mTvDownloadCount.setText(String.valueOf(mLibrarysBean.getDownloadNumber()));
+//                mTvCommentCount.setText(String.valueOf(mLibrarysBean.getCommentCount()));
+
+                mTvCollection.setSelected(mLibrarysBean.getIsCollection() == 1);
+                mTvCollection.setText(mLibrarysBean.getIsCollection() == 1 ? "已收藏" : "收藏");
+
+                mTvReadPageHint.setText(String.format("剩余%s页未读！继续阅读需付费。", mLibrarysBean.getChargePage()));
+            }
+        } else {
+            mTvDownloadCount.setVisibility(View.GONE);
+            mReadId = getIntent().getStringExtra("readId");
+            mGetReadDetailsPresenter = new GetReadDetailsPresenter(this);
+            mGetReadDetailsPresenter.getReadDetails(mReadId);
         }
 
     }
@@ -75,15 +127,24 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
         return R.layout.activity_industry_details;
     }
 
-    public static void start(Context context, String readId) {
+    public static void start(Context context, String readId, int type) {
         Intent starter = new Intent(context, IndustryDetailsActivity.class);
         starter.putExtra("readId", readId);
+        starter.putExtra("type", type);
+        context.startActivity(starter);
+    }
+
+    public static void startFielDetails(Context context, ResourcesFileBean.ResultdataBean.LibrarysBean librarysBean, int type) {
+        Intent starter = new Intent(context, IndustryDetailsActivity.class);
+        starter.putExtra("librarysBean", librarysBean);
+        starter.putExtra("type", type);
         context.startActivity(starter);
     }
 
 
     @OnClick({R.id.rl_right, R.id.iv_zan, R.id.tv_join_vip, R.id.tv_download_count, R.id.tv_comment_count, R.id.tv_collection, R.id.tv_price})
     public void onClick(final View view) {
+
         switch (view.getId()) {
             case R.id.rl_right:
                 if (mPopShare == null) {
@@ -106,13 +167,42 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
             case R.id.tv_download_count:
                 break;
             case R.id.tv_comment_count:
+                if (mPopReadComment == null) {
+                    mPopReadComment = new PopReadComment(IndustryDetailsActivity.this, mReadId);
+                }
+
+                mPopReadComment.show();
 
                 break;
             case R.id.tv_collection:
-                mTvCollection.setSelected(!mTvCollection.isSelected());
+                int isCollection = 0;
+
+                if (mReadDetailsBean != null) {
+                    isCollection = mReadDetailsBean.getIsCollection();
+                }
+
+                if (mLibrarysBean != null) {
+                    isCollection = mLibrarysBean.getIsCollection();
+                }
+
+                if (isCollection == 1) {
+                    ArrayList<String> readIds = new ArrayList<>();
+                    readIds.add(mReadId);
+                    mAddOrDelCollectionPresenter.delCollection(readIds, AddOrDelCollectionPresenter.FILE_COLLECTION);
+                } else {
+                    mAddOrDelCollectionPresenter.addCollection(mReadId, AddOrDelCollectionPresenter.FILE_COLLECTION);
+                }
                 break;
             case R.id.tv_price:
-                PayActivity.start(view.getContext(), PayActivity.RESOURCE_PAY, String.valueOf(mReadDetailsBean.getRead().getPrice()));
+
+                if (!UserManager.getIsLogin(IndustryDetailsActivity.this)) {
+                    return;
+                }
+                if (mType == FILE_DETAILS_TYPE) {
+                    PayActivity.startFileResource(view.getContext(), PayActivity.RESOURCE_PAY, mLibrarysBean);
+                } else {
+                    PayActivity.startRead(view.getContext(), PayActivity.COLUMN_PAY, mReadDetailsBean.getRead());
+                }
                 break;
             default:
                 break;
@@ -124,7 +214,6 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
         this.mReadDetailsBean = readDetailsBean;
         if (readDetailsBean != null) {
             String url;
-
             if (UserManager.getUserIsVip()) {
                 url = readDetailsBean.getRead().getChargeConten();
             } else {
@@ -136,9 +225,10 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
             mTvTitle.setText(readDetailsBean.getRead().getTitle());
             mTvTimeBrowse.setText(String.format("%s 阅读%s", TimeUtils.getDateToString(Long.parseLong(readDetailsBean.getRead().getCreateTime())), readDetailsBean.getRead().getClickNumber()));
             mTvCommentCount.setText(String.valueOf(readDetailsBean.getCommentCount()));
-//            mTvDownloadCount.setText(String.valueOf(readDetailsBean.getRead().getd));
+
 
             mTvCollection.setSelected(readDetailsBean.getIsCollection() == 1);
+            mTvCollection.setText(readDetailsBean.getIsCollection() == 1 ? "已收藏" : "收藏");
 
             mTvReadPageHint.setText(String.format("剩余%s页未读！继续阅读需付费。", readDetailsBean.getRead().getChargePage()));
         }
@@ -192,5 +282,17 @@ public class IndustryDetailsActivity extends BaseActivity implements GetReadDeta
                 }
             }
         });
+    }
+
+    @Override
+    public void collectionSuccess(boolean isAdd) {
+        mTvCollection.setSelected(isAdd);
+        mTvCollection.setText(isAdd ? "已收藏" : "收藏");
+        mReadDetailsBean.setIsCollection(isAdd ? 1 : 0);
+    }
+
+    @Override
+    public void collectionCodeField() {
+
     }
 }

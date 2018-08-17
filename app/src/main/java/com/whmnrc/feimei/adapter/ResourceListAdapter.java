@@ -1,6 +1,7 @@
 package com.whmnrc.feimei.adapter;
 
 import android.content.Context;
+import android.view.View;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
@@ -29,9 +30,15 @@ public class ResourceListAdapter extends CommonAdapter<ReadListBean.ResultdataBe
         GlideUtils.LoadImage(mContext, readBean.getImg(), holder.getView(R.id.iv_img));
 
         holder.itemView.setOnClickListener((v) -> {
-                    IndustryDetailsActivity.start(mContext, readBean.getID());
+                    IndustryDetailsActivity.start(mContext, readBean.getID(), IndustryDetailsActivity.READ_DETAILS_TYPE);
                 }
         );
+
+        if (position == getDatas().size()-1) {
+            holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
+        }else {
+            holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
+        }
 
     }
 

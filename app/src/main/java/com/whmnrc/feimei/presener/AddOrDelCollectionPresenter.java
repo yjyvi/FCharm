@@ -2,7 +2,6 @@ package com.whmnrc.feimei.presener;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.beans.BaseBean;
-import com.whmnrc.feimei.beans.UserBean;
 import com.whmnrc.feimei.network.CommonCallBack;
 import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.ui.PresenterBase;
@@ -18,6 +17,28 @@ import java.util.HashMap;
 
 public class AddOrDelCollectionPresenter extends PresenterBase {
 
+    /**
+     * 商品收藏
+     */
+    public static final int PRODUCT_COLLECTION = 0;
+    /**
+     * 阅读收藏
+     */
+    public static final int READ_COLLECTION = 1;
+    /**
+     * 文库收藏
+     */
+    public static final int FILE_COLLECTION = 2;
+    /**
+     * 规格书收藏
+     */
+    public static final int SPECIFICATION_COLLECTION = 3;
+    /**
+     * 资讯收藏
+     */
+    public static final int INFORMATION_COLLECTION = 4;
+
+
     private AddOrDelCollectionListener mAddOrDelCollectionListener;
 
     public AddOrDelCollectionPresenter(AddOrDelCollectionListener addOrDelCollectionListener) {
@@ -25,24 +46,36 @@ public class AddOrDelCollectionPresenter extends PresenterBase {
 
     }
 
-    public void addOrDelCollection(boolean isAdd, String productId) {
+    public void addCollection(String productId, int type) {
         HashMap<String, Object> params = new HashMap<>(5);
-        params.put("type", isAdd ? 1 : 0);
+        params.put("type", type);
         params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
         params.put("OtherID", productId);
 
-        int api;
-        if (isAdd) {
-            api = R.string.AddCollection;
-        } else {
-            api = R.string.DelCollection;
-        }
 
-        OKHttpManager.postString(getUrl(api), params, new CommonCallBack<BaseBean>() {
+        OKHttpManager.postString(getUrl(R.string.AddCollection), params, new CommonCallBack<BaseBean>() {
             @Override
             protected void onSuccess(BaseBean data) {
                 if (data.getType() == 1) {
-                    mAddOrDelCollectionListener.collectionSuccess();
+                    mAddOrDelCollectionListener.collectionSuccess(true);
+                } else {
+                    mAddOrDelCollectionListener.collectionCodeField();
+                }
+                ToastUtils.showToast(data.getMessage());
+            }
+        });
+    }
+
+    public void delCollection(Object productIds, int type) {
+        HashMap<String, Object> params = new HashMap<>(4);
+        params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
+        params.put("CollectionID", productIds);
+
+        OKHttpManager.postString(getUrl(R.string.DelCollection), params, new CommonCallBack<BaseBean>() {
+            @Override
+            protected void onSuccess(BaseBean data) {
+                if (data.getType() == 1) {
+                    mAddOrDelCollectionListener.collectionSuccess(false);
                 } else {
                     mAddOrDelCollectionListener.collectionCodeField();
                 }
@@ -53,7 +86,7 @@ public class AddOrDelCollectionPresenter extends PresenterBase {
 
 
     public interface AddOrDelCollectionListener {
-        void collectionSuccess();
+        void collectionSuccess(boolean isAdd);
 
         void collectionCodeField();
     }

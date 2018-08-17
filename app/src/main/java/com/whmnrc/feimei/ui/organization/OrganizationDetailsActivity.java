@@ -171,7 +171,10 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
         switch (view.getId()) {
             //关于我们
             case R.id.ll_account:
-                if (mOrganizationDetailsBean.getEnterprise().getPrice() > 0) {
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
+                if ( mOrganizationDetailsBean.getEnterprise().getPrice() > 0) {
                     if (!UserManager.getIsLogin(view.getContext())) {
                         return;
                     }
@@ -187,14 +190,23 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 break;
             //主营业务
             case R.id.ll_business_more:
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
                 CommonH5WebView.startCommonH5WebView(OrganizationDetailsActivity.this, mOrganizationDetailsBean.getEnterprise().getMainBusiness(), "主营业务");
                 break;
             //企业概述
             case R.id.ll_overview_more:
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
                 OtherInfoDetailsActivity.start(view.getContext(), "企业概览", mOrganizationDetailsBean.getEnterprise().getIntroduction());
                 break;
             //关联企业
             case R.id.ll_link_more:
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
                 if (mOrganizationDetailsBean.getEnterprise().getPrice() > 0) {
                     if (!UserManager.getIsLogin(view.getContext())) {
                         return;
@@ -215,18 +227,29 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 break;
             //其它信息
             case R.id.ll_other_more:
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
+
                 if (mOrganizationDetailsBean.getEnterpriseOther().size() > 0) {
                     OtherInfoActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterpriseOther());
                 }
                 break;
             //知识产权
             case R.id.tv_intellectual_property:
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
                 if (mOrganizationDetailsBean.getCertificate().size() > 0) {
                     IntellectualPropertyActivity.start(view.getContext(), mOrganizationDetailsBean.getCertificate());
                 }
                 break;
             //主要客户
             case R.id.tv_major_client:
+
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
 
                 if (mOrganizationDetailsBean.getEnterprise().getPrice() > 0) {
                     if (!UserManager.getIsLogin(view.getContext())) {
@@ -251,22 +274,36 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 break;
             //股东信息
             case R.id.tv_shareholder_information:
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
+
                 if (mOrganizationDetailsBean.getShareholder().size() > 0) {
                     ShareholderInformationActivity.start(view.getContext(), mOrganizationDetailsBean.getShareholder());
                 }
                 break;
             //关联岗位
             case R.id.tv_associated_position:
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
                 AssociatedPositionActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise().getID());
                 break;
             //全部评论
             case R.id.ll_all_comment:
+                if (mOrganizationDetailsBean == null) {
+                    return;
+                }
                 if (mOrganizationDetailsBean.getComment().size() > 0) {
                     AllCommentActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise().getID());
                 }
                 break;
             case R.id.tv_send:
                 if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
+                if (mOrganizationDetailsBean == null) {
                     return;
                 }
 

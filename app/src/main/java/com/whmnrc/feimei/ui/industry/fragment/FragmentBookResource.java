@@ -11,10 +11,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.adapter.ResourceFileListAdapter;
-import com.whmnrc.feimei.beans.ResourcesFileBean;
+import com.whmnrc.feimei.adapter.ResourceBookListAdapter;
+import com.whmnrc.feimei.beans.RegulationBookListBean;
 import com.whmnrc.feimei.beans.SearchConditionBean;
-import com.whmnrc.feimei.presener.GetLibraryPresenter;
+import com.whmnrc.feimei.presener.GetRegulationBookPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
@@ -24,10 +24,10 @@ import butterknife.BindView;
 /**
  * @author yjyvi
  * @data 2018/7/24.
- * 文库
+ * 规格书
  */
 
-public class FragmentFileResource extends LazyLoadFragment implements GetLibraryPresenter.GetLibraryListener {
+public class FragmentBookResource extends LazyLoadFragment implements GetRegulationBookPresenter.GetBookListener {
 
     @BindView(R.id.et_search_content)
     EditText mEtSearchContent;
@@ -37,8 +37,8 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
     RecyclerView mRvProductList;
     @BindView(R.id.ll_filter)
     LinearLayout mLlFilter;
-    public ResourceFileListAdapter mResourceListAdapter;
-    private GetLibraryPresenter mGetLibraryPresenter;
+    public ResourceBookListAdapter mResourceBookListAdapter;
+    public GetRegulationBookPresenter mGetRegulationBookPresenter;
 
     @Override
     protected int contentViewLayoutID() {
@@ -49,14 +49,13 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
     protected void initViewData() {
         mLlFilter.setVisibility(View.GONE);
 
-
-        mGetLibraryPresenter = new GetLibraryPresenter(this);
-        mGetLibraryPresenter.getLibraryList();
+        mGetRegulationBookPresenter = new GetRegulationBookPresenter(this);
+        mGetRegulationBookPresenter.getBookList();
 
         mRvProductList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRvProductList.setNestedScrollingEnabled(false);
-        mResourceListAdapter = new ResourceFileListAdapter(getActivity(), R.layout.item_library_resource_list);
-        mRvProductList.setAdapter(mResourceListAdapter);
+        mResourceBookListAdapter = new ResourceBookListAdapter(getActivity(), R.layout.item_library_resource_list);
+        mRvProductList.setAdapter(mResourceBookListAdapter);
 
 
         mEtSearchContent.setOnEditorActionListener((view, keyCode, event) -> {
@@ -82,22 +81,22 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
      *
      * @return
      */
-    public static FragmentFileResource newInstance(int type) {
+    public static FragmentBookResource newInstance(int type) {
         Bundle bundle = new Bundle();
         bundle.putInt("type", type);
-        FragmentFileResource fragmentResource = new FragmentFileResource();
+        FragmentBookResource fragmentResource = new FragmentBookResource();
         fragmentResource.setArguments(bundle);
         return fragmentResource;
     }
 
     @Override
-    public void getReadSuccess(boolean isRefresh, ResourcesFileBean.ResultdataBean bean) {
-        mResourceListAdapter.setDataArray(bean.getLibrarys());
-        mResourceListAdapter.notifyDataSetChanged();
+    public void getBookSuccess(boolean isRefresh, RegulationBookListBean.ResultdataBean bean) {
+        mResourceBookListAdapter.setDataArray(bean.getRead());
+        mResourceBookListAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void getReadField() {
+    public void getBookField() {
 
     }
 }

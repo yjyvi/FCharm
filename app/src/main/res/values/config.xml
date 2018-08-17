@@ -81,7 +81,10 @@
     <string name="GetColumn">/api/Industry/GetColumn</string>
     <!--获取规格书列表-->
     <string name="GetRegulationBook">/api/Industry/GetRegulationBook</string>
-    <!--规格书详情-->
-    <string name="GetRegulationBookDetails">/api/Industry/GetRegulationBookDetails</string>
+    <!--增加下载量-->
+    <string name="DownloadNumber">/api/Industry/DownloadNumber</string>
+    <!--获取文库-->
+    <string name="GetLibrary">/api/Industry/GetLibrary</string>
+
 
 </resources>

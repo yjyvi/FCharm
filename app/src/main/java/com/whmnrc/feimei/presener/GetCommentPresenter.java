@@ -30,11 +30,14 @@ public class GetCommentPresenter extends PresenterBase {
         HashMap<String, Object> params = new HashMap<>(7);
         HashMap<String, String> conditionJson = new HashMap<>(3);
 
-        if (!TextUtils.isEmpty(otherId)) {
-            conditionJson.put("OtherID", otherId);
+        if (TextUtils.isEmpty(otherId)) {
+            return;
         }
 
+        conditionJson.put("OtherID", otherId);
+
         params.put("rows", "5");
+
         if (isRefresh) {
             page = 1;
         } else {

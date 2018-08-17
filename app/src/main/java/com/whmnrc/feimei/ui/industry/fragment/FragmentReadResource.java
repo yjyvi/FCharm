@@ -30,6 +30,7 @@ import butterknife.BindView;
 /**
  * @author yjyvi
  * @data 2018/7/24.
+ * 阅读
  */
 
 public class FragmentReadResource extends LazyLoadFragment implements GetReadPresenter.GetReadListener, GetColumnPresenter.GetColumnListener, OnRefreshLoadMoreListener {

@@ -1,20 +1,27 @@
 package com.whmnrc.feimei.pop;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
-import com.whmnrc.feimei.adapter.IndustryReadCommentAdapter;
+import com.whmnrc.feimei.adapter.AllCommentAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
+import com.whmnrc.feimei.beans.CommentListBean;
 import com.whmnrc.feimei.beans.ProductTypeBean;
+import com.whmnrc.feimei.presener.GetCommentPresenter;
+import com.whmnrc.feimei.ui.mine.CommentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +32,9 @@ import java.util.List;
  * 行业资源弹窗
  */
 
-public class PopReadComment {
+public class PopReadComment implements GetCommentPresenter.GetCommentListener {
 
+    private String mReadId;
     private View showView;
     private PopupWindow mPopupWindow;
     private Context mContext;
@@ -34,6 +42,9 @@ public class PopReadComment {
     private PopHintListener mPopHintListener;
 
     private List<ProductTypeBean.ResultdataBean> mDataList = new ArrayList<>();
+    public GetCommentPresenter mGetCommentPresenter;
+    public AllCommentAdapter mAllCommentAdapter;
+    public SmartRefreshLayout mRefreshLayout;
 
 
     public PopupWindow getPopupWindow() {
@@ -45,24 +56,43 @@ public class PopReadComment {
     }
 
 
-    public PopReadComment(Context context, View showView) {
-        this.showView = showView;
+    public PopReadComment(Context context, String readId) {
         this.mContext = context;
+        this.mReadId = readId;
 
+        mGetCommentPresenter = new GetCommentPresenter(this);
 
         View view = LayoutInflater.from(context).inflate(R.layout.pop_read_comment, null);
         RecyclerView mRvType = view.findViewById(R.id.rv_list);
+        mRefreshLayout = view.findViewById(R.id.refresh);
+        mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                refreshLayout.setEnableLoadMore(true);
+                mGetCommentPresenter.getComment(mReadId, true);
+                refreshLayout.finishRefresh();
+            }
+
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                mGetCommentPresenter.getComment(mReadId, false);
+                refreshLayout.finishLoadMore();
+            }
+        });
 
 
         mRvType.setLayoutManager(new LinearLayoutManager(mContext));
+        mRvType.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                outRect.bottom = mContext.getResources().getDimensionPixelOffset(R.dimen.dm_0_5);
+            }
+        });
         mRvType.setNestedScrollingEnabled(false);
-        DividerItemDecoration divider = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.custom_divider));
-        mRvType.addItemDecoration(divider);
-        IndustryReadCommentAdapter productLibraryTypeAdapter = new IndustryReadCommentAdapter(context, R.layout.item_organization_comment);
-        productLibraryTypeAdapter.setDataArray(mDataList);
-        mRvType.setAdapter(productLibraryTypeAdapter);
-        productLibraryTypeAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+        mAllCommentAdapter = new AllCommentAdapter(context, R.layout.item_organization_comment);
+        mRvType.setAdapter(mAllCommentAdapter);
+        mAllCommentAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 mPopHintListener.confirm(mDataList.get(position));
@@ -90,13 +120,51 @@ public class PopReadComment {
         mPopupWindow.setOutsideTouchable(false);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setTouchable(true);
-        view.findViewById(R.id.view_bg).setOnClickListener(v -> mPopupWindow.dismiss());
 
+        view.findViewById(R.id.tv_send_comment).setOnClickListener(v -> {
+            CommentActivity.start(mContext, mReadId);
+            CommentActivity.setCommentListener(() -> mGetCommentPresenter.getComment(mReadId, true));
+        });
     }
 
     public void show() {
         // 设置弹出位置
-        mPopupWindow.showAsDropDown(showView);
+        mGetCommentPresenter.getComment(mReadId, true);
+    }
+
+    @Override
+    public void getCommentListSuccess(CommentListBean.ResultdataBean beans, boolean isRefresh) {
+        if (isRefresh) {
+            mAllCommentAdapter.setDataArray(beans.getComment());
+        } else {
+            List<CommentListBean.ResultdataBean.CommentBean> datas = mAllCommentAdapter.getDatas();
+            datas.addAll(beans.getComment());
+
+            if (beans.getPagination().getRecords() == datas.size()) {
+                mRefreshLayout.setEnableLoadMore(false);
+            }
+
+            mAllCommentAdapter.setDataArray(datas);
+        }
+        mAllCommentAdapter.notifyDataSetChanged();
+
+        if (mPopupWindow != null) {
+            PopUtils.setBackgroundAlpha((Activity) mContext, 0.5f);
+
+            mPopupWindow.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+            // 刷新状态
+            mPopupWindow.update();
+
+            mPopupWindow.setOnDismissListener(() -> PopUtils.setBackgroundAlpha((Activity) mContext, 1f));
+
+        }
+
+
+
+    }
+
+    @Override
+    public void getCommentListField() {
 
     }
 

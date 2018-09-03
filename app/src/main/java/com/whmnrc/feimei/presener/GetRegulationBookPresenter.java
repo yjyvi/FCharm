@@ -28,11 +28,15 @@ public class GetRegulationBookPresenter extends PresenterBase {
     }
 
     public void getBookList() {
-        getBookList(true, "", "");
+        getBookList(true, "", "","");
+    }
+
+    public void getBook(String bookId) {
+        getBookList(true, "", "",bookId);
     }
 
 
-    public void getBookList(boolean isRefresh, String searchContent, String columnId) {
+    public void getBookList(boolean isRefresh, String searchContent, String columnId, String bookId) {
         HashMap<String, Object> params = new HashMap<>(8);
         params.put("rows", 10);
         params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
@@ -51,6 +55,10 @@ public class GetRegulationBookPresenter extends PresenterBase {
         }
         if (!TextUtils.isEmpty(columnId)) {
             conditionJson.put("ColumnID", columnId);
+        }
+
+        if (!TextUtils.isEmpty(bookId)) {
+            conditionJson.put("ID", bookId);
         }
         params.put("conditionJson", JSON.toJSONString(conditionJson));
 

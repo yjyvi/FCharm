@@ -2,6 +2,7 @@ package com.whmnrc.feimei.ui.mine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,16 +14,25 @@ import com.whmnrc.feimei.CommonConstant;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.VipPriceAdapter;
 import com.whmnrc.feimei.adapter.VipTypeAdapter;
-import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
+import com.whmnrc.feimei.beans.RuleDescriptionBean;
+import com.whmnrc.feimei.beans.VipTypeListBean;
 import com.whmnrc.feimei.network.OKHttpManager;
+import com.whmnrc.feimei.presener.CreateOrderPresenter;
+import com.whmnrc.feimei.presener.GetVipTypePresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.login.LoginActivity;
-import com.whmnrc.feimei.utils.TestDataUtils;
+import com.whmnrc.feimei.utils.TextSpannableUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
 import com.whmnrc.feimei.utils.ToastUtils;
+import com.whmnrc.feimei.utils.evntBusBean.PayEvent;
 import com.whmnrc.feimei.utils.pay.PayUtils;
 import com.whmnrc.mylibrary.utils.GlideUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -32,7 +42,7 @@ import butterknife.OnClick;
  * @data 2018/7/27.
  */
 
-public class PayVipActivity extends BaseActivity {
+public class PayVipActivity extends BaseActivity implements GetVipTypePresenter.GetVipTypeListener, CreateOrderPresenter.CreateOrderListener {
     @BindView(R.id.iv_user_img)
     ImageView mIvUserImg;
     @BindView(R.id.tv_no_login)
@@ -51,22 +61,34 @@ public class PayVipActivity extends BaseActivity {
     ImageView mIvSelectWx;
     @BindView(R.id.iv_select_zfb)
     ImageView mIvSelectZfb;
+    @BindView(R.id.tv_pay_price)
+    TextView mTvPayPrice;
     public PayUtils mPayUtils;
-    private int payType;
+    private int payType = CommonConstant.Common.PAY_METHOD_WX;
+    public GetVipTypePresenter mGetVipTypePresenter;
+    public VipPriceAdapter mVipPriceAdapter;
+    public double mVIpPrice;
+    private CreateOrderPresenter mCreateOrderPresenter;
+    public String mOtherId;
 
     @Override
     protected void initViewData() {
-        mPayUtils = new PayUtils(this);
+
+        EventBus.getDefault().register(this);
+
+        mCreateOrderPresenter = new CreateOrderPresenter(this);
+
+        mPayUtils = new PayUtils();
         if (UserManager.getUser() != null && UserManager.getUser().getMobile() != null && TextUtils.isEmpty(UserManager.getUser().getMobile())) {
-            setTitle("开通VIP");
             mTvVipTime.setVisibility(View.GONE);
             mTvLogin.setVisibility(View.VISIBLE);
         } else {
-            setTitle("续费");
             if (UserManager.getUserIsVip()) {
+                setTitle("续费");
                 mTvVipTime.setText(String.format("会员至：%s", TimeUtils.getDateToString(Long.parseLong(UserManager.getUser().getVIP()))));
                 mTvVipTime.setVisibility(View.VISIBLE);
             } else {
+                setTitle("开通VIP");
                 mTvVipTime.setVisibility(View.GONE);
             }
             mTvLogin.setVisibility(View.GONE);
@@ -74,29 +96,29 @@ public class PayVipActivity extends BaseActivity {
             mTvVipHint.setVisibility(View.GONE);
         }
 
+        mGetVipTypePresenter = new GetVipTypePresenter(this);
+        mGetVipTypePresenter.getVipTypeList(0);
         if (UserManager.getUser() != null && UserManager.getUser().getHeadImg() != null && !TextUtils.isEmpty(UserManager.getUser().getHeadImg())) {
             GlideUtils.LoadImage(this, UserManager.getUser().getHeadImg(), mIvUserImg);
         }
 
-        mRvList.setLayoutManager(new GridLayoutManager(this, 3));
-        VipPriceAdapter adapter = new VipPriceAdapter(this, R.layout.item_vip_price_list);
-        adapter.setDataArray(TestDataUtils.initTestData(3));
-        mRvList.setAdapter(adapter);
-        adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                selectedView2(view);
-            }
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        mRvList.setLayoutManager(layoutManager);
+        mVipPriceAdapter = new VipPriceAdapter(this, R.layout.item_vip_price_list);
+        mRvList.setAdapter(mVipPriceAdapter);
 
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
+        mVipPriceAdapter.setVipPriceListener(bean -> {
+            mVIpPrice = bean.getMoney();
+            mTvPayPrice.setText(String.format("共计：￥%2.2f", mVIpPrice));
+            mOtherId = bean.getPayType_ID();
+            String reslutPirce = mTvPayPrice.getText().toString().trim();
+            TextSpannableUtils.changeTextColor(mTvPayPrice, reslutPirce, 4, reslutPirce.length(), ContextCompat.getColor(this, R.color.good_price_red));
         });
 
         mRvTypeList.setLayoutManager(new GridLayoutManager(this, 4));
         VipTypeAdapter vipTypeAdapter = new VipTypeAdapter(this, R.layout.item_vip_type_list);
-        vipTypeAdapter.setDataArray(TestDataUtils.initTestData(8));
+        List<RuleDescriptionBean> ruleDescriptionDataList = RuleDescriptionActivity.getRuleDescriptionDataList();
+        vipTypeAdapter.setDataArray(ruleDescriptionDataList);
         mRvTypeList.setAdapter(vipTypeAdapter);
 
         selectedView(mIvSelectWx);
@@ -113,27 +135,14 @@ public class PayVipActivity extends BaseActivity {
     }
 
 
-    private View lastView2;
-
-    private void selectedView2(View view) {
-        if (lastView2 != null) {
-            lastView2.setSelected(false);
-        }
-        if (!view.isSelected()) {
-            view.setSelected(true);
-            lastView2 = view;
-        } else {
-            view.setSelected(false);
-        }
-
-    }
-
-
     private View lastView;
 
     private void selectedView(View view) {
         if (lastView != null) {
             lastView.setSelected(false);
+        }
+        if (view == null) {
+            return;
         }
         if (!view.isSelected()) {
             view.setSelected(true);
@@ -152,7 +161,8 @@ public class PayVipActivity extends BaseActivity {
                 LoginActivity.start(view.getContext());
                 break;
             case R.id.ll_commit:
-                payResult(payType, "123123");
+                mCreateOrderPresenter.createOrder(1, "", 1, mOtherId);
+                isShowDialog(true);
                 break;
             case R.id.ll_wx:
                 payType = CommonConstant.Common.PAY_METHOD_WX;
@@ -179,11 +189,13 @@ public class PayVipActivity extends BaseActivity {
         if (mPayUtils == null) {
             return;
         }
-        mPayUtils.playPay(payType,  order, new OKHttpManager.ObjectCallback() {
+        mPayUtils.playPay(this, payType, order, new OKHttpManager.ObjectCallback() {
             @Override
             public void onSuccess(String st) {
                 ToastUtils.showToast(st);
-                PayResultActivity.start(PayVipActivity.this, order, false);
+                UserManager.refresh();
+                EventBus.getDefault().post(new PayEvent().setEventType(PayEvent.PAY_SUCCESS));
+                EventBus.getDefault().post(new PayEvent().setEventType(PayEvent.PAY_VIP_SUCCESS));
                 finish();
             }
 
@@ -193,5 +205,40 @@ public class PayVipActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void getVipTypeSuccess(List<VipTypeListBean.ResultdataBean> resultdataBeans) {
+        mVipPriceAdapter.setDataArray(resultdataBeans);
+        mVipPriceAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void getVipTypeField() {
+
+    }
+
+    @Override
+    public void createOrderSuccess(String orderId) {
+        payResult(payType, orderId);
+        isShowDialog(false);
+    }
+
+    @Override
+    public void createOrderField() {
+        isShowDialog(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPayUtils = null;
+        lastView = null;
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscribe
+    public void payEvent(PayEvent payEvent) {
+
     }
 }

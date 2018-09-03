@@ -20,9 +20,9 @@
             android:layout_width="@dimen/dm_45"
             android:layout_height="@dimen/dm_45"
             android:layout_marginLeft="@dimen/dm_15"
+            android:src="@mipmap/icon_normal"
             android:background="@drawable/shape_normal_icon_bg"
-            android:padding="@dimen/dm_2"
-            android:src="@color/normal_gray"/>
+            android:padding="@dimen/dm_2"/>
 
         <TextView
             android:id="@+id/tv_vip_time"
@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dm_12"
             android:layout_weight="1"
-            android:text="会员至：2019-8-8"
             android:textColor="@color/white"
             android:textSize="@dimen/dm_12"/>
 
@@ -109,6 +108,33 @@
             android:src="@mipmap/icon_more"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_12"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_about_us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dm_0.5"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/dm_15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dm_15"
+            android:layout_weight="1"
+            android:text="关于我们"
+            android:textColor="@color/normal_gray"
+            android:textSize="@dimen/dm_14"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dm_5"
+            android:src="@mipmap/icon_more"/>
 
     </LinearLayout>
 

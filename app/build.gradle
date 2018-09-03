@@ -28,8 +28,8 @@ android {
         //应用签名：eb1c8c9ea92b6657a9e432cb68ecd5dd
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0.0"
+        versionCode 5
+        versionName "1.04"
         multiDexEnabled true
 
         ndk {
@@ -46,9 +46,9 @@ android {
         ]
 
         //Java8 使用Lambda表达式
-        jackOptions {
-            enabled = true
-        }
+//        jackOptions {
+//            enabled = true
+//        }
 
 
     }
@@ -83,10 +83,13 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.android.support:multidex:1.0.3'
+    compile 'junit:junit:4.12'
+
     //检测内存泄漏工具
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+
     implementation project(':mylibrary')
 
     //信鸽jar，包含厂商通道

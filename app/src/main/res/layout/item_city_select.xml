@@ -8,7 +8,6 @@
           android:includeFontPadding="false"
           android:orientation="vertical"
           android:textColor="@color/black"
-          android:textSize="@dimen/dm_12"
-          android:text="wwww">
+          android:textSize="@dimen/dm_12">
 
 </TextView>

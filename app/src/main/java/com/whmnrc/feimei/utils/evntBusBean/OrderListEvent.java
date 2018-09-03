@@ -7,8 +7,9 @@ package com.whmnrc.feimei.utils.evntBusBean;
 
 public class OrderListEvent extends BaseEvent {
 
-    public static final int UNPAID = 1001;
-    public static final int UNSHIPPED = 1002;
-    public static final int RECEIPT = 1003;
-    public static final int ALL = 1004;
+    public static final int ORDER_NO_PAY = 1001;
+    public static final int ORDER_PAY = 1002;
+    public static final int ORDER_CANCEL = 1003;
+    public static final int ORDER_REFUND = 1004;
+    public static final int ALL = 1005;
 }

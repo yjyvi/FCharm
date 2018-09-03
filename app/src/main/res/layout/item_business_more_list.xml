@@ -8,7 +8,6 @@
           android:paddingLeft="@dimen/dm_15"
           android:paddingRight="@dimen/dm_15"
           android:textSize="@dimen/dm_13"
-          android:textColor="@color/black"
-          android:text="扬州通信光科技有限公司">
+          android:textColor="@color/black">
 
 </TextView>

@@ -65,7 +65,7 @@ public class BusinessMoreActivity extends BaseActivity {
         otherListAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                OrganizationDetailsActivity.start(view.getContext(), otherListAdapter.getDatas().get(position).getEnterprise_ID());
+                OrganizationDetailsActivity.start(view.getContext(), otherListAdapter.getDatas().get(position).getRelationEnterprise_ID());
             }
 
             @Override

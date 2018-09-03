@@ -2,18 +2,30 @@ package com.whmnrc.feimei.ui.product;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.beans.AddressBean;
 import com.whmnrc.feimei.beans.ProductDetailsBean;
+import com.whmnrc.feimei.presener.AddressListPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.mine.AddressManagerActivity;
 import com.whmnrc.feimei.ui.mine.PayActivity;
+import com.whmnrc.feimei.utils.ToastUtils;
+import com.whmnrc.feimei.utils.evntBusBean.AddressEvent;
+import com.whmnrc.feimei.utils.pay.MoneyUtils;
 import com.whmnrc.mylibrary.utils.GlideUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -24,7 +36,7 @@ import butterknife.OnClick;
  * 确认商品订单
  */
 
-public class ConfirmOrderActivity extends BaseActivity {
+public class ConfirmOrderActivity extends BaseActivity implements AddressListPresenter.AddressListListener {
     @BindView(R.id.iv_location)
     ImageView mIvLocation;
     @BindView(R.id.tv_name)
@@ -51,22 +63,38 @@ public class ConfirmOrderActivity extends BaseActivity {
     TextView mTvSubtotalName;
     @BindView(R.id.tv_total)
     TextView mTvTotal;
+    @BindView(R.id.tv_no_address)
+    TextView mTvNoAddress;
+    @BindView(R.id.rl_address)
+    RelativeLayout mRlAddress;
+    @BindView(R.id.iv_add)
+    ImageView mIvAdd;
     public ProductDetailsBean.ResultdataBean.CommodityBean mCommodityBean;
-    public int mNum;
+    public int mNum = 1;
+    private String addressId;
+    private AddressBean.ResultdataBean addressEventData;
+    private AddressListPresenter mAddressListPresenter;
 
     @Override
     protected void initViewData() {
         setTitle("确认订单");
 
+        EventBus.getDefault().register(this);
+
         mCommodityBean = getIntent().getParcelableExtra("commodity");
+
+        mAddressListPresenter = new AddressListPresenter(this);
+        mAddressListPresenter.getAddressList();
+
 
         if (mCommodityBean != null) {
 
             mTvGoodsName.setText(mCommodityBean.getName());
             GlideUtils.LoadImage(this, mCommodityBean.getImg(), mIvGoodsImg);
-            mTvSourcePrice.setText(String.format("%s", mCommodityBean.getPrice()));
-            mTvSubtotalPrice.setText(String.format("%s", mCommodityBean.getPrice()));
-            mTvTotal.setText(String.format("%s", mCommodityBean.getPrice()));
+
+            MoneyUtils.showRMB(true, mTvSourcePrice, mCommodityBean.getPrice());
+            MoneyUtils.showRMB(false, mTvSubtotalPrice, mCommodityBean.getPrice());
+            MoneyUtils.showRMB(false, mTvTotal, mCommodityBean.getPrice());
 
         }
 
@@ -83,6 +111,23 @@ public class ConfirmOrderActivity extends BaseActivity {
         context.startActivity(starter);
     }
 
+    @Subscribe
+    public void addressEvent(AddressEvent addressEvent) {
+        if (addressEvent.getEventType() == AddressEvent.ORDER_SELECT_ADDRESS) {
+            addressEventData = (AddressBean.ResultdataBean) addressEvent.getData();
+            if (addressEventData != null) {
+                initAddress(addressEventData);
+            } else {
+                mAddressListPresenter.getAddressList();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 
     @OnClick({R.id.ll_select_address, R.id.iv_minus, R.id.iv_add, R.id.ll_pay})
     public void onClick(View view) {
@@ -97,7 +142,17 @@ public class ConfirmOrderActivity extends BaseActivity {
                 isAdd(true);
                 break;
             case R.id.ll_pay:
-                PayActivity.startProduct(view.getContext(), PayActivity.PRODUCT_PAY, mCommodityBean,mTvTotal.getText().toString().trim());
+
+                if (TextUtils.isEmpty(addressId)) {
+                    ToastUtils.showToast("请选择收货地址");
+                    return;
+                }
+
+                PayActivity.startProduct(view.getContext(),
+                        PayActivity.PRODUCT_PAY, mCommodityBean,
+                        mTvTotal.getText().toString().trim(),
+                        mNum,
+                        addressId, mEtRemark.getText().toString().trim());
                 finish();
                 break;
             default:
@@ -116,9 +171,49 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
         mEditNum.setText(String.valueOf(mNum));
         mTvSubtotalName.setText(String.format("共%s件商品    小计： ", mNum));
-        mTvSubtotalPrice.setText(String.format("%s", mCommodityBean.getPrice() * mNum));
-        mTvTotal.setText(String.format("%s", mCommodityBean.getPrice() * mNum));
+
+        MoneyUtils.showRMB(false, mTvSubtotalPrice, (mCommodityBean.getPrice() * mNum));
+        MoneyUtils.showRMB(false, mTvTotal, (mCommodityBean.getPrice() * mNum));
     }
 
 
+    @Override
+    public void getListSuccess(List<AddressBean.ResultdataBean> resultdataBeans) {
+        if (resultdataBeans.size() == 0) {
+            addressId = "";
+            mTvNoAddress.setVisibility(View.VISIBLE);
+            mTvName.setText("");
+            mTvTel.setText("");
+            mTvAddress.setText("");
+        } else {
+            for (AddressBean.ResultdataBean resultdataBean : resultdataBeans) {
+                if (resultdataBean.getIsDefault() == 1) {
+                    initAddress(resultdataBean);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    /**
+     * 显示地址信息
+     *
+     * @param resultdataBean
+     */
+    private void initAddress(AddressBean.ResultdataBean resultdataBean) {
+
+        mRlAddress.setVisibility(View.VISIBLE);
+        mTvNoAddress.setVisibility(View.GONE);
+        addressId = resultdataBean.getID();
+        mTvName.setText(String.format("收货人：%s", resultdataBean.getName()));
+        mTvTel.setText(resultdataBean.getMobile());
+        mTvAddress.setText(String.format("收货地址：%s", resultdataBean.getProvice() + resultdataBean.getCity() + resultdataBean.getRegion() + resultdataBean.getDetail()));
+
+    }
+
+    @Override
+    public void getAddressListField() {
+
+    }
 }

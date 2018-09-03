@@ -49,6 +49,8 @@ public class ShareholderInformationActivity extends BaseActivity {
         ShareholderInformationListAdapter shareholderInformationListAdapter = new ShareholderInformationListAdapter(this, R.layout.item_shareholder_information_list);
         shareholderInformationListAdapter.setDataArray(mShareholder);
         mRvBusinessList.setAdapter(shareholderInformationListAdapter);
+
+        showEmpty(shareholderInformationListAdapter, mVsEmpty);
     }
 
     @Override

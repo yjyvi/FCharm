@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
+import com.whmnrc.feimei.beans.AddressBean;
 import com.whmnrc.feimei.ui.mine.AddAddressActivity;
 
 /**
@@ -14,10 +15,10 @@ import com.whmnrc.feimei.ui.mine.AddAddressActivity;
  * @data 2018/5/19.
  */
 
-public class AddressManagerAdapter extends CommonAdapter {
+public class AddressManagerAdapter extends CommonAdapter<AddressBean.ResultdataBean> {
     private boolean mIsSelect;
 
-    private  AddressListener mAddressListener;
+    private AddressListener mAddressListener;
 
     public void setAddressListener(AddressListener addressListener) {
         mAddressListener = addressListener;
@@ -29,7 +30,12 @@ public class AddressManagerAdapter extends CommonAdapter {
     }
 
     @Override
-    public void convert(ViewHolder holder, final Object resultdataBean, final int position) {
+    public void convert(ViewHolder holder, final AddressBean.ResultdataBean resultdataBean, final int position) {
+
+        holder.setText(R.id.tv_name, resultdataBean.getName());
+        holder.setText(R.id.tv_phone_number, resultdataBean.getMobile());
+        holder.setText(R.id.tv_address, resultdataBean.getProvice() + resultdataBean.getCity() + resultdataBean.getRegion() + resultdataBean.getDetail());
+
         holder.setOnClickListener(R.id.tv_edit, v -> AddAddressActivity.start(v.getContext(), JSON.toJSONString(resultdataBean), 1));
 
         holder.setOnClickListener(R.id.tv_delete, v -> {
@@ -39,28 +45,25 @@ public class AddressManagerAdapter extends CommonAdapter {
         });
         holder.setOnClickListener(R.id.ll_is_default, v -> {
             if (mAddressListener != null) {
-                mAddressListener.setAddressDefault(position,v);
+                mAddressListener.setAddressDefault(position, v);
             }
         });
-//
-//
-//        if (resultdataBean.getAddress_IsDefault() == 1) {
-//            holder.setVisible(R.id.v_isDefault, true);
-//        } else {
-//            holder.setVisible(R.id.v_isDefault, false);
-//        }
-//
-        if (mIsSelect) {
-            holder.setVisible(R.id.ll_is_select, false);
+
+
+        if (resultdataBean.getIsDefault() == 1) {
+            holder.setSelected(R.id.ll_is_default, true);
+            holder.setText(R.id.tv_default,"默认地址");
         } else {
-            holder.setVisible(R.id.ll_is_select, true);
+            holder.setText(R.id.tv_default,"设为默认");
+            holder.setSelected(R.id.ll_is_default, false);
         }
+
     }
 
-    public interface AddressListener{
+    public interface AddressListener {
 
         void delAddress(int position);
 
-        void setAddressDefault(int position,View view);
+        void setAddressDefault(int position, View view);
     }
 }

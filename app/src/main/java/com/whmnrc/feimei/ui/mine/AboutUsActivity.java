@@ -35,7 +35,7 @@ public class AboutUsActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
-        setTitle("About Us");
+        setTitle("关于我们");
         setAppVersionName(this);
         GlideUtils.LoadRoundImage(this, ContextCompat.getDrawable(this, R.drawable.ic_launcher), ivLogo);
     }
@@ -47,12 +47,12 @@ public class AboutUsActivity extends BaseActivity {
 
 
     public void setAppVersionName(Context context) {
-        String versionName = "";
+        String versionName;
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
             versionName = pi.versionName;
-            tvVersionName.setText(String.format("Flymall（%s）", versionName));
+            tvVersionName.setText(String.format("菲魅（%s）", versionName));
         } catch (Exception e) {
             Log.e("VersionInfo", "Exception", e);
         }

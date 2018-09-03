@@ -36,11 +36,11 @@ public class GetRecruitPresenter extends PresenterBase {
         }
 
         if (!TextUtils.isEmpty(provincial)) {
-            conditionJson.put("Provincial", provincial);
+            conditionJson.put("Provincial", provincial.trim());
         }
 
         if (!TextUtils.isEmpty(city)) {
-            conditionJson.put("City", city);
+            conditionJson.put("City", city.trim());
         }
 
         if (!TextUtils.isEmpty(enterpriseId)) {

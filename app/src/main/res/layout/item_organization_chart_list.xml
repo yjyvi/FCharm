@@ -24,7 +24,6 @@
             android:textSize="@dimen/dm_10"
             android:paddingTop="@dimen/dm_2"
             android:paddingBottom="@dimen/dm_2"
-            android:text="模块"
             android:textColor="@color/white"/>
 
         <TextView

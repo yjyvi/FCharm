@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.CommonConstant;
@@ -32,15 +33,23 @@ public class FindPwdActivity extends BaseActivity implements GetCodePresenter.Ge
     EditText mEtPwd;
     @BindView(R.id.bt_get_code)
     TextView mBtGetCode;
+    @BindView(R.id.iv_img)
+    ImageView mIvImg;
+    @BindView(R.id.tv_commit)
+    TextView mTvCommit;
     private GetCodePresenter mGetCodePresenter;
     public FindPwdPresenter mFindPwdPresenter;
 
     @Override
     protected void initViewData() {
         String title = getIntent().getStringExtra("title");
-        if (title != null) {
-            setTitle(title);
+        if (!TextUtils.isEmpty(title)) {
+            setTitle("修改密码");
+            mIvImg.setImageResource(R.mipmap.icon_save);
+            mTvCommit.setText("修改密码");
         } else {
+            mIvImg.setImageResource(R.mipmap.icon_find_pwd);
+            mTvCommit.setText("找回密码");
             setTitle("找回密码");
         }
 
@@ -68,17 +77,17 @@ public class FindPwdActivity extends BaseActivity implements GetCodePresenter.Ge
     private boolean inputVerification() {
 
         if (TextUtils.isEmpty(mEtPhoneNumber.getText().toString().trim())) {
-            ToastUtils.showToast(getResources().getString(R.string.input_tel));
+            ToastUtils.showToast(mEtPhoneNumber.getHint().toString().trim());
             return false;
         }
 
         if (TextUtils.isEmpty(mEtPwd.getText().toString().trim())) {
-            ToastUtils.showToast("请输入新密码");
+            ToastUtils.showToast(mEtPwd.getHint().toString().trim());
             return false;
         }
 
         if (TextUtils.isEmpty(mEtCode.getText().toString().trim())) {
-            ToastUtils.showToast("请输入验证码");
+            ToastUtils.showToast(mEtCode.getHint().toString().trim());
             return false;
         }
 

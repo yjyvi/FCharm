@@ -282,7 +282,7 @@ public class OrganizationDetailsBean implements Parcelable {
             private String Address;
             private String MainBusiness;
             private String Introduction;
-            private int Price;
+            private double Price;
             private String Label;
             private int IsRed;
             private int IsRecommend;
@@ -311,7 +311,7 @@ public class OrganizationDetailsBean implements Parcelable {
                 Address = in.readString();
                 MainBusiness = in.readString();
                 Introduction = in.readString();
-                Price = in.readInt();
+                Price = in.readDouble();
                 Label = in.readString();
                 IsRed = in.readInt();
                 IsRecommend = in.readInt();
@@ -478,11 +478,11 @@ public class OrganizationDetailsBean implements Parcelable {
                 this.Introduction = Introduction;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return Price;
             }
 
-            public void setPrice(int Price) {
+            public void setPrice(double Price) {
                 this.Price = Price;
             }
 
@@ -575,7 +575,7 @@ public class OrganizationDetailsBean implements Parcelable {
                 dest.writeString(Address);
                 dest.writeString(MainBusiness);
                 dest.writeString(Introduction);
-                dest.writeInt(Price);
+                dest.writeDouble(Price);
                 dest.writeString(Label);
                 dest.writeInt(IsRed);
                 dest.writeInt(IsRecommend);

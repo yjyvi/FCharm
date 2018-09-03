@@ -32,7 +32,6 @@
             android:ellipsize="end"
             android:lineSpacingExtra="@dimen/dm_5"
             android:lines="2"
-            android:text="动力电池巨头通讯资讯动力电池巨头通讯资讯动力电池巨头通"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_12"/>
 
@@ -57,7 +56,6 @@
         android:layout_marginBottom="@dimen/dm_5"
         android:layout_marginLeft="@dimen/dm_15"
         android:layout_toRightOf="@id/iv_img"
-        android:text="新闻"
         android:textColor="@color/normal_blue_text_color"
         android:textSize="@dimen/dm_10"/>
 
@@ -67,9 +65,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/iv_img"
-        android:layout_marginBottom="@dimen/dm_5"
         android:layout_alignParentRight="true"
-        android:text="810已阅读"
+        android:textColor="@color/normal_gray"
+        android:layout_marginBottom="@dimen/dm_5"
         android:textSize="@dimen/dm_10"/>
 
     <TextView
@@ -80,7 +78,7 @@
         android:layout_marginBottom="@dimen/dm_5"
         android:layout_marginRight="@dimen/dm_15"
         android:layout_toLeftOf="@id/tv_download_count"
-        android:text="2018-7-24"
+        android:textColor="@color/normal_gray"
         android:textSize="@dimen/dm_10"/>
 
 

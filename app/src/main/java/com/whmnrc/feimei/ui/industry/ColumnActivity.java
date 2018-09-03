@@ -45,7 +45,7 @@ public class ColumnActivity extends BaseActivity implements GetReadPresenter.Get
     public PopShare mPopShare;
     @BindView(R.id.iv_user_img)
     CircleImageView mIvUserImg;
-    @BindView(R.id.tv_title)
+    @BindView(R.id.tv_column_title)
     TextView mTvTitle;
     @BindView(R.id.tv_content)
     TextView mTvContent;
@@ -72,7 +72,7 @@ public class ColumnActivity extends BaseActivity implements GetReadPresenter.Get
 
         mGetReadPresenter = new GetReadPresenter(this);
 
-        mGetReadPresenter.getReadList(true, "", mColumnId);
+        mGetReadPresenter.getReadList(true, "", mColumnId, -1);
 
         mTvSearch.setOnEditorActionListener((view, keyCode, event) -> {
             if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
@@ -122,7 +122,8 @@ public class ColumnActivity extends BaseActivity implements GetReadPresenter.Get
     @OnClick(R.id.rl_right)
     public void onClick() {
         if (mPopShare == null) {
-            mPopShare = new PopShare(this, "1", "1", "1", "1");
+
+            mPopShare = new PopShare(this, mColumnBean.getName(), mColumnBean.getImg(), "", mColumnBean.getIntroduce());
         }
         mPopShare.show();
     }

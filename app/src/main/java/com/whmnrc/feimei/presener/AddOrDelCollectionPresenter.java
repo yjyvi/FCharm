@@ -77,6 +77,7 @@ public class AddOrDelCollectionPresenter extends PresenterBase {
                 BaseBean baseBean = JSON.parseObject(st, BaseBean.class);
                 if (baseBean.getType() == 1) {
                     mAddOrDelCollectionListener.collectionSuccess(false);
+                    ToastUtils.showToast("已取消收藏");
                 } else {
                     mAddOrDelCollectionListener.collectionCodeField();
                     ToastUtils.showToast(baseBean.getMessage());

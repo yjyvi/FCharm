@@ -54,32 +54,41 @@ public class ResourceBookListAdapter extends CommonAdapter<RegulationBookListBea
         BookFileTypeUtils.showBookFileType(holder.getView(R.id.tv_name), readBean.getType());
 
         holder.getView(R.id.tv_price).setVisibility(View.INVISIBLE);
-        holder.setVisible(R.id.iv_video_img, false);
+        holder.setVisible(R.id.rl_video, false);
         holder.setVisible(R.id.tv_download_count, false);
+//        holder.setText(R.id.tv_download_count, readBean.g());
 
         holder.setText(R.id.tv_desc, readBean.getSubtitle());
         holder.setText(R.id.tv_time, TimeUtils.getDateToString(Long.parseLong(readBean.getCreateTime())));
 
         TextView tvDownload = holder.getView(R.id.tv_is_download);
         tvDownload.setOnClickListener(v -> {
-            tvDownload.setEnabled(false);
-            ProductSpecificationsActivity.showDownloadPop(mContext, tvDownload, readBean.getFilePath(), readBean.getName(), 0, readBean.getID(), new ProductSpecificationsActivity.DownloadListener() {
-                @Override
-                public void downloadSuccess() {
-                    tvDownload.setEnabled(true);
-                }
+            tvDownload.post(() -> {
+                tvDownload.setEnabled(false);
+                ProductSpecificationsActivity.showDownloadPop(mContext, tvDownload, readBean.getFilePath(), readBean.getName(), 0, readBean.getID(), new ProductSpecificationsActivity.DownloadListener() {
+                    @Override
+                    public void downloadSuccess() {
+                        tvDownload.setEnabled(true);
+                        tvDownload.setText("马上下载");
+                    }
 
-                @Override
-                public void downloadField() {
-                    tvDownload.setEnabled(true);
-                }
+                    @Override
+                    public void downloadField() {
+                        tvDownload.setEnabled(true);
+                        tvDownload.setText("马上下载");
+                    }
+
+                    @Override
+                    public void downloading() {
+                        tvDownload.setText("正在下载");
+                    }
+                });
             });
         });
 
         holder.itemView.setOnClickListener(v -> ProductSpecificationsActivity.start(mContext, readBean, 0));
 
     }
-
 
 
 }

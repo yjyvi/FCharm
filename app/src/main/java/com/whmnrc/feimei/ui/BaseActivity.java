@@ -1,5 +1,6 @@
 package com.whmnrc.feimei.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tencent.connect.common.Constants;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
 import com.whmnrc.feimei.utils.EmptyListUtils;
@@ -51,6 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //禁止截屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
         setContentView(setLayoutId());
         setTranslucentStatus();
         ButterKnife.bind(this);
@@ -59,6 +65,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             back.setOnClickListener(v -> back());
         }
         initViewData();
+
+
     }
 
 
@@ -125,7 +133,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param text 标题
      */
     protected void setTitle(String text) {
-        TextView tv_title = (TextView) findViewById(R.id.title);
+        TextView tv_title = (TextView) findViewById(R.id.tv_title);
         if (tv_title != null) {
             tv_title.setVisibility(View.VISIBLE);
             tv_title.setText(text);
@@ -234,4 +242,35 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Tencent.onActivityResultData(requestCode, resultCode, data, mIUiListener);
+        if (requestCode == Constants.REQUEST_API) {
+            if (resultCode == Constants.REQUEST_QQ_SHARE || resultCode == Constants.REQUEST_QZONE_SHARE || resultCode == Constants.REQUEST_OLD_SHARE) {
+                Tencent.handleResultData(data, mIUiListener);
+            }
+        }
+    }
+
+    private MyQQShareListener mIUiListener;
+
+
+    public static class MyQQShareListener implements IUiListener {
+
+        @Override
+        public void onComplete(Object o) {
+            ToastUtils.showToast("分享成功");
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+            ToastUtils.showToast("分享失败" + uiError.errorMessage);
+        }
+
+        @Override
+        public void onCancel() {
+            ToastUtils.showToast("取消分享");
+        }
+    }
 }

@@ -34,7 +34,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.functions.Consumer;
 
 /**
  * @author yjyvi
@@ -63,6 +62,7 @@ public class CommentActivity extends BaseActivity implements SendCommentPresente
     private String videoThumbUrl;
     public UpdateImgFilePresenter mUpdateImgFilePresenter;
     private static CommentListener mCommentListener;
+    public String mCommentContent;
 
     public static void setCommentListener(CommentListener commentListener) {
         mCommentListener = commentListener;
@@ -73,8 +73,17 @@ public class CommentActivity extends BaseActivity implements SendCommentPresente
         setTitle("发表评论");
         isShowButton();
         mProductId = getIntent().getStringExtra("productId");
+
+
+        mCommentContent = getIntent().getStringExtra("commentContent");
         mAddEvaluatePresenter = new SendCommentPresenter(this);
         mUpdateImgFilePresenter = new UpdateImgFilePresenter(this);
+
+        if (!TextUtils.isEmpty(mCommentContent)) {
+            mEtContent.setText(mCommentContent);
+            mEtContent.setSelection(mCommentContent.length());
+            isShowButton();
+        }
 
         if (TextUtils.isEmpty(mProductId)) {
             mLlProduct.setVisibility(View.VISIBLE);
@@ -113,23 +122,27 @@ public class CommentActivity extends BaseActivity implements SendCommentPresente
         context.startActivity(starter);
     }
 
+    public static void start(Context context, String goodsId, String commentContent) {
+        Intent starter = new Intent(context, CommentActivity.class);
+        starter.putExtra("productId", goodsId);
+        starter.putExtra("commentContent", commentContent);
+        context.startActivity(starter);
+    }
+
 
     private void initRv() {
 
         selectPremissions();
         rvPhoto.setLayoutManager(new GridLayoutManager(this, 3));
         localMediaMultiItemTypeAdapter = new MultiItemTypeAdapter<>(this);
-        localMediaMultiItemTypeAdapter.addItemViewDelegate(new PublishImgArrayAdapter(new PublishImgArrayAdapter.OnClick() {
-            @Override
-            public void onCancelClick(View view, int position) {
-                LocalMedia remove = localMediaDatas.remove(position);
-                try {
-                    mediaMap.remove(remove);
-                } catch (Exception e) {
+        localMediaMultiItemTypeAdapter.addItemViewDelegate(new PublishImgArrayAdapter((view, position) -> {
+            LocalMedia remove = localMediaDatas.remove(position);
+            try {
+                mediaMap.remove(remove);
+            } catch (Exception e) {
 
-                }
-                localMediaMultiItemTypeAdapter.notifyDataSetChanged();
             }
+            localMediaMultiItemTypeAdapter.notifyDataSetChanged();
         }));
 
 
@@ -141,14 +154,11 @@ public class CommentActivity extends BaseActivity implements SendCommentPresente
 
     private void selectPremissions() {
         RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        ).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean) {
+        rxPermissions.request(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ).subscribe(aBoolean -> {
+            if (aBoolean) {
 
-                }
             }
         });
 
@@ -242,6 +252,12 @@ public class CommentActivity extends BaseActivity implements SendCommentPresente
     }
 
     @Override
+    protected void onDestroy() {
+        mCommentListener = null;
+        super.onDestroy();
+    }
+
+    @Override
     public void sendEvaluateField() {
         isShowDialog(false);
     }
@@ -265,12 +281,12 @@ public class CommentActivity extends BaseActivity implements SendCommentPresente
 
 
     public void isShowButton() {
-        if ( !TextUtils.isEmpty(mEtContent.getText().toString().trim())) {
+        if (!TextUtils.isEmpty(mEtContent.getText().toString().trim())) {
             mLlCommit.setEnabled(true);
-            mLlCommit.setBackgroundColor(ContextCompat.getColor(this,R.color.normal_blue_text_color));
+            mLlCommit.setBackgroundColor(ContextCompat.getColor(this, R.color.normal_blue_text_color));
         } else {
             mLlCommit.setEnabled(false);
-            mLlCommit.setBackgroundColor(ContextCompat.getColor(this,R.color.normal_gray));
+            mLlCommit.setBackgroundColor(ContextCompat.getColor(this, R.color.normal_gray));
         }
     }
 

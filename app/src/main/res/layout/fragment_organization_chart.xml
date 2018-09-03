@@ -21,6 +21,7 @@
         android:paddingTop="@dimen/dm_30">
 
         <ImageView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -53,7 +54,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="搜索你想要的商品"
+                android:hint="搜索你想要的企业"
                 android:textColorHint="@color/search_hint_text_bg"
                 android:textCursorDrawable="@color/black"
                 android:textSize="@dimen/dm_12"/>

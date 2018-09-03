@@ -7,7 +7,6 @@
           android:background="@drawable/select_appreacalate_bg"
           android:gravity="center"
           android:orientation="vertical"
-          android:text="所有"
           android:textColor="@drawable/select_apprecalate_text">
 
 </TextView>

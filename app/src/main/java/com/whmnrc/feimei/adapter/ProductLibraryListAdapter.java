@@ -31,15 +31,15 @@ public class ProductLibraryListAdapter extends CommonAdapter<ProductListBean.Res
     public void convert(ViewHolder holder, ProductListBean.ResultdataBean.EnterpriseBean o, int position) {
 
         holder.setText(R.id.tv_goods_name, o.getName());
-        holder.setText(R.id.tv_rows, String.format("已浏览：%s人", o.getClickNumber()));
-        if (o.getPrice() <= 0) {
+        holder.setText(R.id.tv_rows, String.format("已浏览：%s", o.getClickNumber()));
+        if (o.getPrice() <= 0.00d) {
             holder.setVisible(R.id.tv_price, false);
             holder.setVisible(R.id.tv_sale, false);
         } else {
             holder.setVisible(R.id.tv_price, true);
             holder.setVisible(R.id.tv_sale, true);
             holder.setText(R.id.tv_sale, String.format("销量：%s件", o.getSales()));
-            holder.setText(R.id.tv_price, String.format("￥%s", o.getPrice()));
+            holder.setText(R.id.tv_price, String.format("￥%2.2f", o.getPrice()));
         }
         GlideUtils.LoadImage(mContext, o.getImg(), holder.getView(R.id.iv_goods_img));
         holder.itemView.setOnClickListener(v -> {

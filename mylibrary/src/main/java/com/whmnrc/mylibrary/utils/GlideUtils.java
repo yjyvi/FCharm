@@ -45,8 +45,8 @@ public class GlideUtils {
 //        }
 
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.color.normal_gray);
-        requestOptions.error(R.color.normal_gray);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
+        requestOptions.error(R.drawable.icon_img_field);
         requestOptions.fitCenter();
         requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
         int width = imageview.getWidth() / 2;
@@ -54,6 +54,7 @@ public class GlideUtils {
         requestOptions.override(width, height);
         Glide.with(mContext)
                 .load(path)
+                .thumbnail(0.1f)
                 .apply(requestOptions)
                 .into(imageview);
     }
@@ -66,10 +67,11 @@ public class GlideUtils {
         requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
         requestOptions.override(width, height);
         requestOptions.fitCenter();
-        requestOptions.placeholder(R.color.normal_gray);
-        requestOptions.error(R.color.normal_gray);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
+        requestOptions.error(R.drawable.icon_img_field);
         Glide.with(mContext)
                 .load(path)
+                .thumbnail(0.1f)
                 .apply(requestOptions)
                 .into(imageview);
     }
@@ -79,11 +81,12 @@ public class GlideUtils {
         RequestOptions requestOptions = new RequestOptions();
 //        requestOptions.placeholder(R.color.back_gray);
         requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
-        requestOptions.placeholder(R.color.normal_gray);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
         requestOptions.fitCenter();
-        requestOptions.error(R.color.normal_gray);
+        requestOptions.error(R.drawable.icon_img_field);
         Glide.with(mContext)
                 .load(path)
+                .thumbnail(0.1f)
                 .apply(requestOptions)
                 .into(imageview);
     }
@@ -93,11 +96,12 @@ public class GlideUtils {
         RequestOptions requestOptions = new RequestOptions();
 //        requestOptions.placeholder(R.color.back_gray);
         requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
-        requestOptions.placeholder(R.color.normal_gray);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
         requestOptions.fitCenter();
-        requestOptions.error(R.color.normal_gray);
+        requestOptions.error(R.drawable.icon_img_field);
         Glide.with(mContext)
                 .load(path)
+                .thumbnail(0.1f)
                 .apply(requestOptions)
                 .into(imageview);
     }
@@ -109,10 +113,11 @@ public class GlideUtils {
         requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
         requestOptions.transform(new GlideRoundTransform(mContext));
         requestOptions.fitCenter();
-        requestOptions.placeholder(R.color.normal_gray);
-        requestOptions.error(R.color.normal_gray);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
+        requestOptions.error(R.drawable.icon_img_field);
         Glide.with(mContext)
                 .load(path)
+                .thumbnail(0.1f)
                 .apply(requestOptions)
                 .into(imageview);
     }
@@ -122,10 +127,11 @@ public class GlideUtils {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
         requestOptions.transform(new GlideRoundTransform(mContext));
-        requestOptions.placeholder(R.color.normal_gray);
-        requestOptions.error(R.color.normal_gray);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
+        requestOptions.error(R.drawable.icon_img_field);
         Glide.with(mContext)
                 .load(path)
+                .thumbnail(0.1f)
                 .apply(requestOptions)
                 .into(imageview);
     }
@@ -138,10 +144,11 @@ public class GlideUtils {
         requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
         requestOptions.transform(new GlideRoundTransform(mContext));
         requestOptions.fitCenter();
-        requestOptions.placeholder(R.color.normal_gray);
-        requestOptions.error(R.color.normal_gray);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
+        requestOptions.error(R.drawable.icon_img_field);
         Glide.with(mContext)
                 .load(path)
+                .thumbnail(0.1f)
                 .apply(requestOptions)
                 .into(imageview);
     }
@@ -167,9 +174,9 @@ public class GlideUtils {
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.transform(new GlideCircleTransform(mContext));
-        requestOptions.placeholder(R.color.normal_gray);
-        requestOptions.error(R.color.normal_gray);
-        Glide.with(mContext).load(path).apply(requestOptions).into(imageview);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
+        requestOptions.error(R.drawable.icon_img_field);
+        Glide.with(mContext).load(path).thumbnail(0.1f).apply(requestOptions).into(imageview);
 
     }
 
@@ -177,7 +184,7 @@ public class GlideUtils {
                                        ImageView imageview) {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.transform(new GlideCircleTransform(mContext));
-        Glide.with(mContext).load(path).apply(requestOptions).into(imageview);
+        Glide.with(mContext).load(path).thumbnail(0.1f).apply(requestOptions).into(imageview);
 
     }
 
@@ -185,9 +192,9 @@ public class GlideUtils {
                                        ImageView imageview) {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.transform(new GlideCircleTransform(mContext));
-        requestOptions.placeholder(R.color.normal_gray);
-        requestOptions.error(R.color.normal_gray);
-        Glide.with(mContext).load(path).apply(requestOptions).into(imageview);
+        requestOptions.placeholder(R.drawable.icon_img_loading);
+        requestOptions.error(R.drawable.icon_img_field);
+        Glide.with(mContext).load(path).thumbnail(0.1f).apply(requestOptions).into(imageview);
 
     }
 

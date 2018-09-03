@@ -26,7 +26,7 @@ public class TimeUtils {
     public static String second2MMSS(int totalSecond) {
         int minute = totalSecond / 60;
         int second = totalSecond % 60;
-        return String.format("%02d:%02d", minute, second);
+        return String.format("%02d分%02d秒", minute, second);
     }
 
     /**
@@ -123,6 +123,7 @@ public class TimeUtils {
      * @return
      */
     public static void setTime(TextView textView, String time) {
+        time.replace("T"," ");
 
         if (TextUtils.isEmpty(time)) {
             return;
@@ -291,7 +292,7 @@ public class TimeUtils {
      */
     public static String changeTime(String time) {
         if (time == null) {
-            return "0";
+            return " ";
         }
         return time.replace("T", " ");
     }

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.android.otherPush.StubAppUtils;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
@@ -49,16 +50,16 @@ public class MyApplication extends MultiDexApplication {
 
 
         //-----------内存泄漏检查工具初始化----------------
-//        if (LeakCanary.isInAnalyzerProcess(this)) {
-//            return;
-//        }
-//        LeakCanary.install(this);
+        if (!LeakCanary.isInAnalyzerProcess(this)) {
+            LeakCanary.install(this);
+        }
 
         //-----------全局捕获异常日志----------------
         if (!BuildConfig.DEBUG) {
             CrashHandler crashHandler = CrashHandler.getInstance();
             crashHandler.init(getApplicationContext());
         }
+
 
         initXGPush();
     }
@@ -68,7 +69,7 @@ public class MyApplication extends MultiDexApplication {
      * 信鸽推送
      */
     private void initXGPush() {
-        XGPushConfig.enableDebug(this,true);
+        XGPushConfig.enableDebug(this, true);
         StubAppUtils.attachBaseContext(this);
 
         XGPushConfig.enableOtherPush(getApplicationContext(), true);
@@ -84,6 +85,7 @@ public class MyApplication extends MultiDexApplication {
                 //token在设备卸载重装的时候有可能会变
                 Log.d("TPush", "注册成功，设备token为：" + data);
             }
+
             @Override
             public void onFail(Object data, int errCode, String msg) {
                 Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);

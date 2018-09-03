@@ -25,18 +25,26 @@ import com.whmnrc.feimei.adapter.ProductDetailsCommentAdapter;
 import com.whmnrc.feimei.beans.ProductDetailsBean;
 import com.whmnrc.feimei.pop.PopServerInfo;
 import com.whmnrc.feimei.pop.PopShare;
+import com.whmnrc.feimei.presener.AddOrDelCollectionPresenter;
 import com.whmnrc.feimei.presener.GetProductDetailsPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.UserManager;
-import com.whmnrc.feimei.ui.mine.PayVipActivity;
+import com.whmnrc.feimei.ui.mine.CommentActivity;
 import com.whmnrc.feimei.ui.organization.AllCommentActivity;
 import com.whmnrc.feimei.ui.organization.OrganizationDetailsActivity;
+import com.whmnrc.feimei.utils.TextSpannableUtils;
+import com.whmnrc.feimei.utils.ToastUtils;
+import com.whmnrc.feimei.utils.evntBusBean.CollectionEvent;
 import com.whmnrc.feimei.views.BackGroundColorSpan;
 import com.whmnrc.mylibrary.utils.GlideUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.loader.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,7 +55,7 @@ import butterknife.OnClick;
  * @data 2018/7/26.
  */
 
-public class ProductDetailsActivity extends BaseActivity implements GetProductDetailsPresenter.GetProductDetailsListener {
+public class ProductDetailsActivity extends BaseActivity implements GetProductDetailsPresenter.GetProductDetailsListener, AddOrDelCollectionPresenter.AddOrDelCollectionListener {
 
 
     @BindView(R.id.banner)
@@ -106,6 +114,8 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
     ViewStub mVsEmpty;
     @BindView(R.id.dsl_layout)
     NestedScrollView mDslLayout;
+    @BindView(R.id.tv_collection)
+    TextView mTvCollection;
 
     private PopShare mPopShare;
     public PopServerInfo mPopServerInfo;
@@ -113,15 +123,23 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
     public String mProductId;
     public ProductDetailsCommentAdapter mOrganizationCommentAdapter;
     private ProductDetailsBean.ResultdataBean mProductDetailsBean;
+    public AddOrDelCollectionPresenter mAddOrDelCollectionPresenter;
 
 
     @Override
     protected void initViewData() {
+
+        EventBus.getDefault().register(this);
+
         showEmpty(true, mVsEmpty);
         mProductId = getIntent().getStringExtra("productId");
         isAccountLogin(true);
         mGetProductDetailsPresenter = new GetProductDetailsPresenter(this);
         mGetProductDetailsPresenter.getProductDetails(mProductId);
+
+        mAddOrDelCollectionPresenter = new AddOrDelCollectionPresenter(this);
+
+
         mRvCommentList.setNestedScrollingEnabled(false);
         mRvCommentList.setLayoutManager(new LinearLayoutManager(this));
         mOrganizationCommentAdapter = new ProductDetailsCommentAdapter(this, R.layout.item_organization_comment);
@@ -147,7 +165,7 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
             settings.setJavaScriptEnabled(true);
             settings.setUseWideViewPort(true);
             settings.setDefaultTextEncodingName("utf-8");
-            settings.setTextZoom(200);
+//            settings.setTextZoom(200);
             settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             settings.setLoadWithOverviewMode(true);
             //去除WebView的焦点事件
@@ -228,38 +246,34 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
             R.id.iv_back,
             R.id.iv_share})
     public void onClick(View view) {
+
+        if (mProductDetailsBean == null) {
+            finish();
+            return;
+        }
+
         switch (view.getId()) {
             case R.id.ll_account_product_details:
                 isAccountLogin(true);
                 break;
             case R.id.ll_comment:
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
                 isAccountLogin(false);
                 int bottom = mWbProductDetails.getBottom();
-                mDslLayout.smoothScrollTo(0, bottom);
+                mDslLayout.setScrollY(bottom);
+
+                CommentActivity.start(view.getContext(), mProductId);
+                CommentActivity.setCommentListener(() -> mGetProductDetailsPresenter.getProductDetails(mProductId));
                 break;
             case R.id.ll_advisory:
 
-                if (mProductDetailsBean.getCommodity().getPrice() <= 0) {
-                    if (mPopServerInfo == null) {
-                        mPopServerInfo = new PopServerInfo(this, mProductDetailsBean.getCommodity());
-                    }
-
-                } else {
-                    if (!UserManager.getIsLogin(view.getContext())) {
-                        return;
-                    }
-
-                    if (UserManager.getUserIsVip()) {
-                        if (mPopServerInfo == null) {
-                            mPopServerInfo = new PopServerInfo(this, mProductDetailsBean.getCommodity());
-                        }
-                    } else {
-                        PayVipActivity.start(view.getContext());
-                    }
+                if (mPopServerInfo == null) {
+                    mPopServerInfo = new PopServerInfo(this, mProductDetailsBean.getCommodity());
                 }
-                if (mPopServerInfo != null) {
-                    mPopServerInfo.show();
-                }
+                mPopServerInfo.show();
 
                 break;
             case R.id.ll_collection:
@@ -267,10 +281,22 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                 if (!UserManager.getIsLogin(view.getContext())) {
                     return;
                 }
-                mIvCollection.setSelected(!mIvCollection.isSelected());
+
+                if (mProductDetailsBean.getIsCollection() == 1) {
+                    ArrayList<String> readIds = new ArrayList<>();
+                    readIds.add(mProductDetailsBean.getCommodity().getID());
+                    mAddOrDelCollectionPresenter.delCollection(readIds);
+                } else {
+                    mAddOrDelCollectionPresenter.addCollection(mProductDetailsBean.getCommodity().getID(), AddOrDelCollectionPresenter.PRODUCT_COLLECTION);
+                }
+
                 break;
             case R.id.tv_product_specifications:
-//                ProductSpecificationsActivity.start(view.getContext(),mProductDetailsBean.getCommodity());
+                if (TextUtils.isEmpty(mProductDetailsBean.getCommodity().getRegulationBookID())) {
+                    ToastUtils.showToast("该产品没有规格书");
+                    return;
+                }
+                ProductSpecificationsActivity.start(view.getContext(), mProductDetailsBean.getCommodity().getRegulationBookID());
                 break;
             case R.id.tv_organization_name:
                 OrganizationDetailsActivity.start(view.getContext(), mProductDetailsBean.getCommodity().getEnterprise_ID());
@@ -282,17 +308,23 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                 break;
             case R.id.ll_pay:
 
-                if (mProductDetailsBean.getCommodity().getPrice() <= 0) {
+                if (mProductDetailsBean.getCommodity().getPrice() <= 0.00d) {
                     return;
                 }
                 if (!UserManager.getIsLogin(view.getContext())) {
                     return;
                 }
 
+
                 ConfirmOrderActivity.start(view.getContext(), mProductDetailsBean.getCommodity());
 
                 break;
             case R.id.iv_msg:
+
+                if (!UserManager.getIsLogin(view.getContext())) {
+                    return;
+                }
+
                 MsgActivity.start(view.getContext());
                 break;
             case R.id.iv_back:
@@ -302,7 +334,7 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
                 mPopShare = new PopShare(ProductDetailsActivity.this,
                         mProductDetailsBean.getCommodity().getName(),
                         mProductDetailsBean.getCommodity().getImg(),
-                        mProductDetailsBean.getCommodity().getConten(), mProductDetailsBean.getCommodity().getSalesman());
+                        "", mProductDetailsBean.getCommodity().getSalesman());
                 mPopShare.show();
                 break;
             default:
@@ -329,19 +361,16 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
 
         String productName = commodity.getName() + " " + commodity.getLabel();
 
-//        TextSpannableUtils.changeTextSize(mTvTitle, productName, productName.length()-commodity.getLabel().length(), productName.length(), getResources().getDimensionPixelOffset(R.dimen.dm_10));
-
         SpannableStringBuilder spannableString = new SpannableStringBuilder(productName);
-        int bgColor =Color.parseColor("#ff0000");
+        int bgColor = Color.parseColor("#ff0000");
         int textColor = Color.parseColor("#ffffff");
         BackGroundColorSpan span = new BackGroundColorSpan(bgColor, textColor, 10);
-        spannableString.setSpan(span, productName.length()-commodity.getLabel().length(), productName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(span, productName.length() - commodity.getLabel().length(), productName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTvTitle.setText(spannableString);
         mTvTitle.setMovementMethod(LinkMovementMethod.getInstance());
 
 
-
-        if (commodity.getPrice() <= 0) {
+        if (commodity.getPrice() <= 0.00d) {
             mTvPrice.setVisibility(View.GONE);
             mTvSales.setVisibility(View.GONE);
             mTvShowpiece.setVisibility(View.VISIBLE);
@@ -353,13 +382,22 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
             mTvShowpiece.setVisibility(View.GONE);
             mTvSales.setVisibility(View.VISIBLE);
             mTvPrice.setVisibility(View.VISIBLE);
-            mTvPrice.setText(String.format("￥%s", commodity.getPrice()));
+            mTvPrice.setText(String.format("￥%2.2f", commodity.getPrice()));
             mTvSales.setText(String.format("销量%s", commodity.getSales()));
         }
+
+//        mTvCollection.setText(bean.getIsCollection() == 1 ? "已收藏" : "收藏");
+        mIvCollection.setSelected(bean.getIsCollection() == 1);
         mTvBrowse.setText(String.format("浏览量%s", commodity.getClickNumber()));
         mTvOrganizationName.setText(commodity.getEnterpriseName());
-        mTvCommentCount.setText(String.format("共%s条", bean.getCommentCount()));
 
+        if (bean.getCommentCount() > 0) {
+            mTvCommentCount.setText(String.format("共%s条", bean.getCommentCount()));
+            mTvAllComment.setText(String.format("全部评价(%s)", bean.getCommentCount()));
+            String textContent = mTvAllComment.getText().toString().trim();
+            TextSpannableUtils.changeTextColor(mTvAllComment, textContent, 4, textContent.length(), ContextCompat.getColor(this, R.color.good_price_red));
+
+        }
         mOrganizationCommentAdapter.setDataArray(bean.getComment());
         mOrganizationCommentAdapter.notifyDataSetChanged();
         isShowDialog(false);
@@ -369,5 +407,31 @@ public class ProductDetailsActivity extends BaseActivity implements GetProductDe
     @Override
     public void getProductDetailsField() {
         isShowDialog(false);
+    }
+
+    @Override
+    public void collectionSuccess(boolean isAdd) {
+        mIvCollection.setSelected(isAdd);
+        mProductDetailsBean.setIsCollection(isAdd ? 1 : 0);
+        if (!isAdd) {
+            EventBus.getDefault().post(new CollectionEvent().setEventType(CollectionEvent.CANCEL_COLLECTION));
+        }
+    }
+
+    @Override
+    public void collectionCodeField() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+
+    }
+
+    @Subscribe
+    public void collectionEvent(CollectionEvent collectionEvent) {
+
     }
 }

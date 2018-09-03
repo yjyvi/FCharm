@@ -24,6 +24,9 @@ import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
+import com.whmnrc.feimei.utils.evntBusBean.CollectionEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,7 +139,7 @@ public class FragmentInformationResource extends LazyLoadFragment implements Get
 
         mLlFilter.setOnClickListener(v -> {
             if (mPopInformation == null) {
-                mPopInformation = new PopInformation(getActivity(), mLlFilter);
+                mPopInformation = new PopInformation(getActivity(), mLlFilter, PopInformation.FILTTER_NEW);
                 mPopInformation.setPopHintListener(bean -> {
                     mTvTypeName.setText(bean.getTypeName());
                     currentNewType = bean.getType();
@@ -171,6 +174,7 @@ public class FragmentInformationResource extends LazyLoadFragment implements Get
 
             if (datas.size() == bean.getPagination().getRecords()) {
                 mRefresh.setEnableLoadMore(false);
+                return;
             }
 
             datas.addAll(bean.getNews());
@@ -191,6 +195,10 @@ public class FragmentInformationResource extends LazyLoadFragment implements Get
     public void collectionSuccess(boolean isAdd) {
         mResourceNewsAdapter.getDatas().get(mCollectionPosition).setIsCollection(isAdd ? 1 : 0);
         mResourceNewsAdapter.notifyItemChanged(mCollectionPosition);
+
+        if (!isAdd) {
+            EventBus.getDefault().post(new CollectionEvent().setEventType(CollectionEvent.CANCEL_COLLECTION));
+        }
     }
 
     @Override

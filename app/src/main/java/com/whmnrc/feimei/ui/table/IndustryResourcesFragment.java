@@ -8,12 +8,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.beans.BannerListBean;
+import com.whmnrc.feimei.presener.GetBannerPresenter;
 import com.whmnrc.feimei.ui.BaseFragment;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
@@ -22,8 +24,10 @@ import com.whmnrc.feimei.ui.industry.fragment.FragmentFileResource;
 import com.whmnrc.feimei.ui.industry.fragment.FragmentInformationResource;
 import com.whmnrc.feimei.ui.industry.fragment.FragmentReadResource;
 import com.whmnrc.feimei.ui.mine.MineActivity;
-import com.whmnrc.feimei.utils.evntBusBean.BaseEvent;
+import com.whmnrc.mylibrary.utils.GlideUtils;
 import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.loader.ImageLoader;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -33,9 +37,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ import butterknife.OnClick;
  * 行业资源
  */
 
-public class IndustryResourcesFragment extends LazyLoadFragment implements OnRefreshLoadMoreListener {
+public class IndustryResourcesFragment extends LazyLoadFragment implements GetBannerPresenter.GetBannerListener {
 
     @BindView(R.id.header_layout)
     LinearLayout headerLayout;
@@ -61,22 +62,11 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
     AppBarLayout appBarLayout;
     @BindView(R.id.banner)
     Banner mBanner;
-//    @BindView(R.id.iv_user_info)
-//    ImageView mIvUserInfo;
-
-    private double mCurrencyPrice;
 
     private List<BaseFragment> mFragments = new ArrayList<>();
-    private int page = 1;
-    private int rows = 10;
-    private String mCurrencyCode;
-    /**
-     * 品牌的一页显示的最大数据
-     */
-    private int pageMax = 10;
 
     String[] titles = new String[]{"阅读", "文库", "规格书", "光通资讯"};
-    private int headerHeight;
+    public GetBannerPresenter mGetBannerPresenter;
 
 
     @Override
@@ -87,13 +77,14 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
 
     @Override
     protected void initViewData() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
 
+
+        mGetBannerPresenter = new GetBannerPresenter(this);
+        mGetBannerPresenter.getBanner(2);
         initFragment();
 
         initTab();
+
 
     }
 
@@ -131,6 +122,55 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void getBannerSuccess(List<BannerListBean.ResultdataBean> bean) {
+        initBanner(bean);
+    }
+
+
+    /**
+     * 轮播图
+     */
+    private void initBanner(List<BannerListBean.ResultdataBean> bannerList) {
+        if (mBanner != null) {
+            mBanner.setDelayTime(3000);
+            mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+            mBanner.setIndicatorGravity(BannerConfig.CENTER);
+            mBanner.offsetLeftAndRight(10);
+            mBanner.setImages(bannerList).setImageLoader(new ImageLoader() {
+                @Override
+                public void displayImage(Context context, Object path, ImageView imageView) {
+                    final BannerListBean.ResultdataBean  resultdataBeans = (BannerListBean.ResultdataBean) path;
+                    String bannerUrl = resultdataBeans.getBanner_Url();
+                    if (TextUtils.isEmpty(bannerUrl)) {
+                        if (!bannerUrl.startsWith("http")) {
+                            bannerUrl = getResources().getString(R.string.service_host_address) + bannerUrl;
+                        }
+                    }
+                    GlideUtils.LoadImage(imageView.getContext(), bannerUrl, imageView);
+                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                }
+            }).start();
+        }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mBanner != null) {
+            mBanner.startAutoPlay();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mBanner != null) {
+            mBanner.stopAutoPlay();
         }
     }
 
@@ -218,35 +258,5 @@ public class IndustryResourcesFragment extends LazyLoadFragment implements OnRef
         IndustryResourcesFragment homeFragment = new IndustryResourcesFragment();
         homeFragment.setArguments(bundle);
         return homeFragment;
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onLoadMore(RefreshLayout refreshLayout) {
-        page++;
-        refreshLayout.finishLoadMore();
-    }
-
-    @Override
-    public void onRefresh(RefreshLayout refreshLayout) {
-        page = 1;
-        refreshLayout.finishRefresh();
-    }
-
-
-    /**
-     * 修改货币显示
-     *
-     * @param goodsCommentEvent
-     */
-    @Subscribe
-    public void changePrice(BaseEvent goodsCommentEvent) {
-
     }
 }

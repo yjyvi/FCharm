@@ -14,7 +14,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dm_1"
+        android:layout_height="@dimen/dm_0.5"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/dm_50"
         android:background="@color/normal_gray_line"/>
@@ -37,13 +37,13 @@
         <TextView
             android:id="@+id/tv_table_organization_chart"
             style="@style/Main_RadioGroup"
-            android:drawableTop="@drawable/tab_organization_chart"
+            android:drawableTop="@drawable/tab_industry_resources"
             android:text="企业名录"/>
 
         <TextView
             android:id="@+id/tv_table_industry_resources"
             style="@style/Main_RadioGroup"
-            android:drawableTop="@drawable/tab_industry_resources"
+            android:drawableTop="@drawable/tab_organization_chart"
             android:text="行业资源"/>
 
 

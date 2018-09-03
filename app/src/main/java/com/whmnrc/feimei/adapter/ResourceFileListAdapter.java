@@ -35,37 +35,52 @@ public class ResourceFileListAdapter extends CommonAdapter<ResourcesFileBean.Res
             holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
         }
 
-        holder.setText(R.id.tv_name, readBean.getName());
+        holder.setText(R.id.tv_name, readBean.getTitle());
         holder.setText(R.id.tv_collection, readBean.getIsCollection() == 1 ? "已收藏" : "收藏");
         holder.getView(R.id.tv_collection).setSelected(readBean.getIsCollection() == 1);
 
         if (readBean.getType() == 4) {
-            holder.setVisible(R.id.iv_video_img, true);
-            GlideUtils.LoadImage(mContext, "", holder.getView(R.id.iv_video_img));
+            holder.setVisible(R.id.rl_video, true);
+            GlideUtils.LoadImage(mContext, readBean.getImg(), holder.getView(R.id.iv_video_img));
         } else {
-            holder.setVisible(R.id.iv_video_img, false);
+            holder.setVisible(R.id.rl_video, false);
         }
 
         BookFileTypeUtils.showFileType(holder.getView(R.id.tv_name), readBean.getType());
 
         holder.setText(R.id.tv_desc, readBean.getSubtitle());
-        holder.setText(R.id.tv_price, String.format("收费：%s", readBean.getPrice()));
+        holder.setText(R.id.tv_price, String.format("收费：￥%2.2f", readBean.getPrice()));
         holder.setText(R.id.tv_download_count, String.format("%s次下载", readBean.getDownloadNumber()));
         holder.setText(R.id.tv_time, TimeUtils.getDateToString(Long.parseLong(readBean.getCreateTime())));
 
         TextView tvDownload = holder.getView(R.id.tv_is_download);
-        tvDownload.setOnClickListener(v -> {
-            if (readBean.getIsPay() == 1 || UserManager.getUserIsVip()) {
-                ProductSpecificationsActivity.showDownloadPop(mContext, tvDownload, readBean.getFilePath(), readBean.getName(), 1, readBean.getID(), new ProductSpecificationsActivity.DownloadListener() {
-                    @Override
-                    public void downloadSuccess() {
-                        tvDownload.setEnabled(true);
-                    }
 
-                    @Override
-                    public void downloadField() {
-                        tvDownload.setEnabled(true);
-                    }
+
+        tvDownload.setOnClickListener(v -> {
+            if (!UserManager.getIsLogin(mContext)) {
+                return;
+            }
+            if (readBean.getIsPay() == 1 || UserManager.getUserIsVip()) {
+                tvDownload.post(() -> {
+                    tvDownload.setEnabled(false);
+                    ProductSpecificationsActivity.showDownloadPop(mContext, tvDownload, readBean.getFilePath(), readBean.getName(), 1, readBean.getID(), new ProductSpecificationsActivity.DownloadListener() {
+                        @Override
+                        public void downloadSuccess() {
+                            tvDownload.setEnabled(true);
+                            tvDownload.setText("马上下载");
+                        }
+
+                        @Override
+                        public void downloadField() {
+                            tvDownload.setEnabled(true);
+                            tvDownload.setText("马上下载");
+                        }
+
+                        @Override
+                        public void downloading() {
+                            tvDownload.setText("正在下载");
+                        }
+                    });
                 });
             } else {
                 PayActivity.startFileResource(mContext, PayActivity.RESOURCE_PAY, readBean);
@@ -73,7 +88,7 @@ public class ResourceFileListAdapter extends CommonAdapter<ResourcesFileBean.Res
         });
 
         holder.itemView.setOnClickListener(v -> {
-            IndustryDetailsActivity.startFielDetails(mContext, readBean, IndustryDetailsActivity.FILE_DETAILS_TYPE, position);
+            IndustryDetailsActivity.start(mContext, readBean.getID(), IndustryDetailsActivity.FILE_DETAILS_TYPE, position);
             IndustryDetailsActivity.setCollectionListener(isCollection -> {
                 readBean.setIsCollection(isCollection ? 1 : 0);
                 notifyItemChanged(position);

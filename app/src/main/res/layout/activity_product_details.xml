@@ -110,7 +110,6 @@
                         android:id="@+id/tv_organization_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="威海电力电源有限公司"
                         android:textColor="@color/black"
                         android:textSize="@dimen/dm_13"/>
                 </LinearLayout>
@@ -326,6 +325,7 @@
 
 
                 <TextView
+                    android:id="@+id/tv_collection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -352,7 +352,7 @@
                 android:drawableLeft="@mipmap/icon_order_pay"
                 android:drawablePadding="@dimen/dm_10"
                 android:gravity="center"
-                android:text="确认支付"
+                android:text="立即购买"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dm_14"/>
 

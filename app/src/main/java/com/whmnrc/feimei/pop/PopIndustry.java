@@ -245,8 +245,8 @@ public class PopIndustry {
     }
 
 
-    public void show() {
-        mPopupWindow.showAsDropDown(showView);
+    public void show(View view) {
+        mPopupWindow.showAsDropDown(view);
 
 //        if (cityListener == null) {
 //            return;

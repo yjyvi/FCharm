@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@mipmap/icon_msg"
         android:drawablePadding="@dimen/dm_5"
-        android:text="系统消息"
         android:textColor="@color/black"
         android:textSize="@dimen/dm_13"/>
 
     <View
+        android:visibility="gone"
         android:id="@+id/v_point"
-        android:layout_width="@dimen/dm_3"
-        android:layout_height="@dimen/dm_3"
+        android:layout_width="@dimen/dm_5"
+        android:layout_height="@dimen/dm_5"
         android:layout_toRightOf="@id/tv_title"
         android:background="@drawable/shape_red_circle"/>
 
@@ -28,7 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="2018/10/12  08:18"
         android:textColor="@color/normal_gray"
         android:textSize="@dimen/dm_11"/>
 
@@ -37,8 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title"
+        android:lines="2"
+        android:ellipsize="end"
         android:layout_marginTop="@dimen/dm_10"
-        android:text="欢迎使用菲魅APP应用平台 ，这里将给你不一样的完美体验，敬请期待！"
         android:textColor="@color/normal_gray"
         android:textSize="@dimen/dm_11"/>
 

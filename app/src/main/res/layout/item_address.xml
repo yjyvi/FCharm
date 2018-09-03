@@ -2,19 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingTop="@dimen/dm_15"
               android:background="@color/white"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:paddingTop="@dimen/dm_15">
 
 
     <LinearLayout
 
-        android:paddingLeft="@dimen/dm_15"
-        android:paddingRight="@dimen/dm_15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingRight="@dimen/dm_15">
 
         <TextView
             android:id="@+id/tv_name"
@@ -22,64 +22,62 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:includeFontPadding="false"
-            android:text="wwww"
             android:textColor="@color/black"
-            android:textSize="@dimen/dm_14" />
+            android:textSize="@dimen/dm_14"/>
 
         <TextView
             android:id="@+id/tv_phone_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:textColor="@color/black"
             android:textSize="@dimen/dm_14"
-            android:text="546545"
             />
 
     </LinearLayout>
 
     <TextView
-        android:paddingLeft="@dimen/dm_15"
-        android:paddingRight="@dimen/dm_15"
         android:id="@+id/tv_address"
-        android:textSize="@dimen/dm_12"
-        android:textColor="@color/normal_gray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dm_14"
-        android:text="湖北省武汉市武昌区广埠屯地铁站旁融科T1写字楼1404—
-1405室" />
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingRight="@dimen/dm_15"
+        android:textColor="@color/normal_gray"
+        android:textSize="@dimen/dm_12"
+        />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dm_0.5"
         android:layout_marginTop="@dimen/dm_15"
-        android:background="@color/common_line" />
+        android:background="@color/common_line"/>
 
     <LinearLayout
         android:id="@+id/ll_is_select"
-        android:paddingLeft="@dimen/dm_15"
-        android:paddingRight="@dimen/dm_15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dm_15"
         android:layout_marginTop="@dimen/dm_15"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingRight="@dimen/dm_15">
 
 
         <LinearLayout
             android:id="@+id/ll_is_default"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginRight="@dimen/dm_20"
-            android:layout_height="match_parent">
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/iv_is_default"
                 android:layout_width="@dimen/dm_15"
                 android:layout_height="@dimen/dm_15"
-                android:src="@drawable/select_cart" />
+                android:src="@drawable/select_cart"/>
 
             <TextView
                 android:id="@+id/tv_default"
@@ -88,9 +86,8 @@
                 android:layout_marginLeft="@dimen/dm_8"
                 android:text="默认地址"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dm_12" />
+                android:textSize="@dimen/dm_12"/>
         </LinearLayout>
-
 
 
         <TextView
@@ -101,7 +98,7 @@
             android:drawablePadding="@dimen/dm_6"
             android:text="编辑"
             android:textColor="@color/black"
-            android:textSize="@dimen/dm_12" />
+            android:textSize="@dimen/dm_12"/>
 
         <TextView
             android:id="@+id/tv_delete"
@@ -112,7 +109,7 @@
             android:drawablePadding="@dimen/dm_6"
             android:text="删除"
             android:textColor="@color/black"
-            android:textSize="@dimen/dm_12" />
+            android:textSize="@dimen/dm_12"/>
 
     </LinearLayout>
 

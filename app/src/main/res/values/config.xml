@@ -14,6 +14,13 @@
     <!--支付-->
     <string name="Pay">/api/Pay/Pay</string>
 
+    <!--获取首页数据-->
+    <string name="GetFirstPage">/api/Home/GetFirstPage</string>
+    <!--获取轮播图-->
+    <string name="GetBanner">/api/Home/GetBanner</string>
+    <!--综合搜索-->
+    <string name="Search">/api/Home/Search</string>
+
     <!--登录-->
     <string name="Login">/api/User/Login</string>
     <!--注销用户-->
@@ -32,11 +39,40 @@
     <string name="RecoverUserPassword">/api/User/RecoverUserPassword</string>
     <!--修改用户资料-->
     <string name="ModifyUserBasicData">/api/User/ModifyUserBasicData</string>
+    <!--获取VIP会员金额列表和赞赏金额列表-->
+    <string name="GetPayType">/api/Pay/GetPayType</string>
+    <!--意见反馈-->
+    <string name="Feedback">/api/Home/Feedback</string>
+    <!--消息列表-->
+    <string name="GetPush">/api/Home/GetPush</string>
+    <!--消息已读-->
+    <string name="ReadPush">/api/Home/ReadPush</string>
+
+
+    <!--创建订单-->
+    <string name="SendOrder">/api/Order/SendOrder</string>
+    <!--获取订单列表-->
+    <string name="GetOrder">/api/Order/GetOrder</string>
+    <!--订单详情-->
+    <string name="GetOrderDetails">/api/Order/GetOrderDetails</string>
+    <!--取消订单-->
+    <string name="CancelOrder">/api/Order/CancelOrder</string>
+    <!--发起退款-->
+    <string name="RefundOrder">/api/Order/RefundOrder</string>
 
     <!--添加收藏-->
     <string name="AddCollection">/api/Collection/AddCollection</string>
     <!--删除收藏-->
     <string name="DelCollection">/api/Collection/DelCollection</string>
+    <!--收藏列表-->
+    <string name="GetCollection">/api/Collection/GetCollection</string>
+
+    <!--添加地址-->
+    <string name="Address">/api/Order/Address</string>
+    <!--删除地址-->
+    <string name="DelAddress">/api/Order/DelAddress</string>
+    <!--获取地址列表-->
+    <string name="GetAddress">/api/Order/GetAddress</string>
 
     <!--企业名录-->
     <!--获取企业类型-->

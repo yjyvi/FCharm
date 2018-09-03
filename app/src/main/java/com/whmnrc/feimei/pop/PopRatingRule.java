@@ -41,12 +41,9 @@ public class PopRatingRule {
         // 设置popwindow弹出大小
         mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        ivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPopupWindow != null) {
-                    mPopupWindow.dismiss();
-                }
+        ivClose.setOnClickListener(v -> {
+            if (mPopupWindow != null) {
+                mPopupWindow.dismiss();
             }
         });
         // 使其聚集
@@ -69,12 +66,7 @@ public class PopRatingRule {
         // 刷新状态
         mPopupWindow.update();
 
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                PopUtils.setBackgroundAlpha((Activity) mContext, 1f);
-            }
-        });
+        mPopupWindow.setOnDismissListener(() -> PopUtils.setBackgroundAlpha((Activity) mContext, 1f));
     }
 
 

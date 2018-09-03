@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.beans.ResourcesFileBean;
-import com.whmnrc.feimei.network.CommonCallBack;
 import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.ui.PresenterBase;
 import com.whmnrc.feimei.ui.UserManager;
@@ -28,11 +27,11 @@ public class GetLibraryPresenter extends PresenterBase {
     }
 
     public void getLibraryList() {
-        getLibraryList(true, "");
+        getLibraryList(true, "", "");
     }
 
 
-    public void getLibraryList(boolean isRefresh, String searchContent) {
+    public void getLibraryList(boolean isRefresh, String searchContent, String libraryId) {
         HashMap<String, Object> params = new HashMap<>(8);
         params.put("rows", 10);
         params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
@@ -46,22 +45,33 @@ public class GetLibraryPresenter extends PresenterBase {
         params.put("sord", "");
 
         HashMap<String, Object> conditionJson = new HashMap<>(4);
+        if (!TextUtils.isEmpty(libraryId)) {
+            conditionJson.put("ID", libraryId);
+            params.put("rows", 1);
+        }
         if (!TextUtils.isEmpty(searchContent)) {
             conditionJson.put("Name", searchContent);
         }
 
         params.put("conditionJson", JSON.toJSONString(conditionJson));
 
-        OKHttpManager.postString(getUrl(R.string.GetLibrary), params, new CommonCallBack<ResourcesFileBean>() {
+        OKHttpManager.postString(getUrl(R.string.GetLibrary), params, new OKHttpManager.ObjectCallback() {
             @Override
-            protected void onSuccess(ResourcesFileBean data) {
-                if (data.getType() == 1) {
-                    mGetLibraryListener.getReadSuccess(isRefresh, data.getResultdata());
+            public void onSuccess(String st) {
+                ResourcesFileBean resourcesFileBean = JSON.parseObject(st, ResourcesFileBean.class);
+                if (resourcesFileBean.getType() == 1) {
+                    mGetLibraryListener.getReadSuccess(isRefresh, resourcesFileBean.getResultdata());
                 } else {
                     mGetLibraryListener.getReadField();
-                    ToastUtils.showToast(data.getMessage());
+                    ToastUtils.showToast(resourcesFileBean.getMessage());
                 }
             }
+
+            @Override
+            public void onFailure(int code, String errorMsg) {
+                mGetLibraryListener.getReadField();
+            }
+
         });
     }
 

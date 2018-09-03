@@ -39,6 +39,8 @@ public class ShareholderInformationListAdapter extends CommonAdapter<Organizatio
      * @param holder
      */
     private void createSignText(ViewHolder holder, OrganizationDetailsBean.ResultdataBean.ShareholderBean shareholderBean) {
+
+        holder.setIsRecyclable(false);
         LinearLayout llSign = holder.getView(R.id.ll_sign);
 
         if (shareholderBean.getIsShareholder() == 1) {
@@ -66,7 +68,8 @@ public class ShareholderInformationListAdapter extends CommonAdapter<Organizatio
         layoutParams.setMargins(mContext.getResources().getDimensionPixelSize(R.dimen.dm_5), 0, 0, 0);
         textView.setLayoutParams(layoutParams);
         textView.setText(textContent);
-        textView.setTextSize(mContext.getResources().getDimensionPixelSize(R.dimen.dm_4));
+        textView.setTextSize(mContext.getResources().getDimensionPixelSize(R.dimen.dm_3));
+        textView.setLines(1);
         textView.setTextColor(ContextCompat.getColor(mContext, color));
         textView.setPadding(
                 mContext.getResources().getDimensionPixelSize(R.dimen.dm_2),

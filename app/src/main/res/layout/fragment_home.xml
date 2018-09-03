@@ -49,24 +49,24 @@
 
                     <ImageView
                         android:id="@+id/iv_user_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginRight="@dimen/dm_30"
                         android:layout_marginTop="@dimen/dm_40"
-                        android:layout_gravity="center_vertical"
-                        android:layout_width="wrap_content"
-                        android:src="@mipmap/icon_header"
-                        android:layout_height="wrap_content"/>
+                        android:src="@mipmap/icon_header"/>
 
                 </RelativeLayout>
 
 
                 <LinearLayout
-                    android:layout_marginTop="@dimen/dm_12"
                     android:id="@+id/ll_search"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dm_43"
                     android:layout_marginLeft="@dimen/dm_15"
                     android:layout_marginRight="@dimen/dm_15"
+                    android:layout_marginTop="@dimen/dm_12"
                     android:background="@drawable/search_home_gray_bg"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -93,12 +93,12 @@
 
                 <!--固定区域-->
                 <LinearLayout
-                    android:background="@color/white"
-                    android:layout_margin="@dimen/dm_15"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dm_120"
+                    android:layout_height="@dimen/dm_150"
                     android:layout_marginTop="@dimen/dm_15"
-                    android:orientation="horizontal">
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dm_15">
 
                     <!--左边两个的-->
                     <LinearLayout
@@ -118,10 +118,10 @@
 
 
                         <ImageView
-                            android:layout_marginTop="@dimen/dm_1"
                             android:id="@+id/iv_activity_4"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
+                            android:layout_marginTop="@dimen/dm_1"
                             android:layout_weight="1"
                             android:scaleType="fitXY"
                             android:src="@mipmap/icon_home3"/>
@@ -130,9 +130,9 @@
 
                     <!--右边二个的-->
                     <LinearLayout
-                        android:layout_marginLeft="@dimen/dm_1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dm_1"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -146,10 +146,10 @@
 
 
                         <ImageView
-                            android:layout_marginTop="@dimen/dm_1"
                             android:id="@+id/iv_activity_3"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
+                            android:layout_marginTop="@dimen/dm_1"
                             android:layout_weight="1"
                             android:scaleType="fitXY"
                             android:src="@mipmap/icon_home4"/>
@@ -157,8 +157,11 @@
 
                 </LinearLayout>
 
+                <include layout="@layout/common_line"/>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_recommend_list"
+                    android:layout_marginTop="@dimen/dm_8"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/back_gray"/>

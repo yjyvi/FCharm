@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -17,6 +19,7 @@ import com.whmnrc.feimei.adapter.ResourceListAdapter;
 import com.whmnrc.feimei.beans.ColumnBean;
 import com.whmnrc.feimei.beans.ReadListBean;
 import com.whmnrc.feimei.beans.SearchConditionBean;
+import com.whmnrc.feimei.pop.PopInformation;
 import com.whmnrc.feimei.presener.GetColumnPresenter;
 import com.whmnrc.feimei.presener.GetReadPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
@@ -45,10 +48,17 @@ public class FragmentReadResource extends LazyLoadFragment implements GetReadPre
     EditText mEtSearchContent;
     @BindView(R.id.refresh)
     SmartRefreshLayout mRefresh;
+    @BindView(R.id.ll_filter)
+    LinearLayout mLlFilter;
+    @BindView(R.id.tv_type_name)
+    TextView mTvTypeName;
+
     private GetColumnPresenter mGetColumnPresenter;
     private GetReadPresenter mGetReadPresenter;
     public AuthorResourceListAdapter mAuthorResourceListAdapter;
     public ResourceListAdapter mResourceListAdapter;
+    private PopInformation mPopInformation;
+    private int currentNewType = -1;
 
     @Override
     protected int contentViewLayoutID() {
@@ -87,12 +97,26 @@ public class FragmentReadResource extends LazyLoadFragment implements GetReadPre
                 if (!TextUtils.isEmpty(mSearchContent)) {
                     SearchConditionBean searchConditionBean = new SearchConditionBean();
                     searchConditionBean.setContent(mSearchContent);
+                    searchConditionBean.setCurrentNewType(currentNewType);
                     SearchActivity.start(getActivity(), SearchActivity.SEARCH_READ, searchConditionBean);
                     mEtSearchContent.setText("");
                     return true;
                 }
             }
             return false;
+        });
+
+        mLlFilter.setOnClickListener(v -> {
+            if (mPopInformation == null) {
+                mPopInformation = new PopInformation(getActivity(), mLlFilter, PopInformation.FILTTER_READ);
+                mPopInformation.setPopHintListener(bean -> {
+                    mTvTypeName.setText(bean.getTypeName());
+                    currentNewType = bean.getType();
+                    mGetReadPresenter.getReadList(true, "", "", currentNewType);
+                });
+            }
+
+            mPopInformation.show();
         });
     }
 
@@ -117,6 +141,7 @@ public class FragmentReadResource extends LazyLoadFragment implements GetReadPre
             List<ReadListBean.ResultdataBean.ReadBean> datas = mResourceListAdapter.getDatas();
             if (bean.getPagination().getRecords() == datas.size()) {
                 mRefresh.setEnableLoadMore(false);
+                return;
             }
             datas.addAll(bean.getRead());
             mResourceListAdapter.setDataArray(datas);

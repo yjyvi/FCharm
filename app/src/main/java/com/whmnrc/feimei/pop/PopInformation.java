@@ -31,6 +31,16 @@ public class PopInformation {
 
     private PopHintListener mPopHintListener;
 
+    /**
+     * 筛选光通资讯
+     */
+    public static final int FILTTER_NEW = 1;
+
+    /**
+     * 筛选阅读
+     */
+    public static final int FILTTER_READ = 2;
+
     private List<InformationTypeBean> mDataList = new ArrayList<>();
     public Adapter mAdapter;
 
@@ -73,28 +83,29 @@ public class PopInformation {
     }
 
 
-    public PopInformation(Context context, View showView) {
+    public PopInformation(Context context, View showView, int type) {
         this.mContext = context;
         this.showView = showView;
 
-        mDataList.add(new InformationTypeBean("全部", -1));
-        mDataList.add(new InformationTypeBean("标准规范", 0));
-        mDataList.add(new InformationTypeBean("行业论文", 1));
-        mDataList.add(new InformationTypeBean("技术文章", 2));
-        mDataList.add(new InformationTypeBean("行业视频", 3));
-        mDataList.add(new InformationTypeBean("其它", 4));
+        if (type == FILTTER_NEW) {
+            mDataList.add(new InformationTypeBean("全部", -1));
+            mDataList.add(new InformationTypeBean("标准规范", 0));
+            mDataList.add(new InformationTypeBean("行业论文", 1));
+            mDataList.add(new InformationTypeBean("技术文章", 2));
+            mDataList.add(new InformationTypeBean("行业视频", 3));
+            mDataList.add(new InformationTypeBean("其它", 4));
+        } else {
+            mDataList.add(new InformationTypeBean("全部", -1));
+            mDataList.add(new InformationTypeBean("技术", 0));
+            mDataList.add(new InformationTypeBean("市场", 1));
+            mDataList.add(new InformationTypeBean("其它", 2));
+        }
+
 
         View view = LayoutInflater.from(context).inflate(R.layout.pop_information, null);
         RecyclerView mRvType = view.findViewById(R.id.rv_list);
 
         mRvType.setLayoutManager(new LinearLayoutManager(mContext));
-//        mRvType.addItemDecoration(new RecyclerView.ItemDecoration() {
-//            @Override
-//            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-//                super.getItemOffsets(outRect, view, parent, state);
-//                outRect.bottom = mContext.getResources().getDimensionPixelOffset(R.dimen.dm_0_5);
-//            }
-//        });
         mRvType.setNestedScrollingEnabled(false);
         mAdapter = new Adapter(context, R.layout.item_city_select);
         mRvType.setAdapter(mAdapter);

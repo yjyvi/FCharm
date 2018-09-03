@@ -61,7 +61,6 @@
                 android:inputType="text"
                 android:lines="1"
                 android:textColorHint="@color/search_hint_text_bg"
-                android:textCursorDrawable="@color/black"
                 android:textSize="@dimen/dm_12"/>
         </LinearLayout>
 

@@ -143,33 +143,25 @@ public class PopMoreFitter {
         twoRv.setAdapter(twoAdapter);
 
 
-        tvReturn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedFalse(twoRv,false);
+        tvReturn.setOnClickListener(v -> selectedFalse(twoRv,false));
+
+        tvConfirm.setOnClickListener(v -> {
+
+            if (oneSelect == 0) {
+                twoSelect = twoSelectTime;
+            } else if (oneSelect == 1) {
+                twoSelect = twoSelectEducation;
             }
-        });
-
-        tvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (oneSelect == 0) {
-                    twoSelect = twoSelectTime;
-                } else if (oneSelect == 1) {
-                    twoSelect = twoSelectEducation;
-                }
-                mMoreFitterListener.onSelectFitter(oneSelect, twoSelect, 1);
-                if (mPopupWindow != null) {
-                    mPopupWindow.dismiss();
-                }
+            mMoreFitterListener.onSelectFitter(oneSelect, twoSelect, 1);
+            if (mPopupWindow != null) {
+                mPopupWindow.dismiss();
             }
         });
     }
 
 
-    public void show() {
-        mPopupWindow.showAsDropDown(showView);
+    public void show(View view) {
+        mPopupWindow.showAsDropDown(view);
         if (oneSelect == -1) {
             oneSelect = 0;
             oneAdapter.notifyDataSetChanged();
@@ -250,16 +242,13 @@ public class PopMoreFitter {
         public void convert(ViewHolder holder, SpecialInformationFitterBean.DataListBean s, final int position) {
             holder.setText(R.id.tv, s.getName());
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectedFalse(twoRv,true);
-                    selectedView(v);
-                    if (oneSelect == 0) {
-                        twoSelectTime = position;
-                    } else if (oneSelect == 1) {
-                        twoSelectEducation = position;
-                    }
+            holder.itemView.setOnClickListener(v -> {
+                selectedFalse(twoRv,true);
+                selectedView(v);
+                if (oneSelect == 0) {
+                    twoSelectTime = position;
+                } else if (oneSelect == 1) {
+                    twoSelectEducation = position;
                 }
             });
 

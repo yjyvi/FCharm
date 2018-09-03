@@ -10,10 +10,10 @@
               android:layout_width="match_parent"
               android:layout_height="@dimen/dm_38"
               android:layout_margin="@dimen/dm_5"
+              android:textSize="@dimen/dm_12"
               android:background="@drawable/select_shape_more_fitter"
               android:gravity="center"
               android:orientation="vertical"
-              android:text="所有"
               android:textColor="@drawable/select_more_fitter_text"/>
 
 </LinearLayout>

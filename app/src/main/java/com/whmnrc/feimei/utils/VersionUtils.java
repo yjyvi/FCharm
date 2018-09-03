@@ -1,7 +1,6 @@
 package com.whmnrc.feimei.utils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -11,22 +10,20 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
-import android.view.View;
 import android.webkit.MimeTypeMap;
 
+import com.allenliu.versionchecklib.callback.APKDownloadListener;
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.whmnrc.feimei.MyApplication;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.beans.VersionBean;
 import com.whmnrc.feimei.network.CommonCallBack;
 import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.pop.PopUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 import java.util.TreeMap;
-
-import okhttp3.Call;
 
 
 /**
@@ -55,68 +52,58 @@ public class VersionUtils {
      * 显示下载弹窗
      *
      * @param activity
-     * @param contentView
      */
-    public static void showDownloadPop(final Activity activity, final View contentView) {
+    public static void showDownloadPop(final Activity activity) {
 
         String url = MyApplication.applicationContext.getResources().getString(R.string.service_host_address) + MyApplication.applicationContext.getResources().getString(R.string.GetVersion);
-        OKHttpManager.postString(url, new TreeMap<String, Object>(), new CommonCallBack<VersionBean>() {
+        OKHttpManager.postString(url, new TreeMap<>(), new CommonCallBack<VersionBean>() {
             @Override
             protected void onSuccess(VersionBean data) {
                 final VersionBean.ResultdataBean resultdata = data.getResultdata();
                 if (resultdata == null) {
                     return;
                 }
-                if (TextUtils.equals(getVersionName(activity),resultdata.getAndroidVersion())) {
+                if (TextUtils.equals(getVersionName(activity), resultdata.getAndroidVersion())) {
                     return;
                 }
-                PopUtils.showNotify(activity, contentView, resultdata.getExplain(), "确定", new PopUtils.NormalNotifyPopListener() {
+                PopUtils.showVersionNotify(activity, resultdata.getExplain(), "确定", new PopUtils.NormalNotifyPopListener() {
                     @Override
                     public void commitClick() {
-                        final ProgressDialog progressDialog = new ProgressDialog(activity);
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                        progressDialog.setMessage("下载中");
-                        progressDialog.setTitle("提示");
-                        progressDialog.setMax(100);
-                        progressDialog.setIndeterminate(false);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
                         //下载文件
-                        String filePath = Environment.getExternalStorageDirectory().getPath();
-                        final String fileName = MyApplication.applicationContext.getString(R.string.app_name) + "_" + resultdata.getAndroidVersion() + ".apk";
-
+                        String filePath = Environment.getExternalStoragePublicDirectory(Environment.
+                                DIRECTORY_DOWNLOADS) + "/FeiMeiDownload/";
                         String url = resultdata.getURL();
+
 
                         if (!url.contains("http")) {
                             ToastUtils.showToast("下载链接错误");
-                            progressDialog.dismiss();
                         } else {
-                            OkHttpUtils.get().url(url).build().execute(new FileCallBack(filePath, fileName) {
+                            AllenVersionChecker
+                                    .getInstance()
+                                    .downloadOnly(
+                                            UIData.create().setDownloadUrl(url).setTitle("版本更新！").setContent(resultdata.getExplain())
+                                    ).setDownloadAPKPath(filePath).setApkDownloadListener(new APKDownloadListener() {
                                 @Override
-                                public void onError(Call call, Exception e, int id) {
+                                public void onDownloading(int progress) {
+//
+                                }
+
+                                @Override
+                                public void onDownloadSuccess(File file) {
+                                    openFile(file, activity);
+                                }
+
+                                @Override
+                                public void onDownloadFail() {
                                     ToastUtils.showToast("下载错误");
-                                    progressDialog.dismiss();
                                 }
-
-                                @Override
-                                public void onResponse(File response, int id) {
-                                    progressDialog.dismiss();
-                                    openFile(response, activity);
-                                }
-
-
-                                @Override
-                                public void inProgress(float progress, long total, int id) {
-                                    super.inProgress(progress, total, id);
-                                    progressDialog.setProgress((int) (progress * 100));
-                                }
-                            });
+                            }).excuteMission(activity);
                         }
                     }
 
                     @Override
                     public void dissmiss() {
-
+                        AllenVersionChecker .getInstance().cancelAllMission(activity);
                     }
                 });
             }
@@ -127,6 +114,9 @@ public class VersionUtils {
     //打开APK程序代码
 
     private static void openFile(File file, Context var1) {
+
+
+
         Intent var2 = new Intent();
         var2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         var2.setAction(Intent.ACTION_VIEW);

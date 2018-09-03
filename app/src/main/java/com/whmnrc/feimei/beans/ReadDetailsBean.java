@@ -126,7 +126,7 @@ public class ReadDetailsBean {
             private String FreeConten;
             private String ChargeConten;
             private int ChargePage;
-            private int Price;
+            private double Price;
             private int ClickNumber;
             private String Img;
 
@@ -139,7 +139,7 @@ public class ReadDetailsBean {
                 FreeConten = in.readString();
                 ChargeConten = in.readString();
                 ChargePage = in.readInt();
-                Price = in.readInt();
+                Price = in.readDouble();
                 ClickNumber = in.readInt();
                 Img = in.readString();
             }
@@ -154,7 +154,7 @@ public class ReadDetailsBean {
                 dest.writeString(FreeConten);
                 dest.writeString(ChargeConten);
                 dest.writeInt(ChargePage);
-                dest.writeInt(Price);
+                dest.writeDouble(Price);
                 dest.writeInt(ClickNumber);
                 dest.writeString(Img);
             }
@@ -240,11 +240,11 @@ public class ReadDetailsBean {
                 this.ChargePage = ChargePage;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return Price;
             }
 
-            public void setPrice(int Price) {
+            public void setPrice(double Price) {
                 this.Price = Price;
             }
 

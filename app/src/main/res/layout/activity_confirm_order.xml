@@ -10,15 +10,16 @@
     <LinearLayout
         android:id="@+id/ll_select_address"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:paddingRight="@dimen/dm_15"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/dm_15">
 
         <RelativeLayout
-            android:layout_weight="1"
+            android:id="@+id/rl_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:padding="@dimen/dm_15">
 
             <ImageView
@@ -34,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dm_10"
                 android:layout_toRightOf="@id/iv_location"
-                android:text="收货人：张小姐"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dm_12"/>
 
@@ -43,7 +43,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="123132131"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dm_12"/>
 
@@ -53,23 +52,29 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_name"
                 android:layout_marginLeft="@dimen/dm_10"
-                android:maxLines="2"
-                android:ellipsize="end"
                 android:layout_marginTop="@dimen/dm_10"
                 android:layout_toRightOf="@id/iv_location"
-                android:text="收货地址：湖北省武汉市武昌区珞瑜路广埠屯T1写字楼1404室"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:textColor="@color/normal_gray"
                 android:textSize="@dimen/dm_12"/>
 
         </RelativeLayout>
 
-        <ImageView
-            android:layout_gravity="center"
+        <TextView
+            android:id="@+id/tv_no_address"
             android:layout_width="wrap_content"
-            android:src="@mipmap/more"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:text="请选择收货地址"/>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/more"/>
+    </LinearLayout>
 
 
     <!--商品信息-->
@@ -104,8 +109,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:includeFontPadding="false"
-            android:maxLines="3"
-            android:text="华三（H3C） SFP-GE-SX-千兆光模块 850nm 550m"
+            android:lines="3"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
@@ -123,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:lines="1"
-                android:text="￥1000000"
+                android:text="￥0"
                 android:textColor="@color/normal_red"
                 android:textSize="@dimen/dm_12"/>
 
@@ -157,19 +161,17 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dm_20"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/tv_goods_spec"
-
             android:gravity="center_vertical"
             >
 
             <ImageView
                 android:id="@+id/iv_minus"
                 android:layout_width="wrap_content"
-                android:background="@drawable/shape_home_product_bg"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dm_7"
+                android:background="@drawable/shape_home_product_bg"
                 android:paddingLeft="@dimen/dm_15"
                 android:paddingRight="@dimen/dm_15"
-                android:layout_marginLeft="@dimen/dm_7"
                 android:scaleType="centerInside"
                 android:src="@mipmap/reduce"/>
 
@@ -189,13 +191,13 @@
 
 
             <ImageView
-                android:background="@drawable/shape_home_product_bg"
-                android:paddingLeft="@dimen/dm_15"
-                android:paddingRight="@dimen/dm_15"
                 android:id="@+id/iv_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/dm_6"
+                android:background="@drawable/shape_home_product_bg"
+                android:paddingLeft="@dimen/dm_15"
+                android:paddingRight="@dimen/dm_15"
                 android:scaleType="centerInside"
                 android:src="@mipmap/add"/>
 
@@ -223,7 +225,8 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:gravity="top"
-            android:hint="请输入您的意见和建议,我们会及时联系您"
+            android:hint="如有特殊理由，请备注"
+            android:maxLength="100"
             android:minHeight="@dimen/dm_90"
             android:padding="@dimen/dm_10"
             android:textColor="@color/black"
@@ -232,39 +235,39 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:gravity="right"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dm_8"
         android:background="@color/white"
-        android:paddingTop="@dimen/dm_18"
+        android:gravity="right"
+        android:orientation="horizontal"
         android:paddingBottom="@dimen/dm_18"
-        android:layout_height="wrap_content">
+        android:paddingTop="@dimen/dm_18">
 
         <TextView
-            android:textColor="@color/black"
-            android:textSize="@dimen/dm_13"
             android:id="@+id/tv_subtotal_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="共1件商品    小计： "/>
+            android:text="共1件商品    小计： "
+            android:textColor="@color/black"
+            android:textSize="@dimen/dm_13"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/dm_12"
+            android:text="￥"
             android:textColor="@color/good_price_red"
-            android:text="￥"/>
+            android:textSize="@dimen/dm_12"/>
+
         <TextView
             android:id="@+id/tv_subtotal_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/dm_17"
-            android:textColor="@color/good_price_red"
             android:paddingRight="@dimen/dm_15"
-            android:text="199"/>
+            android:text="0"
+            android:textColor="@color/good_price_red"
+            android:textSize="@dimen/dm_17"/>
     </LinearLayout>
-
 
 
     <View
@@ -273,42 +276,42 @@
         android:layout_weight="1"/>
 
     <LinearLayout
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dm_45">
+        android:layout_height="@dimen/dm_45"
+        android:background="@color/white">
 
         <LinearLayout
-            android:layout_weight="1"
-            android:orientation="horizontal"
             android:layout_width="0dp"
-            android:gravity="center_horizontal|bottom"
+            android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dm_15"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|bottom"
 
-            android:layout_height="match_parent">
+            android:orientation="horizontal">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="总计："
                 android:textColor="@color/black"
-                android:textSize="@dimen/dm_13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="总计："/>
+                android:textSize="@dimen/dm_13"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/dm_12"
+                android:text="￥"
                 android:textColor="@color/good_price_red"
-                android:text="￥"/>
+                android:textSize="@dimen/dm_12"/>
+
             <TextView
                 android:id="@+id/tv_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/dm_17"
-                android:textColor="@color/good_price_red"
                 android:paddingRight="@dimen/dm_15"
-                android:text="199"/>
+                android:text="0"
+                android:textColor="@color/good_price_red"
+                android:textSize="@dimen/dm_17"/>
         </LinearLayout>
-
 
 
         <LinearLayout
@@ -326,7 +329,7 @@
                 android:drawableLeft="@mipmap/icon_order_pay"
                 android:drawablePadding="@dimen/dm_10"
                 android:gravity="center"
-                android:text="支付款"
+                android:text="去付款"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dm_14"/>
 

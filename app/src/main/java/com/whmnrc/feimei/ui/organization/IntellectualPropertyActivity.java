@@ -51,6 +51,8 @@ public class IntellectualPropertyActivity extends BaseActivity {
         IntellectualPropertyListAdapter intellectualPropertyListAdapter = new IntellectualPropertyListAdapter(this, R.layout.item_intellectual_property_list);
         intellectualPropertyListAdapter.setDataArray(mCertificateBeans);
         mRvBusinessList.setAdapter(intellectualPropertyListAdapter);
+
+        showEmpty(intellectualPropertyListAdapter, mVsEmpty);
     }
 
     @Override

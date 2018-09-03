@@ -60,12 +60,7 @@ public class PopSalaryRange {
         twoRv = view.findViewById(R.id.two_rv);
         TextView tvReturn = view.findViewById(R.id.tv_return);
         TextView tvConfirm = view.findViewById(R.id.tv_confirm);
-        view.findViewById(R.id.view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopupWindow.dismiss();
-            }
-        });
+        view.findViewById(R.id.view).setOnClickListener(v -> mPopupWindow.dismiss());
         mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mPopupWindow.setClippingEnabled(false);
 
@@ -95,31 +90,23 @@ public class PopSalaryRange {
             }
         });
 
-        tvReturn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedFalse(twoRv);
-            }
-        });
+        tvReturn.setOnClickListener(v -> selectedFalse(twoRv));
 
-        tvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (oneSelect != -1) {
-                    mSalaryRangeListener.onSelectSalaryRange(oneList.get(oneSelect).getID());
-                } else {
-                    mSalaryRangeListener.onSelectSalaryRange("");
-                }
-                if (mPopupWindow != null) {
-                    mPopupWindow.dismiss();
-                }
+        tvConfirm.setOnClickListener(v -> {
+            if (oneSelect != -1) {
+                mSalaryRangeListener.onSelectSalaryRange(oneList.get(oneSelect).getID());
+            } else {
+                mSalaryRangeListener.onSelectSalaryRange("");
+            }
+            if (mPopupWindow != null) {
+                mPopupWindow.dismiss();
             }
         });
     }
 
 
-    public void show() {
-        mPopupWindow.showAsDropDown(showView);
+    public void show(View view) {
+        mPopupWindow.showAsDropDown(view);
     }
 
     public void dissmiss() {

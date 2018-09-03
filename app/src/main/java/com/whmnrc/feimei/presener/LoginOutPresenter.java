@@ -29,7 +29,7 @@ public class LoginOutPresenter extends PresenterBase {
         if (UserManager.getUser() == null) {
             return;
         }
-        params.put("Mobile", UserManager.getUser().getMobile());
+        params.put("Mobile",UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
         OKHttpManager.postString(getUrl(R.string.Cancellation), params, new CommonCallBack<UserBean>() {
             @Override
             protected void onSuccess(UserBean data) {

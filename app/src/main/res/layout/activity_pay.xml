@@ -32,19 +32,10 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/tv_name"
                     android:includeFontPadding="false"
-                    android:text="支付：￥199"
+                    android:text="支付：￥0"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dm_15"/>
 
-                <!--<TextView-->
-                    <!--android:id="@+id/tv_name"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignBottom="@id/tv_money"-->
-                    <!--android:includeFontPadding="false"-->
-                    <!--android:text="支付：￥199"-->
-                    <!--android:textColor="@color/white"-->
-                    <!--android:textSize="@dimen/dm_15"/>-->
             </RelativeLayout>
 
 
@@ -63,7 +54,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dm_15"
-                    android:text="支付剩余时间  04:28"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dm_14"/>
 
@@ -75,22 +65,12 @@
                     android:gravity="center">
 
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/tv_product_name"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_alignBottom="@id/tv_money2"-->
-                        <!--android:includeFontPadding="false"-->
-                        <!--android:text="支付：￥"-->
-                        <!--android:textColor="@color/white"-->
-                        <!--android:textSize="@dimen/dm_15"/>-->
-
                     <TextView
                         android:id="@+id/tv_money2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
-                        android:text="支付：￥199"
+                        android:text="支付：￥0"
                         android:textColor="@color/white"
                         android:textSize="@dimen/dm_15"/>
                 </RelativeLayout>
@@ -101,7 +81,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dm_15"
-                    android:text="华三（H3C） SFP-GE-SX-MM850-ASFP千兆光模块 850nm 550m"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dm_11"/>
             </LinearLayout>
@@ -209,16 +188,31 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/iv_video_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dm_160"
-                    android:layout_marginLeft="@dimen/dm_15"
-                    android:layout_marginRight="@dimen/dm_15"
-                    android:scaleType="center"
-                    android:background="@color/normal_gray"
+                <RelativeLayout
+                    android:id="@+id/rl_video"
                     android:layout_marginTop="@dimen/dm_10"
-                    android:src="@mipmap/icon_video"/>
+                    android:layout_marginRight="@dimen/dm_15"
+                    android:layout_marginLeft="@dimen/dm_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dm_160">
+                    <ImageView
+                        android:id="@+id/iv_video_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@color/normal_gray"
+                        android:scaleType="centerCrop"
+
+                        />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:background="#7666"
+                        android:scaleType="center"
+                        android:src="@mipmap/icon_video"/>
+                </RelativeLayout>
+
 
 
                 <TextView
@@ -250,7 +244,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/normal_gray"
-                        android:text="2018-7-24"
                         android:textSize="@dimen/dm_10"/>
 
                     <TextView
@@ -261,7 +254,6 @@
                         android:layout_alignTop="@id/tv_time"
                         android:layout_marginLeft="@dimen/dm_10"
                         android:layout_toRightOf="@id/tv_time"
-                        android:text="810次下载"
                         android:textSize="@dimen/dm_10"/>
 
                     <TextView
@@ -271,7 +263,6 @@
                         android:layout_alignTop="@id/tv_time"
                         android:layout_marginLeft="@dimen/dm_10"
                         android:layout_weight="1"
-                        android:text="收费：￥100"
                         android:textColor="@color/normal_red"
                         android:textSize="@dimen/dm_10"/>
 
@@ -284,7 +275,6 @@
                         android:paddingLeft="@dimen/dm_7"
                         android:paddingRight="@dimen/dm_7"
                         android:paddingTop="@dimen/dm_5"
-                        android:text="马上下载"
                         android:textColor="@color/white"
                         android:textSize="@dimen/dm_12"/>
 

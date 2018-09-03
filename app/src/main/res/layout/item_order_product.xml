@@ -15,7 +15,6 @@
             android:id="@+id/tv_order_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="下单时间:2018-7-3 12:12:12"
             android:textColor="@color/normal_gray"
             android:textSize="@dimen/dm_13"/>
 
@@ -24,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="待付款"
             android:textColor="@color/normal_blue_text_color"
             android:textSize="@dimen/dm_13"/>
 
@@ -46,11 +44,11 @@
             android:layout_height="@dimen/dm_70"
             android:background="@drawable/shape_home_product_bg"
             android:padding="@dimen/dm_2"
-            android:scaleType="fitCenter"
+            android:scaleType="centerCrop"
             android:src="@color/normal_gray"/>
 
         <TextView
-            android:id="@+id/tv_goods_name"
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dm_10"
@@ -59,8 +57,6 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="3"
-            android:text="华三（H3C） SFP-GE-SX-
-千兆光模块 850nm 550m"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
@@ -78,11 +74,12 @@
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:lines="1"
-                android:text="￥1000000"
+                android:text="￥0"
                 android:textColor="@color/normal_red"
                 android:textSize="@dimen/dm_12"/>
 
             <TextView
+                android:id="@+id/tv_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"

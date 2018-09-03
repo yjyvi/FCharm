@@ -33,21 +33,30 @@ public class CommonH5WebView extends BaseActivity {
     public String mTitle;
     public String mH5Url;
     public PopShare mPopShare;
+    public boolean mIsSpecial;
 
-
-    @Override
-    protected void back() {
-        if (mWbContent.canGoBack()) {
-            mWbContent.goBack();
-        } else {
-            finish();
-        }
-    }
+//
+//    @Override
+//    protected void back() {
+//        if (mWbContent.canGoBack()) {
+//            mWbContent.goBack();
+//        } else {
+//            finish();
+//        }
+//    }
 
     public static void startCommonH5WebView(Context activity, String h5Url, String title) {
         Intent intent = new Intent(activity, CommonH5WebView.class);
         intent.putExtra("h5Url", h5Url);
         intent.putExtra("title", title);
+        activity.startActivity(intent);
+    }
+
+    public static void startCommonH5WebView(Context activity, String h5Url, String title, boolean isSpecial) {
+        Intent intent = new Intent(activity, CommonH5WebView.class);
+        intent.putExtra("h5Url", h5Url);
+        intent.putExtra("title", title);
+        intent.putExtra("isSpecial", isSpecial);
         activity.startActivity(intent);
     }
 
@@ -65,10 +74,14 @@ public class CommonH5WebView extends BaseActivity {
         isShowDialog(true);
         mTitle = getIntent().getStringExtra("title");
         mH5Url = getIntent().getStringExtra("h5Url");
+        mIsSpecial = getIntent().getBooleanExtra("isSpecial", false);
 
 
         findViewById(R.id.rl_right).setOnClickListener(v -> {
             if (mPopShare == null) {
+                if (!mIsSpecial) {
+                    mH5Url = "";
+                }
                 mPopShare = new PopShare(CommonH5WebView.this, mTitle, "", mH5Url, "");
             }
             mPopShare.show();
@@ -89,14 +102,15 @@ public class CommonH5WebView extends BaseActivity {
 
 
                 //去除WebView的焦点事件
-                mWbContent.setFocusableInTouchMode(false);
+//                mWbContent.setFocusableInTouchMode(false);
 
-                mWbContent.setOnTouchListener((v, event) -> false);
+//                mWbContent.setOnTouchListener((v, event) -> false);
 
                 //去掉超连接事件
                 mWbContent.setWebViewClient(new WebViewClient() {
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
                         return true;
                     }
                 });
@@ -110,7 +124,7 @@ public class CommonH5WebView extends BaseActivity {
                     public void onProgressChanged(WebView view, int newProgress) {
                         super.onProgressChanged(view, newProgress);
 
-                        if (newProgress == 100) {
+                        if (newProgress >= 100) {
                             //加载完网页进度条消失
 //                            mPbLoading.setVisibility(View.GONE);
                             isShowDialog(false);

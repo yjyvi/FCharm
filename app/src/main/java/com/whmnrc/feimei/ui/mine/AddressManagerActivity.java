@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.TextView;
@@ -19,9 +18,9 @@ import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
 import com.whmnrc.feimei.beans.AddressBean;
 import com.whmnrc.feimei.presener.AddressEditPresenter;
 import com.whmnrc.feimei.presener.AddressListPresenter;
+import com.whmnrc.feimei.presener.DelAddressPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.utils.EmptyListUtils;
-import com.whmnrc.feimei.utils.TestDataUtils;
 import com.whmnrc.feimei.utils.evntBusBean.AddressEvent;
 import com.whmnrc.feimei.views.AlertDialog;
 
@@ -38,7 +37,7 @@ import butterknife.OnClick;
  * @data 2018/5/19.
  */
 
-public class AddressManagerActivity extends BaseActivity implements AddressListPresenter.AddressListListener, AddressEditPresenter.AddressEditListener, OnRefreshListener {
+public class AddressManagerActivity extends BaseActivity implements AddressListPresenter.AddressListListener, OnRefreshListener, DelAddressPresenter.DelAddressListener, AddressEditPresenter.AddressEditListener {
 
     @BindView(R.id.vs_empty)
     ViewStub mVsEmpty;
@@ -50,10 +49,10 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
     TextView mTvCommit;
     public AddressManagerAdapter mAddressManagerAdapter;
     public AddressListPresenter mAddressListPresenter;
-    public AddressEditPresenter mAddressEditPresenter;
     public boolean mIsSelect;
     private String mAddressId = "";
-
+    public DelAddressPresenter mDelAddressPresenter;
+    public AddressEditPresenter mAddressEditPresenter;
 
 
     @Override
@@ -67,9 +66,12 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
             setTitle("收货地址管理");
         }
         mAddressListPresenter = new AddressListPresenter(this);
-//        mAddressListPresenter.getAddressList();
+        mAddressListPresenter.getAddressList();
+
+        mDelAddressPresenter = new DelAddressPresenter(this);
 
         mAddressEditPresenter = new AddressEditPresenter(this);
+
         mRvAddressList.setLayoutManager(new LinearLayoutManager(this));
         mRvAddressList.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -79,14 +81,13 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
             }
         });
         mAddressManagerAdapter = new AddressManagerAdapter(this, R.layout.item_address, mIsSelect);
-        mAddressManagerAdapter.setDataArray(TestDataUtils.initTestData(5));
         mRvAddressList.setAdapter(mAddressManagerAdapter);
 
         mAddressManagerAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 if (mIsSelect) {
-                    EventBus.getDefault().post(new AddressEvent().setEventType(AddressEvent.ORDER_SELECT_ADDRESS).setData(null));
+                    EventBus.getDefault().post(new AddressEvent().setEventType(AddressEvent.ORDER_SELECT_ADDRESS).setData(mAddressManagerAdapter.getDatas().get(position)));
                     finish();
                 }
             }
@@ -105,6 +106,7 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
                         .setMsg("确认要删除地址?")
                         .setCancelable(true)
                         .setPositiveButton("确定", view -> {
+                            mDelAddressPresenter.delAddress(mAddressManagerAdapter.getDatas().get(position).getID());
                             mAddressManagerAdapter.getDatas().remove(position);
                             mAddressManagerAdapter.notifyDataSetChanged();
                         })
@@ -115,10 +117,11 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
 
             @Override
             public void setAddressDefault(int position, View view) {
-                view.setSelected(!view.isSelected());
+                AddressBean.ResultdataBean bean = mAddressManagerAdapter.getDatas().get(position);
+                mAddressEditPresenter.editAddress(bean.getID(), bean.getName(), bean.getProvice(), bean.getCity(), bean.getRegion(), bean.getDetail(), "1", bean.getMobile());
             }
         });
-
+        mRefresh.setEnableLoadMore(false);
         mRefresh.setOnRefreshListener(this);
     }
 
@@ -153,27 +156,20 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
 
     @Override
     public void getListSuccess(List<AddressBean.ResultdataBean> resultdataBeans) {
-        if (mIsSelect) {
-            for (AddressBean.ResultdataBean resultdataBean : resultdataBeans) {
-                if (TextUtils.equals(String.valueOf(resultdataBean.getId()), mAddressId)) {
-                    resultdataBean.setSelect(true);
-                }
-            }
-        }
         mAddressManagerAdapter.setDataArray(resultdataBeans);
         mAddressManagerAdapter.notifyDataSetChanged();
         showEmpty();
     }
 
-
     @Override
-    public void delSuccess() {
-        mAddressListPresenter.getAddressList();
+    public void getAddressListField() {
+
     }
 
 
     public void showEmpty() {
         if (mAddressManagerAdapter != null && mAddressManagerAdapter.getDatas().size() == 0) {
+
             EmptyListUtils.loadEmpty(true, "没有地址", R.mipmap.no_address, mVsEmpty);
         } else {
             if (mVsEmpty != null) {
@@ -200,5 +196,27 @@ public class AddressManagerActivity extends BaseActivity implements AddressListP
     public void onRefresh(RefreshLayout refreshLayout) {
         mAddressListPresenter.getAddressList();
         refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void delAdressSuccess() {
+        mAddressListPresenter.getAddressList();
+        EventBus.getDefault().post(new AddressEvent().setEventType(AddressEvent.ORDER_SELECT_ADDRESS).setData(null));
+
+    }
+
+    @Override
+    public void delAddressField() {
+
+    }
+
+    @Override
+    public void addSuccess() {
+        mAddressListPresenter.getAddressList();
+    }
+
+    @Override
+    public void addField() {
+
     }
 }

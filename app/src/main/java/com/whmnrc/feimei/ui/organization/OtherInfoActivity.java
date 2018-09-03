@@ -48,6 +48,7 @@ public class OtherInfoActivity extends BaseActivity {
         mOtherListAdapter.setDataArray(mEnterpriseOther);
         mRvBusinessList.setAdapter(mOtherListAdapter);
 
+        showEmpty(mOtherListAdapter, mVsEmpty);
     }
 
     @Override
@@ -60,6 +61,7 @@ public class OtherInfoActivity extends BaseActivity {
         starter.putParcelableArrayListExtra("enterpriseOther", (ArrayList<? extends Parcelable>) enterpriseOther);
         context.startActivity(starter);
     }
+
     public static void start(Context context) {
         Intent starter = new Intent(context, OtherInfoActivity.class);
         context.startActivity(starter);

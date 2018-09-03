@@ -3,7 +3,6 @@ package com.whmnrc.feimei.ui.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,12 +55,7 @@ public class PayResultActivity extends BaseActivity {
             mTvText.setText("购买失败");
         }
 
-        mLlCommit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toActivity();
-            }
-        });
+        mLlCommit.setOnClickListener(v -> toActivity());
     }
 
     private void toActivity() {

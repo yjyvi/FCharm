@@ -44,12 +44,11 @@ public class SpecialInformationListAdapter extends CommonAdapter<GetRecruitBean.
         holder.setText(R.id.tv_time, String.format("有效期：%s-%s", TimeUtils.getDateToString(o.getCreateTime(), "MM.dd"), TimeUtils.getDateToString(o.getValidityTime(), "MM.dd")));
 
         holder.itemView.setOnClickListener(v -> {
-            CommonH5WebView.startCommonH5WebView(v.getContext(), o.getDescribe(), "职位详情");
+            CommonH5WebView.startCommonH5WebView(v.getContext(), o.getDescribe(), o.getName(), true);
             if (mGoToDetailsListener != null) {
                 mGoToDetailsListener.toDetails(position);
             }
         });
-
 
 
         if (position == getDatas().size() - 1) {

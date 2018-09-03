@@ -28,7 +28,7 @@ public class UpdateUserInfoPresenter extends PresenterBase {
         HashMap<String, Object> paramters = new HashMap<>(5);
         paramters.put("HeadImg", headImgUrl);
         paramters.put("NickName", nickname);
-        paramters.put("Mobile", UserManager.getUser().getMobile());
+        paramters.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
         OKHttpManager.postString(getUrl(R.string.ModifyUserBasicData), paramters, new CommonCallBack<BaseBean>() {
             @Override
             protected void onSuccess(BaseBean data) {

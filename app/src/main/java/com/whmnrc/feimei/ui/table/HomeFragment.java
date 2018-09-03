@@ -1,32 +1,44 @@
 package com.whmnrc.feimei.ui.table;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.whmnrc.feimei.CommonConstant;
+import com.whmnrc.feimei.MyApplication;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.HomePageListAdapter;
+import com.whmnrc.feimei.beans.HomeDataBean;
 import com.whmnrc.feimei.eventbus.HomeTableChangeEvent;
 import com.whmnrc.feimei.presener.HomePageDataPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.ui.mine.MineActivity;
-import com.whmnrc.feimei.utils.TestDataUtils;
+import com.whmnrc.feimei.utils.SPUtils;
+import com.whmnrc.feimei.utils.VersionUtils;
+import com.whmnrc.mylibrary.utils.GlideUtils;
 import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.loader.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -37,7 +49,7 @@ import butterknife.OnClick;
  * 首页
  */
 
-public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreListener {
+public class HomeFragment extends LazyLoadFragment implements OnRefreshListener, HomePageDataPresenter.HomePageDataListener {
 
     @BindView(R.id.rv_recommend_list)
     RecyclerView mRvRecommendList;
@@ -66,13 +78,7 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
     ImageView mIvActivity3;
 
 
-    private int page = 1;
-    private int rows = 10;
     public HomePageDataPresenter mHomePageBannerPresenter;
-    /**
-     * 品牌的一页显示的最大数据
-     */
-    private int pageMax = 10;
     public HomePageListAdapter mHomePageListAdapter;
 
     @Override
@@ -83,11 +89,12 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
 
     @Override
     protected void initViewData() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
 
-        mRefresh.setOnRefreshLoadMoreListener(this);
+        String data = SPUtils.getString(MyApplication.applicationContext, CommonConstant.Common.HOME_CACHE_DATA1);
+
+        mHomePageBannerPresenter = new HomePageDataPresenter(this);
+        mHomePageBannerPresenter.getHomeData();
+        mRefresh.setOnRefreshListener(this);
         mRefresh.setEnableLoadMore(false);
 
         mRvRecommendList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -100,7 +107,14 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
             }
         });
         mHomePageListAdapter = new HomePageListAdapter(getActivity(), R.layout.item_home_recommend_list_header);
-        mHomePageListAdapter.setDataArray(TestDataUtils.initTestData(4));
+        //显示缓存数据
+        if (!TextUtils.isEmpty(data)) {
+            List<HomeDataBean.ResultdataBean> resultdataBeans = JSON.parseArray(data, HomeDataBean.ResultdataBean.class);
+            mHomePageListAdapter.setDataArray(resultdataBeans);
+            initBanner(resultdataBeans.get(0).getBanners());
+        }else {
+            isShowDialog(true);
+        }
         mRvRecommendList.setAdapter(mHomePageListAdapter);
 
     }
@@ -120,26 +134,12 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onLoadMore(RefreshLayout refreshLayout) {
-        refreshLayout.finishLoadMore();
-    }
-
-    @Override
     public void onRefresh(RefreshLayout refreshLayout) {
         refreshLayout.finishRefresh();
+        mHomePageBannerPresenter.getHomeData();
+        VersionUtils.showDownloadPop(getActivity());
     }
 
-
-    @Subscribe
-    public void changePrice(HomeTableChangeEvent homeTableChangeEvent) {
-
-    }
 
     @OnClick({R.id.tv_search, R.id.iv_user_info, R.id.iv_activity_1, R.id.iv_activity_2, R.id.iv_activity_3, R.id.iv_activity_4})
     public void onClick(View v) {
@@ -157,7 +157,7 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
                 EventBus.getDefault().post(new HomeTableChangeEvent().setEventType(HomeTableChangeEvent.TO_SPECIAL_INFORMATION));
                 break;
             case R.id.tv_search:
-                SearchActivity.start(v.getContext(),  SearchActivity.SEARCH_ALL, null);
+                SearchActivity.start(v.getContext(), SearchActivity.SEARCH_ALL, null);
                 break;
             case R.id.iv_user_info:
                 if (!UserManager.getIsLogin(getActivity())) {
@@ -168,5 +168,56 @@ public class HomeFragment extends LazyLoadFragment implements OnRefreshLoadMoreL
             default:
                 break;
         }
+    }
+
+    @Override
+    public void loadHomeDataSuccess(HomeDataBean.ResultdataBean homeDataBean) {
+        initBanner(homeDataBean.getBanners());
+
+        ArrayList<HomeDataBean.ResultdataBean> data = new ArrayList<>();
+
+        data.add(homeDataBean);
+        data.add(homeDataBean);
+        data.add(homeDataBean);
+        data.add(homeDataBean);
+
+        mHomePageListAdapter.setDataArray(data);
+        mHomePageListAdapter.notifyDataSetChanged();
+
+        List<HomeDataBean.ResultdataBean> datas = mHomePageListAdapter.getDatas();
+        SPUtils.put(MyApplication.applicationContext, CommonConstant.Common.HOME_CACHE_DATA1, JSON.toJSONString(datas));
+        mHomePageListAdapter.setDataLoadFinishListener(() -> isShowDialog(false));
+    }
+
+
+    /**
+     * 轮播图
+     */
+    private void initBanner(List<HomeDataBean.ResultdataBean.BannersBean> bannerList) {
+        if (mBanner != null) {
+            mBanner.setDelayTime(3000);
+            mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+            mBanner.setIndicatorGravity(BannerConfig.CENTER);
+            mBanner.offsetLeftAndRight(10);
+            mBanner.setImages(bannerList).setImageLoader(new ImageLoader() {
+                @Override
+                public void displayImage(Context context, Object path, ImageView imageView) {
+                    final HomeDataBean.ResultdataBean.BannersBean resultdataBeans = (HomeDataBean.ResultdataBean.BannersBean) path;
+                    String bannerUrl = resultdataBeans.getBanner_Url();
+                    if (TextUtils.isEmpty(bannerUrl)) {
+                        if (!bannerUrl.startsWith("http")) {
+                            bannerUrl = getResources().getString(R.string.service_host_address) + bannerUrl;
+                        }
+                    }
+                    GlideUtils.LoadImage(imageView.getContext(), bannerUrl, imageView);
+                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                }
+            }).start();
+        }
+    }
+
+    @Override
+    public void loadHomeDataField() {
+        isShowDialog(true);
     }
 }

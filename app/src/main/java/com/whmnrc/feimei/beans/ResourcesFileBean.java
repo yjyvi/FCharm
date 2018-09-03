@@ -234,6 +234,7 @@ public class ResourcesFileBean {
             private int ClickNumber;
             private int Type;
             private String FilePath;
+            private String Img;
             private int DownloadNumber;
             private int CommentCount;
             private int IsCollection;
@@ -252,6 +253,7 @@ public class ResourcesFileBean {
                 ClickNumber = in.readInt();
                 Type = in.readInt();
                 FilePath = in.readString();
+                Img = in.readString();
                 DownloadNumber = in.readInt();
                 IsCollection = in.readInt();
                 IsPay = in.readInt();
@@ -272,10 +274,20 @@ public class ResourcesFileBean {
                 dest.writeInt(ClickNumber);
                 dest.writeInt(Type);
                 dest.writeString(FilePath);
+                dest.writeString(Img);
                 dest.writeInt(DownloadNumber);
                 dest.writeInt(IsCollection);
                 dest.writeInt(IsPay);
                 dest.writeInt(CommentCount);
+            }
+
+
+            public String getImg() {
+                return Img;
+            }
+
+            public void setImg(String img) {
+                Img = img;
             }
 
             @Override

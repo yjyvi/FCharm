@@ -1,6 +1,6 @@
 package com.whmnrc.feimei.beans;
 
-public class UserBean   {
+public class UserBean {
 
 
     /**
@@ -57,12 +57,48 @@ public class UserBean   {
          * VIP : 1533176291
          */
 
+        private String ID;
         private String CreateTime;
         private String HeadImg;
         private String Mobile;
         private double Money;
         private String NickName;
         private String VIP;
+        private int AllOrder;
+        private int NoPayOrder;
+        private int PayOrder;
+
+        public int getAllOrder() {
+            return AllOrder;
+        }
+
+        public void setAllOrder(int allOrder) {
+            AllOrder = allOrder;
+        }
+
+        public int getNoPayOrder() {
+            return NoPayOrder;
+        }
+
+        public void setNoPayOrder(int noPayOrder) {
+            NoPayOrder = noPayOrder;
+        }
+
+        public int getPayOrder() {
+            return PayOrder;
+        }
+
+        public void setPayOrder(int payOrder) {
+            PayOrder = payOrder;
+        }
+
+        public String getID() {
+            return ID;
+        }
+
+        public void setID(String ID) {
+            this.ID = ID;
+        }
 
         public String getCreateTime() {
             return CreateTime;

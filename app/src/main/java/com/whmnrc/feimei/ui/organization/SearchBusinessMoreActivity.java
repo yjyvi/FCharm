@@ -35,6 +35,10 @@ import com.whmnrc.feimei.ui.mine.PayVipActivity;
 import com.whmnrc.feimei.utils.GetCityUtils;
 import com.whmnrc.feimei.utils.ToastUtils;
 import com.whmnrc.feimei.utils.ViewRoUtils;
+import com.whmnrc.feimei.utils.evntBusBean.PayEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +95,9 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
 
     @Override
     protected void initViewData() {
+
+        EventBus.getDefault().register(this);
+
         isShowDialog(true);
         mEnterpriseTypeID = getIntent().getStringExtra("enterpriseTypeID");
 
@@ -188,10 +195,7 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                 break;
             case R.id.ll_city:
                 mIvCity.setImageResource(R.mipmap.icon_type_more_select);
-                ViewRoUtils.roView(mIvCity,360f);
-                if (mPopCity != null && mPopCity.isShow()) {
-                    mPopCity.dissmiss();
-                }
+                ViewRoUtils.roView(mIvCity, 360f);
                 if (mPopCity == null) {
                     mPopCity = new PopCity(SearchBusinessMoreActivity.this, this, mLlCity);
                 }
@@ -201,7 +205,7 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                     isViewSelect(mTvCity, false);
                     mTvCity.setText("城市");
                 });
-                mPopCity.show();
+                mLlCity.post(() -> mPopCity.show(mLlCity));
                 isViewSelect(mTvCity, true);
                 break;
             case R.id.ll_industry:
@@ -278,7 +282,6 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
     @Override
     public void getIndustrySuccess(final List<IndustryBean.ResultdataBean> beans) {
         mIvIndustry.setImageResource(R.mipmap.icon_type_more_select);
-//        ViewRoUtils.roView(mIvIndustry,360f);
         if (mPopIndustry == null) {
             mPopIndustry = new PopIndustry(SearchBusinessMoreActivity.this, new PopIndustry.CityListener() {
                 @Override
@@ -306,6 +309,7 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                                 mIndustryPid = beans.get(position).getID();
                                 IndustryBean.ResultdataBean.SubsetBean element = new IndustryBean.ResultdataBean.SubsetBean();
                                 element.setName("全部");
+                                element.setPID(beans.get(position).getID());
 
                                 if (mSubset.size() > 0 && !"全部".equals(mSubset.get(0).getName())) {
                                     mSubset.add(0, element);
@@ -319,10 +323,12 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
                             }
                         }
                     } else {
-                        if (TextUtils.isEmpty(mIndustryPid)) {
-                            mIndustryPid = mSubset.get(position).getID();
-                        }
-                        mIndustryId = mSubset.get(position).getPID();
+//                        if (TextUtils.equals("全部", mSubset.get(position).getName())) {
+//                            mIndustryPid = mSubset.get(position).getPID();
+//                        } else {
+                            mIndustryPid = mSubset.get(position).getPID();
+//                        }
+                        mIndustryId = mSubset.get(position).getID();
                         if (mPopIndustry != null) {
                             mPopIndustry.dissmiss();
                         }
@@ -338,11 +344,10 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
             }, mLlCity);
         }
 
-        mPopIndustry.show();
+        mLlCity.post(() -> mPopIndustry.show(mLlCity));
 
         mPopIndustry.getmPopupWindow().setOnDismissListener(() -> {
             mIvIndustry.setImageResource(R.mipmap.icon_type_more);
-//            ViewRoUtils.roView(mIvIndustry,0f);
             isViewSelect(mTvIndustry, false);
         });
         isViewSelect(mTvIndustry, true);
@@ -379,5 +384,22 @@ public class SearchBusinessMoreActivity extends BaseActivity implements PopCity.
     @Override
     public void getEnterpriseField() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+        mPopMoreFitter = null;
+        mPopCity = null;
+        mPopIndustry = null;
+    }
+
+
+    @Subscribe
+    public void payEvent(PayEvent payEvent) {
+        if (payEvent.getEventType() == PayEvent.PAY_VIP_SUCCESS) {
+            mIvVipDialog.setVisibility(View.GONE);
+        }
     }
 }

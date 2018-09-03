@@ -167,7 +167,7 @@ public class ProductListBean {
 
             private String ID;
             private String Name;
-            private int Price;
+            private double Price;
             private String Img;
             private int Sales;
             private int ClickNumber;
@@ -188,11 +188,11 @@ public class ProductListBean {
                 this.Name = Name;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return Price;
             }
 
-            public void setPrice(int Price) {
+            public void setPrice(double Price) {
                 this.Price = Price;
             }
 

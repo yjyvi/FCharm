@@ -35,10 +35,6 @@ import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.ui.mine.MineActivity;
 import com.whmnrc.feimei.utils.GetCityUtils;
 import com.whmnrc.feimei.utils.ViewRoUtils;
-import com.whmnrc.feimei.utils.evntBusBean.BaseEvent;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,9 +110,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
 
     @Override
     protected void initViewData() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
+
         mGetRecruitPresenter = new GetRecruitPresenter(this);
         loadData();
 
@@ -179,12 +173,6 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
         refreshLayout.finishLoadMore();
         mGetRecruitPresenter.getRecruit(false, mSearchContent, mProvincial, mCity, mEnterpriseId, mQualificationsId, mSalaryID, mCrateTime);
@@ -198,15 +186,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
     }
 
 
-    /**
-     * 修改货币显示
-     *
-     * @param goodsCommentEvent
-     */
-    @Subscribe
-    public void changePrice(BaseEvent goodsCommentEvent) {
 
-    }
 
 
     @OnClick({R.id.iv_user_info, R.id.ll_city, R.id.ll_price, R.id.ll_more})
@@ -225,20 +205,20 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 if (mPopCity == null) {
                     mPopCity = new PopCity(getActivity(), this, mLlCity);
                 }
+
                 isViewSelect(mTvCity, true);
                 mIvCity.setImageResource(R.mipmap.icon_type_more_select);
                 ViewRoUtils.roView(mIvCity, 360f);
-                mPopCity.show();
+                mLlCity.post(() -> mPopCity.show(mLlCity));
                 mPopCity.getmPopupWindow().setOnDismissListener(() -> {
                     mIvCity.setImageResource(R.mipmap.icon_type_more);
                     ViewRoUtils.roView(mIvCity, 0f);
                     isViewSelect(mTvCity, false);
+
                 });
                 break;
             case R.id.ll_price:
-                if (mPopSalaryRange != null && mPopSalaryRange.isShow()) {
-                    mPopSalaryRange.dissmiss();
-                }
+
                 if (mFitterData == null) {
                     return;
                 }
@@ -251,7 +231,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 if (mPopSalaryRange == null) {
                     mPopSalaryRange = new PopSalaryRange(getActivity(), this, mLlPrice, beans);
                 }
-                mPopSalaryRange.show();
+            mLlPrice.post(() -> mPopSalaryRange.show(mLlCity));
                 mPopSalaryRange.getPopupWindow().setOnDismissListener(() -> {
                     mIvPrice.setImageResource(R.mipmap.icon_type_more);
                     ViewRoUtils.roView(mIvPrice, 0f);
@@ -262,13 +242,11 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 isViewSelect(mTvPrice, true);
                 break;
             case R.id.ll_more:
-                if (mPopMoreFitter != null && mPopMoreFitter.isShow()) {
-                    mPopMoreFitter.dissmiss();
-                }
                 if (mPopMoreFitter == null) {
                     mPopMoreFitter = new PopMoreFitter(getActivity(), this, mLlCity);
                 }
-                mPopMoreFitter.show();
+                mLlMore.post(() -> mPopMoreFitter.show(mLlCity));
+
                 mPopMoreFitter.getmPopupWindow().setOnDismissListener(() -> {
                     mIvMore.setImageResource(R.mipmap.icon_type_more);
                     ViewRoUtils.roView(mIvMore, 0f);
@@ -306,6 +284,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
                 }
                 mProvincial = "";
                 mCity = "";
+                mTvCity.setText("区域");
                 loadData();
             } else {
                 mProvincial = mProvinceList.get(position).getName().trim();
@@ -314,6 +293,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
             }
         } else {
             mCity = mCityList.get(position).getName().trim();
+            mTvCity.setText(mCity);
             mPopCity.dissmiss();
             loadData();
         }
@@ -453,6 +433,7 @@ public class SpecialInformationFragment extends LazyLoadFragment implements OnRe
         } else {
             if (mSpecialInformationListAdapter.getDatas().size() == bean.getPagination().getRecords()) {
                 mRefresh.setEnableLoadMore(false);
+                return;
             }
 
             List<GetRecruitBean.ResultdataBean.RecruitBean> datas = mSpecialInformationListAdapter.getDatas();

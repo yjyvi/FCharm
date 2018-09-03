@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_weight="1"
-            android:text="合计:￥99"
+            android:text="合计:￥0"
             android:textColor="@color/normal_gray"
             android:textSize="@dimen/dm_14"/>
 

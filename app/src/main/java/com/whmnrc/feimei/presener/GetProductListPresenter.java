@@ -31,7 +31,7 @@ public class GetProductListPresenter extends PresenterBase {
     }
 
     public void getProductList(String name, String commodityClassID) {
-        getProductList(true, "Sort", name, commodityClassID, "");
+        getProductList(true, "", name, commodityClassID, "");
     }
 
     public void getProductList(boolean isRefresh, String sort, String name, String commodityClassID, String desc) {

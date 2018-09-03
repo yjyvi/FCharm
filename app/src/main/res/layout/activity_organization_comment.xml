@@ -39,8 +39,6 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="3"
-            android:text="华三（H3C） SFP-GE-SX-
-千兆光模块 850nm 550m"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
@@ -58,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:lines="1"
-                android:text="￥1000000"
+                android:text="￥0"
                 android:textColor="@color/normal_red"
                 android:textSize="@dimen/dm_12"/>
 

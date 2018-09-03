@@ -47,13 +47,10 @@ public class GetNewsPresenter extends PresenterBase {
 
         HashMap<String, Object> conditionJson = new HashMap<>(4);
         if (!TextUtils.isEmpty(searchContent)) {
-            conditionJson.put("Name", searchContent);
-        }
-        if (!TextUtils.isEmpty(searchContent)) {
-            conditionJson.put("Name", searchContent);
+            conditionJson.put("Title", searchContent);
         }
 
-        if (type > 0) {
+        if (type >= 0) {
             conditionJson.put("Type", type);
         }
 

@@ -87,8 +87,6 @@
         android:background="@color/common_line"/>
 
     <android.support.v7.widget.RecyclerView
-        android:paddingLeft="@dimen/dm_30"
-        android:paddingRight="@dimen/dm_30"
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

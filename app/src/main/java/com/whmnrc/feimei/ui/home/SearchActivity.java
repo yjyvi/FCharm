@@ -18,6 +18,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.SearchResultListAdapter;
+import com.whmnrc.feimei.beans.AllSearchBean;
 import com.whmnrc.feimei.beans.EnterpriseListBean;
 import com.whmnrc.feimei.beans.GetRecruitBean;
 import com.whmnrc.feimei.beans.NewsListBean;
@@ -26,6 +27,7 @@ import com.whmnrc.feimei.beans.ReadListBean;
 import com.whmnrc.feimei.beans.RegulationBookListBean;
 import com.whmnrc.feimei.beans.ResourcesFileBean;
 import com.whmnrc.feimei.beans.SearchConditionBean;
+import com.whmnrc.feimei.presener.AllSearchPresenter;
 import com.whmnrc.feimei.presener.GetEnterprisePresenter;
 import com.whmnrc.feimei.presener.GetLibraryPresenter;
 import com.whmnrc.feimei.presener.GetNewsPresenter;
@@ -34,6 +36,10 @@ import com.whmnrc.feimei.presener.GetReadPresenter;
 import com.whmnrc.feimei.presener.GetRecruitPresenter;
 import com.whmnrc.feimei.presener.GetRegulationBookPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
+import com.whmnrc.feimei.utils.KeyboardUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -44,7 +50,7 @@ import butterknife.OnClick;
  * 综合搜索页面
  */
 
-public class SearchActivity extends BaseActivity implements GetRecruitPresenter.GetRecruitListener, GetProductListPresenter.GetProductListListener, GetEnterprisePresenter.GetEnterpriseListener, GetReadPresenter.GetReadListener, GetRegulationBookPresenter.GetBookListener, GetLibraryPresenter.GetLibraryListener, GetNewsPresenter.GetNewsListener {
+public class SearchActivity extends BaseActivity implements GetRecruitPresenter.GetRecruitListener, GetProductListPresenter.GetProductListListener, GetEnterprisePresenter.GetEnterpriseListener, GetReadPresenter.GetReadListener, GetRegulationBookPresenter.GetBookListener, GetLibraryPresenter.GetLibraryListener, GetNewsPresenter.GetNewsListener, AllSearchPresenter.AllSearchListener {
     @BindView(R.id.et_search_content)
     EditText mEtSearchContent;
     @BindView(R.id.vs_empty)
@@ -102,6 +108,7 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
     private GetRegulationBookPresenter mGetRegulationBookPresenter;
     private GetLibraryPresenter mGetLibraryPresenter;
     private GetNewsPresenter mGetNewsPresenter;
+    public AllSearchPresenter mAllSearchPresenter;
 
     @Override
     protected void initViewData() {
@@ -117,8 +124,6 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
         } else {
             mLlSearchTop.setVisibility(View.VISIBLE);
             mFlTitleBar.setVisibility(View.GONE);
-
-
             mEtSearchContent.setOnEditorActionListener((view, keyCode, event) -> {
                 if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
                     // 先隐藏键盘
@@ -128,6 +133,10 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
                     mSearchContent = view.getText().toString().trim();
 
                     if (!TextUtils.isEmpty(mSearchContent)) {
+                        isShowDialog(true);
+                        if (mAllSearchPresenter != null) {
+                            mAllSearchPresenter.search(mSearchContent);
+                        }
                         mSearchContent = "";
                         mEtSearchContent.setText("");
                         return true;
@@ -136,7 +145,7 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
                 return false;
             });
         }
-
+        mRefresh.setEnableLoadMore(false);
         mRefresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshLayout) {
@@ -149,12 +158,11 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
             }
         });
 
-        if (mSearchConditionBean == null) {
-            return;
-        }
 
         switch (mType) {
             case SEARCH_ALL:
+                mAdapter = new SearchResultListAdapter(this, R.layout.item_all_search, mType);
+                mAllSearchPresenter = new AllSearchPresenter(this);
                 break;
             case SEARCH_PRODUCT:
 
@@ -171,7 +179,7 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
                 break;
             case SEARCH_ORG:
 
-                mAdapter = new SearchResultListAdapter(this, R.layout.item_order_list, mType);
+                mAdapter = new SearchResultListAdapter(this, R.layout.item_enterprise_list, mType);
 
                 mGetEnterprisePresenter = new GetEnterprisePresenter(this);
                 mGetEnterprisePresenter.searchEnterpriseList(true,
@@ -186,17 +194,17 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
             case SEARCH_READ:
                 mGetReadPresenter = new GetReadPresenter(this);
                 mAdapter = new SearchResultListAdapter(this, R.layout.item_resource_list, mType);
-                mGetReadPresenter.getReadList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getColumnId());
+                mGetReadPresenter.getReadList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getColumnId(), mSearchConditionBean.getCurrentNewType());
                 break;
             case SEARCH_FILE:
                 mAdapter = new SearchResultListAdapter(this, R.layout.item_library_resource_list, mType);
                 mGetLibraryPresenter = new GetLibraryPresenter(this);
-                mGetLibraryPresenter.getLibraryList(true, mSearchConditionBean.getContent());
+                mGetLibraryPresenter.getLibraryList(true, mSearchConditionBean.getContent(), "");
                 break;
             case SEARCH_BOOK:
                 mAdapter = new SearchResultListAdapter(this, R.layout.item_library_resource_list, mType);
                 mGetRegulationBookPresenter = new GetRegulationBookPresenter(this);
-                mGetRegulationBookPresenter.getBookList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getColumnId());
+                mGetRegulationBookPresenter.getBookList(true, mSearchConditionBean.getContent(), mSearchConditionBean.getColumnId(), "");
                 break;
             case SEARCH_INFORMATION:
                 mAdapter = new SearchResultListAdapter(this, R.layout.item_information_resource_list, mType);
@@ -242,6 +250,10 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
                 finish();
                 break;
             case R.id.tv_all_search:
+                KeyboardUtils.hideKeyBoard(this, mEtSearchContent);
+                isShowDialog(true);
+                mAllSearchPresenter.search(mEtSearchContent.getText().toString().trim());
+                mEtSearchContent.setText("");
                 break;
             default:
                 break;
@@ -325,5 +337,32 @@ public class SearchActivity extends BaseActivity implements GetRecruitPresenter.
     @Override
     public void getNewsField() {
 
+    }
+
+    @Override
+    public void searchSuccess(AllSearchBean.ResultdataBean bean) {
+        if (bean.getCommoditys().size() == 0 &&
+                bean.getEnterprises().size() == 0 &&
+                bean.getLibrarys().size() == 0 &&
+                bean.getNews().size() == 0 &&
+                bean.getReads().size() == 0 &&
+                bean.getRecruits().size() == 0 &&
+                bean.getRegulationBooks().size() == 0) {
+            showEmpty(true, mVsEmpty);
+        } else {
+            List<AllSearchBean.ResultdataBean> resultdataBeans = new ArrayList<>(7);
+            for (int i = 0; i < 7; i++) {
+                resultdataBeans.add(bean);
+            }
+            mAdapter.setDataArray(resultdataBeans);
+            mAdapter.notifyDataSetChanged();
+            showEmpty(false, mVsEmpty);
+        }
+        isShowDialog(false);
+    }
+
+    @Override
+    public void searchField() {
+        isShowDialog(false);
     }
 }

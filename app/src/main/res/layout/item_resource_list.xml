@@ -38,8 +38,7 @@
                 android:maxLength="6"
                 android:textSize="@dimen/dm_12"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="名称"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
@@ -54,7 +53,6 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:ellipsize="end"
-                android:text="标题"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dm_12"/>
 
@@ -65,7 +63,6 @@
                 android:layout_marginTop="@dimen/dm_10"
                 android:lines="2"
                 android:ellipsize="end"
-                android:text="任何技术的出现和革新都伴随着资本的狂欢，都伴随着资本的狂欢，任何技术的出现和革新都伴随..."
                 android:textColor="@color/normal_gray"
                 android:textSize="@dimen/dm_11"/>
 
@@ -77,7 +74,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginTop="@dimen/dm_10"
-                android:text="2018-07-21  07:25:10"
                 android:textColor="@color/normal_gray"
                 android:textSize="@dimen/dm_10"/>
 

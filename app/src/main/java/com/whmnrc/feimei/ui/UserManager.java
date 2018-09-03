@@ -47,7 +47,7 @@ public class UserManager {
         }
 
         HashMap<String, Object> paramters = new HashMap<>(3);
-        paramters.put("Mobile", String.valueOf(getUser().getMobile()));
+        paramters.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
         String url = MyApplication.applicationContext.getResources().getString(R.string.service_host_address).concat(MyApplication.applicationContext.getResources().getString(R.string.GetUserInfo));
         OKHttpManager.postString(url, paramters, new CommonCallBack<UserBean>() {
             @Override

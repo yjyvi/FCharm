@@ -28,19 +28,24 @@
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
-
-
-        <com.whmnrc.feimei.views.RatingBarView
-            android:id="@+id/rb_star"
+        <com.whmnrc.feimei.views.MyLinearLayout
+            android:id="@+id/ll_rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-3dp"
-            android:clickable="false"
-            android:gravity="center_vertical"
-            app:starCount="5"
-            app:starEmpty="@mipmap/icon_star_false"
-            app:starFill="@mipmap/icon_star_true"
-            app:starImageSize="@dimen/dm_22"/>
+             >
+
+            <com.whmnrc.feimei.views.RatingBarView
+                android:id="@+id/rb_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-3dp"
+                android:clickable="false"
+                android:gravity="center_vertical"
+                app:starCount="5"
+                app:starEmpty="@mipmap/icon_star_false"
+                app:starFill="@mipmap/icon_star_true"
+                app:starImageSize="@dimen/dm_22"/>
+        </com.whmnrc.feimei.views.MyLinearLayout>
     </LinearLayout>
 
 
@@ -64,14 +69,14 @@
         <TextView
             android:id="@+id/tv_address"
             android:layout_width="wrap_content"
-            android:paddingLeft="@dimen/dm_4"
-            android:paddingRight="@dimen/dm_4"
-            android:paddingTop="@dimen/dm_2"
-            android:paddingBottom="@dimen/dm_2"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dm_10"
             android:layout_marginRight="@dimen/dm_15"
             android:background="@drawable/shape_enterprise_address_bg"
+            android:paddingBottom="@dimen/dm_2"
+            android:paddingLeft="@dimen/dm_4"
+            android:paddingRight="@dimen/dm_4"
+            android:paddingTop="@dimen/dm_2"
             android:textColor="@color/normal_gray"
             android:textSize="@dimen/dm_10"/>
 

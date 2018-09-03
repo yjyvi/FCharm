@@ -21,6 +21,11 @@ import com.whmnrc.feimei.presener.GetLibraryPresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
+import com.whmnrc.feimei.utils.evntBusBean.PayEvent;
+import com.whmnrc.feimei.utils.evntBusBean.UserInfoEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -54,13 +59,17 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
 
     @Override
     protected void initViewData() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
         mLlFilter.setVisibility(View.GONE);
 
         mRefresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshLayout) {
                 refreshLayout.finishLoadMore();
-                mGetLibraryPresenter.getLibraryList(false, "");
+                mGetLibraryPresenter.getLibraryList(false, "","");
             }
 
             @Override
@@ -119,6 +128,7 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
             List<ResourcesFileBean.ResultdataBean.LibrarysBean> datas = mResourceListAdapter.getDatas();
             if (datas.size() == bean.getPagination().getRecords()) {
                 mRefresh.setEnableLoadMore(false);
+                return;
             }
 
             datas.addAll(bean.getLibrarys());
@@ -130,6 +140,34 @@ public class FragmentFileResource extends LazyLoadFragment implements GetLibrary
 
     @Override
     public void getReadField() {
+
+    }
+
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+
+    }
+
+    @Subscribe
+    public void payEvent(PayEvent payEvent) {
+        if (payEvent.getEventType() == PayEvent.PAY_SUCCESS) {
+            if (mGetLibraryPresenter != null) {
+                mGetLibraryPresenter.getLibraryList();
+            }
+        }
+    }
+
+
+    @Subscribe
+    public void userChangeEvent(UserInfoEvent userInfoEvent) {
+      if (userInfoEvent.getEventType() == UserInfoEvent.UPDATE_USER_INFO) {
+            if (mGetLibraryPresenter != null) {
+                mGetLibraryPresenter.getLibraryList();
+            }
+        }
 
     }
 }

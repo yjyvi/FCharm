@@ -33,14 +33,13 @@ public class GetProductTypePresenter extends PresenterBase {
                 if (productTypeBean.getType() == 1) {
                     mGetProductTypeListener.getProductTypeSuccess(productTypeBean.getResultdata());
                 } else {
-                    mGetProductTypeListener.getProductTypeField();
                     ToastUtils.showToast(productTypeBean.getMessage());
                 }
             }
 
             @Override
             public void onFailure(int code, String errorMsg) {
-                mGetProductTypeListener.getProductTypeField();
+
             }
 
 
@@ -51,7 +50,7 @@ public class GetProductTypePresenter extends PresenterBase {
     public interface GetProductTypeListener {
         void getProductTypeSuccess(List<ProductTypeBean.ResultdataBean> bean);
 
-        void getProductTypeField();
+
     }
 
 }

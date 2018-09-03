@@ -1,5 +1,6 @@
 package com.whmnrc.feimei.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 import android.widget.TextView;
 
+import com.luck.picture.lib.permissions.RxPermissions;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.eventbus.HomeTableChangeEvent;
 import com.whmnrc.feimei.ui.table.HomeFragment;
@@ -15,6 +17,7 @@ import com.whmnrc.feimei.ui.table.IndustryResourcesFragment;
 import com.whmnrc.feimei.ui.table.OrganizationChartFragment;
 import com.whmnrc.feimei.ui.table.ProductLibraryFragment;
 import com.whmnrc.feimei.ui.table.SpecialInformationFragment;
+import com.whmnrc.feimei.utils.VersionUtils;
 import com.whmnrc.feimei.views.MyViewPager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -89,6 +92,23 @@ public class HomeTableActivity extends BaseActivity {
         mTabPager.setAdapter(helpsViewPagerAdapter);
         mTabPager.setOffscreenPageLimit(2);
         selectedView(mTvTableHome);
+
+        selectPremissions();
+
+        VersionUtils.showDownloadPop(this);
+    }
+
+    private void selectPremissions() {
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ).subscribe(aBoolean -> {
+            if (aBoolean) {
+
+            }
+        });
+
+
     }
 
     @Override

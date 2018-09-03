@@ -14,11 +14,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.adapter.VipPriceAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
-import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
+import com.whmnrc.feimei.beans.VipTypeListBean;
+import com.whmnrc.feimei.presener.GetVipTypePresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,16 +28,17 @@ import java.util.List;
  * 赞赏弹窗
  */
 
-public class PopAppreciate {
+public class PopAppreciate implements GetVipTypePresenter.GetVipTypeListener {
 
     private PopupWindow mPopupWindow;
     private Context mContext;
 
     private PopHintListener mPopHintListener;
 
-    private List<String> mDataList = new ArrayList<>();
     public TextView mTvPayPrice;
-
+    public GetVipTypePresenter mGetVipTypePresenter;
+    public Adapter mAdapter;
+    public VipTypeListBean.ResultdataBean mSelectData;
 
     public void setPopHintListener(PopHintListener popHintListener) {
         mPopHintListener = popHintListener;
@@ -44,15 +46,8 @@ public class PopAppreciate {
 
     public PopAppreciate(Context context) {
 
-        mDataList.add("1元");
-        mDataList.add("3元");
-        mDataList.add("5元");
-        mDataList.add("10元");
-        mDataList.add("15元");
-        mDataList.add("20元");
-        mDataList.add("50元");
-        mDataList.add("100元");
 
+        mGetVipTypePresenter = new GetVipTypePresenter(this);
 
         mContext = context;
         View view = LayoutInflater.from(context).inflate(R.layout.pop_appreciate, null);
@@ -63,23 +58,13 @@ public class PopAppreciate {
         RecyclerView rvList = view.findViewById(R.id.rv_list);
 
         rvList.setLayoutManager(new GridLayoutManager(context, 4));
-        Adapter adapter = new Adapter(context, R.layout.item_apprecalate_select);
-        adapter.setDataArray(mDataList);
-        rvList.setAdapter(adapter);
+        mAdapter = new Adapter(context, R.layout.item_apprecalate_select);
+        rvList.setAdapter(mAdapter);
 
-        adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                mTvPayPrice.setText(String.format("确定支付：%s", mDataList.get(position)));
-                selectedView(view);
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
+        mAdapter.setVipPriceListener(bean -> {
+            mTvPayPrice.setText(String.format("确定支付：%s元", bean.getMoney()));
+            mSelectData = bean;
         });
-
 
         ivClose.setOnClickListener(v -> {
             if (mPopupWindow != null) {
@@ -92,8 +77,8 @@ public class PopAppreciate {
                 mPopupWindow.dismiss();
             }
 
-            if (mPopHintListener != null) {
-                mPopHintListener.confirm();
+            if (mPopHintListener != null && mSelectData != null) {
+                mPopHintListener.confirm(mSelectData);
             }
         });
 
@@ -114,18 +99,7 @@ public class PopAppreciate {
     }
 
     public void show() {
-         PopUtils.setBackgroundAlpha((Activity) mContext, 0.5f);
-        // 设置弹出位置
-        mPopupWindow.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER, 0, 0);
-        // 刷新状态
-        mPopupWindow.update();
-
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                 PopUtils.setBackgroundAlpha((Activity) mContext, 1f);
-            }
-        });
+        mGetVipTypePresenter.getVipTypeList(1);
     }
 
 
@@ -144,20 +118,70 @@ public class PopAppreciate {
 
     }
 
+    @Override
+    public void getVipTypeSuccess(List<VipTypeListBean.ResultdataBean> resultdataBeans) {
+        if (resultdataBeans == null) {
+            return;
+        }
+
+        if (resultdataBeans.size() == 0) {
+            return;
+        }
+
+        mAdapter.setDataArray(resultdataBeans);
+        mAdapter.notifyDataSetChanged();
+
+        PopUtils.setBackgroundAlpha((Activity) mContext, 0.5f);
+        // 设置弹出位置
+        mPopupWindow.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+        // 刷新状态
+        mPopupWindow.update();
+
+        mPopupWindow.setOnDismissListener(() -> PopUtils.setBackgroundAlpha((Activity) mContext, 1f));
+
+    }
+
+    @Override
+    public void getVipTypeField() {
+
+    }
+
     public interface PopHintListener {
-        void confirm();
+        void confirm(VipTypeListBean.ResultdataBean bean);
     }
 
 
-    class Adapter extends CommonAdapter<String> {
+    public class Adapter extends CommonAdapter<VipTypeListBean.ResultdataBean> {
 
         public Adapter(Context context, int layoutId) {
             super(context, layoutId);
         }
 
         @Override
-        public void convert(ViewHolder holder, String s, int position) {
-            holder.setText(R.id.tv, s);
+        public void convert(ViewHolder holder, VipTypeListBean.ResultdataBean s, int position) {
+            holder.setText(R.id.tv, String.format("%s元", s.getMoney()));
+
+            if (position == 0) {
+                if (mVipPriceListener != null) {
+                    selectedView(holder.itemView);
+                    mVipPriceListener.selectData(s);
+                }
+            }
+
+            holder.itemView.setOnClickListener(v -> {
+                if (mVipPriceListener != null) {
+                    selectedView(v);
+                    mVipPriceListener.selectData(s);
+                }
+            });
+
+        }
+
+
+        private VipPriceAdapter.VipPriceListener mVipPriceListener;
+
+        public void setVipPriceListener(VipPriceAdapter.VipPriceListener vipPriceListener) {
+            mVipPriceListener = vipPriceListener;
         }
     }
 

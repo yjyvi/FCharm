@@ -43,7 +43,7 @@ public class UpdateImgFilePresenter extends PresenterBase {
             return;
         }
 
-        final File file = new File(datas.get(position).getPath());
+        final File file = new File(datas.get(position).getCompressPath());
         OkHttpUtils.post()
                 .addFile("Image", file.getName(), file)
                 .url(getUrl(R.string.UploadImg))

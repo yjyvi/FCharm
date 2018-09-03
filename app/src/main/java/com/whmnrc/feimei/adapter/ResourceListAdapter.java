@@ -26,7 +26,7 @@ public class ResourceListAdapter extends CommonAdapter<ReadListBean.ResultdataBe
         holder.setText(R.id.tv_name, readBean.getName());
         holder.setText(R.id.tv_title, readBean.getTitle());
         holder.setText(R.id.tv_desc, readBean.getSubtitle());
-        holder.setText(R.id.tv_time, TimeUtils.getDateToString(Long.parseLong(readBean.getCreateTime())));
+        holder.setText(R.id.tv_time, TimeUtils.getDateToString(Long.parseLong(readBean.getCreateTime()), "yyyy-MM-dd HH:mm:ss"));
         GlideUtils.LoadImage(mContext, readBean.getImg(), holder.getView(R.id.iv_img));
 
         holder.itemView.setOnClickListener((v) -> {
@@ -34,9 +34,9 @@ public class ResourceListAdapter extends CommonAdapter<ReadListBean.ResultdataBe
                 }
         );
 
-        if (position == getDatas().size()-1) {
+        if (position == getDatas().size() - 1) {
             holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
         }
 

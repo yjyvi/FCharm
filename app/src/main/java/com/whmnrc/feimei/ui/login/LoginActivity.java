@@ -203,7 +203,7 @@ public class LoginActivity extends BaseActivity implements LoginPresenter.LoginL
                 RegisterActivity.start(view.getContext());
                 break;
             case R.id.tv_find_pwd:
-                FindPwdActivity.start(view.getContext(), "忘记密码");
+                FindPwdActivity.start(view.getContext(), "");
                 break;
             case R.id.iv_wx_login:
                 setWXLogin();

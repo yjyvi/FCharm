@@ -4,9 +4,9 @@
     android:id="@+id/ll_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/dm_20"
     android:background="@drawable/shape_share_bg"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dm_20">
 
     <ImageView
         android:id="@+id/iv_cancel"
@@ -74,6 +74,24 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="@dimen/dm_20"
             android:src="@mipmap/icon_wx_friend"
+            />
+
+        <ImageView
+            android:id="@+id/iv_qq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/dm_20"
+            android:src="@mipmap/share_qq"
+            />
+
+        <ImageView
+            android:id="@+id/iv_qq_zone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/dm_20"
+            android:src="@mipmap/share_qzone"
             />
 
 

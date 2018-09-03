@@ -1,6 +1,13 @@
 package com.whmnrc.feimei.presener;
 
+import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.beans.HomeDataBean;
+import com.whmnrc.feimei.network.CommonCallBack;
+import com.whmnrc.feimei.network.OKHttpManager;
 import com.whmnrc.feimei.ui.PresenterBase;
+import com.whmnrc.feimei.utils.ToastUtils;
+
+import java.util.HashMap;
 
 /**
  * @author yjyvi
@@ -9,40 +16,40 @@ import com.whmnrc.feimei.ui.PresenterBase;
 
 public class HomePageDataPresenter extends PresenterBase {
 
-    private HomePageBannerListener mHomePageDataListener;
+    private HomePageDataListener mHomePageDataListener;
 
-    public HomePageDataPresenter(HomePageBannerListener homePageBannerListener ) {
-        this.mHomePageDataListener = homePageBannerListener;
-
-    }
-
-    public void getHomePageBanner() {
-//        HashMap<String, String> params = new HashMap<>(1);
-//        OKHttpManager.get(getUrl(R.string.InitHomePage), params, new CommonCallBack<HomeDataBean>() {
-//            @Override
-//            protected void onSuccess(HomeDataBean data) {
-//                if (data.getType() == 1) {
-//                    mHomePageDataListener.loadHomeData(data);
-//                } else {
-//                    mHomePageDataListener.laodHomeDataField();
-//                    ToastUtils.showToast(data.getMessage());
-//                }
-//            }
-//
-//            @Override
-//            protected void onError(String msg) {
-//                super.onError(msg);
-//                mHomePageDataListener.laodHomeDataField();
-//            }
-//        });
-
+    public HomePageDataPresenter(HomePageDataListener homePageDataListener ) {
+        this.mHomePageDataListener = homePageDataListener;
 
     }
 
+    public void getHomeData() {
+        HashMap<String, Object> params = new HashMap<>(3);
+        OKHttpManager.postString(getUrl(R.string.GetFirstPage), params, new CommonCallBack<HomeDataBean>() {
+            @Override
+            protected void onSuccess(HomeDataBean data) {
+                if (data.getType() == 1) {
+                    mHomePageDataListener.loadHomeDataSuccess(data.getResultdata());
+                } else {
+                    mHomePageDataListener.loadHomeDataField();
+                    ToastUtils.showToast(data.getMessage());
+                }
+            }
 
-    public interface HomePageBannerListener {
-        void loadHomeData();
-        void laodHomeDataField();
+            @Override
+            protected void onError(String msg) {
+                super.onError(msg);
+                mHomePageDataListener.loadHomeDataField();
+            }
+        });
+
+
+    }
+
+
+    public interface HomePageDataListener {
+        void loadHomeDataSuccess(HomeDataBean.ResultdataBean homeDataBean);
+        void loadHomeDataField();
     }
 
 }

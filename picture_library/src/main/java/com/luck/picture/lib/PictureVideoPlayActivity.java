@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ public abstract class PictureVideoPlayActivity extends PictureBaseActivity imple
     private TextView mTvDesc;
     private TextView mTvBuy;
     public LinearLayout mLlVideoGoods;
+    private boolean isPlay;
 
 
     @Override
@@ -43,8 +45,6 @@ public abstract class PictureVideoPlayActivity extends PictureBaseActivity imple
 
 
         video_path = getIntent().getStringExtra("video_path");
-        goodsDescription = getIntent().getStringExtra("goodsDescription");
-        goodsId = getIntent().getStringExtra("goodsId");
 
         picture_left_back = (ImageView) findViewById(R.id.picture_left_back);
         mVideoView = (VideoView) findViewById(R.id.video_view);
@@ -52,23 +52,14 @@ public abstract class PictureVideoPlayActivity extends PictureBaseActivity imple
         iv_play = (ImageView) findViewById(R.id.iv_play);
         pb = (ProgressBar) findViewById(R.id.image_buffer);
 
-        mLlVideoGoods = (LinearLayout) findViewById(R.id.ll_video_goods);
-        mTvDesc = (TextView) findViewById(R.id.tv_desc);
-        mTvBuy = (TextView) findViewById(R.id.tv_buy);
-
-        if (TextUtils.isEmpty(goodsId)) {
-            mLlVideoGoods.setVisibility(View.GONE);
-        } else {
-            mLlVideoGoods.setVisibility(View.VISIBLE);
-            mTvDesc.setText(goodsDescription);
-            mTvBuy.setOnClickListener(this);
-        }
 
 
         mMediaController = new MediaController(this);
         mVideoView.setOnCompletionListener(this);
         mVideoView.setOnPreparedListener(this);
         mVideoView.setMediaController(mMediaController);
+
+
 
         picture_left_back.setOnClickListener(this);
         iv_play.setOnClickListener(this);
@@ -82,14 +73,33 @@ public abstract class PictureVideoPlayActivity extends PictureBaseActivity imple
         context.startActivity(starter);
     }
 
-    public static void start(Context context, String videoPath, String goodsDescription, String goodsId) {
+    public static void start(Context context, String videoPath, boolean isVip) {
         Intent starter = new Intent(context, PictureVideoPlayActivity.class);
         starter.putExtra("video_path", videoPath);
-        starter.putExtra("goodsDescription", goodsDescription);
-        starter.putExtra("goodsId", goodsId);
+        starter.putExtra("isVip", isVip);
         context.startActivity(starter);
     }
 
+
+    private CountDownTimer mCountDownTimer;
+    /**
+     * 验证码倒计时
+     */
+    public void countDown() {
+        mCountDownTimer = new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int duration = mVideoView.getDuration();
+                Log.e("CurrentTime", String.valueOf(duration));
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+        mCountDownTimer.start();
+    }
 
     @Override
     public void onStart() {
@@ -104,6 +114,7 @@ public abstract class PictureVideoPlayActivity extends PictureBaseActivity imple
         // Stop video when the activity is pause.
         mPositionWhenPaused = mVideoView.getCurrentPosition();
         mVideoView.stopPlayback();
+
 
         super.onPause();
     }
@@ -149,13 +160,9 @@ public abstract class PictureVideoPlayActivity extends PictureBaseActivity imple
         } else if (id == R.id.iv_play) {
             mVideoView.start();
             iv_play.setVisibility(View.INVISIBLE);
-        } else if (id == R.id.tv_buy) {
-            mVideoView.stopPlayback();
-            goToGoodsDetials(goodsId);
         }
     }
 
-    public abstract void goToGoodsDetials(String goodsId);
 
     @Override
     protected void attachBaseContext(Context newBase) {

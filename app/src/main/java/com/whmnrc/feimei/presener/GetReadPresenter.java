@@ -28,11 +28,11 @@ public class GetReadPresenter extends PresenterBase {
     }
 
     public void getReadList(boolean isRefresh) {
-        getReadList(isRefresh, "", "");
+        getReadList(isRefresh, "", "", -1);
     }
 
 
-    public void getReadList(boolean isRefresh, String searchContent, String columnId) {
+    public void getReadList(boolean isRefresh, String searchContent, String columnId, int type) {
         HashMap<String, Object> params = new HashMap<>(8);
         params.put("rows", 10);
         params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
@@ -47,11 +47,17 @@ public class GetReadPresenter extends PresenterBase {
 
         HashMap<String, Object> conditionJson = new HashMap<>(4);
         if (!TextUtils.isEmpty(searchContent)) {
-            conditionJson.put("Name", searchContent);
+            conditionJson.put("Title", searchContent);
         }
+
         if (!TextUtils.isEmpty(columnId)) {
             conditionJson.put("ColumnID", columnId);
         }
+
+        if (type >= 0) {
+            conditionJson.put("Type", type);
+        }
+
         params.put("conditionJson", JSON.toJSONString(conditionJson));
 
         OKHttpManager.postString(getUrl(R.string.GeRead), params, new CommonCallBack<ReadListBean>() {

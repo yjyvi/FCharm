@@ -30,7 +30,7 @@ public class SendCommentPresenter extends PresenterBase {
         params.put("OtherID", goodsId);
         params.put("Conten", content);
         params.put("ImgList", imgs);
-        params.put("Mobile", UserManager.getUser().getMobile());
+        params.put("Mobile", UserManager.getUser() == null ? "" : UserManager.getUser().getMobile());
         OKHttpManager.postString2(getUrl(R.string.SendComment), params, new CommonCallBack<BaseBean>() {
             @Override
             protected void onSuccess(BaseBean data) {

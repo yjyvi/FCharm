@@ -53,14 +53,14 @@
 
     <!--************************************************ 使用麦克风 ***********************************************-->
     <!-- 使用麦克风 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!--<uses-permission android:name="android.permission.RECORD_AUDIO"/>-->
     <!--************************************************ 使用麦克风 end ***********************************************-->
 
     <!--************************************************ 电话 ***********************************************-->
     <!-- 拨打电话权限 -->
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <!-- 读取电话状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--<uses-permission android:name="android.permission.CALL_PHONE"/>-->
+    <!--&lt;!&ndash; 读取电话状态 &ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
     <!--************************************************ 电话 end ***********************************************-->
 
 
@@ -87,7 +87,7 @@
 
 
     <!--振动-->
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!--<uses-permission android:name="android.permission.VIBRATE"/>-->
 
     <!-- 录音-->
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
@@ -103,6 +103,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="4.5" />
 
         <!-- 兼容android 7.0 -->
         <provider
@@ -130,9 +135,9 @@
         <!--主界面-->
         <activity
             android:name="com.whmnrc.feimei.ui.HomeTableActivity"
-            android:windowSoftInputMode="adjustPan|adjustNothing"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustNothing">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -165,85 +170,133 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             />
 
+        <!-- 支付宝h5支付页面 -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!-- 支付宝h5授权页面 -->
+        <activity
+            android:name="com.alipay.sdk.app.H5AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
-        <!--信鸽推送-->
-        <receiver android:name="com.whmnrc.feimei.receiver.MessageReceiver"
-                  android:exported="true" >
-            <intent-filter>
-                <!-- 接收消息透传 -->
-                <action android:name="com.tencent.android.tpush.action.PUSH_MESSAGE" />
-                <!-- 监听注册、反注册、设置/删除标签、通知被点击等处理结果 -->
-                <action android:name="com.tencent.android.tpush.action.FEEDBACK" />
-            </intent-filter>
-        </receiver>
 
+        <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
 
         <activity
-            android:name="com.whmnrc.feimei.ui.mine.AddressManagerActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+             >
+        <intent-filter>
+            　　　　
+            <action android:name="android.intent.action.VIEW"/>
+            　　　　
+            <category android:name="android.intent.category.DEFAULT"/>
+            　　　　
+            <category android:name="android.intent.category.BROWSABLE"/>
+            　　　　
+            <data android:scheme="tencent1107709037"/>
+            　　
+        </intent-filter>
+        </activity>
         <activity
-            android:name="com.whmnrc.feimei.ui.mine.SettingActivity"
+            android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="com.whmnrc.feimei.ui.mine.OrderListActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="com.whmnrc.feimei.ui.CommonH5WebView"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="com.whmnrc.feimei.ui.mine.AddAddressActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             />
 
 
-        <activity android:name="com.whmnrc.feimei.ui.mine.AboutUsActivity"/>
-        <activity android:name="com.whmnrc.feimei.ui.mine.PayResultActivity"/>
 
-        <activity android:name="com.whmnrc.feimei.ui.login.UserAgreementActivity"/>
-        <activity android:name=".ui.login.RegisterActivity"/>
-        <activity android:name=".ui.login.BindTelActivity"/>
-        <activity android:name=".ui.login.FindPwdActivity"/>
-        <activity android:name=".ui.home.SearchActivity"/>
-        <activity android:name=".ui.mine.MineActivity"/>
-        <activity android:name=".ui.mine.MyCollectionActivity"/>
-        <activity android:name=".ui.mine.FreeBackActivity"/>
-        <activity android:name=".ui.login.NotificationPwdActivity"/>
+    <!--信鸽推送-->
+    <receiver
+        android:name="com.whmnrc.feimei.receiver.MessageReceiver"
+        android:exported="true">
+        <intent-filter>
+            <!-- 接收消息透传 -->
+            <action android:name="com.tencent.android.tpush.action.PUSH_MESSAGE"/>
+            <!-- 监听注册、反注册、设置/删除标签、通知被点击等处理结果 -->
+            <action android:name="com.tencent.android.tpush.action.FEEDBACK"/>
+        </intent-filter>
+    </receiver>
+
+
+    <activity
+        android:name="com.whmnrc.feimei.ui.mine.AddressManagerActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustPan"/>
+    <activity
+        android:name="com.whmnrc.feimei.ui.mine.SettingActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustPan"/>
+    <activity
+        android:name="com.whmnrc.feimei.ui.mine.OrderListActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustPan"/>
+    <activity
+        android:name="com.whmnrc.feimei.ui.CommonH5WebView"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustPan"/>
+    <activity
+        android:name="com.whmnrc.feimei.ui.mine.AddAddressActivity"
+        android:windowSoftInputMode="adjustPan"
+        />
+
+
+    <activity android:name="com.whmnrc.feimei.ui.mine.AboutUsActivity"/>
+    <activity android:name="com.whmnrc.feimei.ui.mine.PayResultActivity"/>
+
+    <activity android:name="com.whmnrc.feimei.ui.login.UserAgreementActivity"/>
+    <activity android:name=".ui.login.RegisterActivity"/>
+    <activity android:name=".ui.login.BindTelActivity"/>
+    <activity android:name=".ui.login.FindPwdActivity"/>
+    <activity android:name=".ui.home.SearchActivity"/>
+    <activity android:name=".ui.mine.MineActivity"/>
+    <activity android:name=".ui.mine.MyCollectionActivity"/>
+    <activity android:name=".ui.mine.FreeBackActivity"/>
         <activity android:name=".ui.mine.OrderDetailsActivity"/>
-        <activity
-            android:name=".ui.organization.OrganizationDetailsActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            />
-        <activity android:name=".ui.organization.BusinessMoreActivity"/>
-        <activity android:name=".ui.organization.IntellectualPropertyActivity"/>
-        <activity android:name=".ui.organization.ShareholderInformationActivity"/>
-        <activity android:name=".ui.organization.OtherInfoActivity"/>
-        <activity android:name=".ui.organization.OtherInfoDetailsActivity"/>
-        <activity android:name=".ui.organization.AssociatedPositionActivity"/>
-        <activity android:name=".ui.organization.AboutMeActivity"/>
-        <activity android:name=".ui.mine.PayActivity"/>
-        <activity android:name=".ui.organization.AllCommentActivity"/>
-        <activity android:name=".ui.organization.SearchBusinessMoreActivity"/>
-        <activity android:name=".ui.mine.CommentActivity"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="adjustResize|stateHidden"
-            />
-        <activity android:name=".ui.product.ProductDetailsActivity"/>
-        <activity android:name=".ui.product.MsgActivity"/>
-        <activity android:name=".ui.product.ConfirmOrderActivity"/>
-        <activity android:name=".ui.product.SearchProductMoreActivity"/>
-        <activity android:name=".ui.industry.ColumnActivity"
-                  android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".ui.industry.IndustryDetailsActivity"/>
-        <activity android:name=".ui.mine.PayVipActivity"/>
-        <activity android:name=".ui.mine.RuleDescriptionActivity"/>
-        <activity android:name=".ui.product.ProductSpecificationsActivity"/>
+    <activity
+        android:name=".ui.organization.OrganizationDetailsActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize|stateHidden"
+        />
+    <activity android:name=".ui.organization.BusinessMoreActivity"/>
+    <activity android:name=".ui.organization.IntellectualPropertyActivity"/>
+    <activity android:name=".ui.organization.ShareholderInformationActivity"/>
+    <activity android:name=".ui.organization.OtherInfoActivity"/>
+    <activity android:name=".ui.organization.OtherInfoDetailsActivity"/>
+    <activity android:name=".ui.organization.AssociatedPositionActivity"/>
+    <activity android:name=".ui.organization.AboutInfoActivity"/>
+    <activity android:name=".ui.mine.PayActivity"/>
+    <activity android:name=".ui.organization.AllCommentActivity"/>
+    <activity android:name=".ui.organization.SearchBusinessMoreActivity"/>
+    <activity
+        android:name=".ui.mine.CommentActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize|stateHidden"
+        />
+    <activity android:name=".ui.product.ProductDetailsActivity"/>
+    <activity android:name=".ui.product.MsgActivity"/>
+    <activity android:name=".ui.product.ConfirmOrderActivity"/>
+    <activity android:name=".ui.product.SearchProductMoreActivity"/>
+    <activity
+        android:name=".ui.industry.ColumnActivity"
+        android:windowSoftInputMode="adjustPan"/>
+    <activity android:name=".ui.industry.IndustryDetailsActivity"
+              android:configChanges="orientation|screenSize|keyboardHidden"
+              android:screenOrientation="portrait"
+              android:windowSoftInputMode="adjustPan"
+        />
+    <activity android:name=".ui.mine.PayVipActivity"/>
+    <activity android:name=".ui.mine.RuleDescriptionActivity"/>
+    <activity android:name=".ui.product.ProductSpecificationsActivity"/>
 
 
-    </application>
+</application>
 
-</manifest>
+    </manifest>

@@ -23,6 +23,9 @@ import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.home.SearchActivity;
 import com.whmnrc.feimei.utils.KeyboardUtils;
+import com.whmnrc.feimei.utils.evntBusBean.CollectionEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +78,7 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
             @Override
             public void onLoadMore(RefreshLayout refreshLayout) {
                 refreshLayout.finishLoadMore();
-                mGetRegulationBookPresenter.getBookList(false, "", "");
+                mGetRegulationBookPresenter.getBookList(false, "", "","");
             }
 
             @Override
@@ -142,6 +145,7 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
             List<RegulationBookListBean.ResultdataBean.ReadBean> datas = mResourceBookListAdapter.getDatas();
             if (datas.size() == bean.getPagination().getRecords()) {
                 mRefresh.setEnableLoadMore(false);
+                return;
             }
             datas.addAll(bean.getRead());
             mResourceBookListAdapter.setDataArray(datas);
@@ -159,10 +163,16 @@ public class FragmentBookResource extends LazyLoadFragment implements GetRegulat
     public void collectionSuccess(boolean isAdd) {
         mResourceBookListAdapter.getDatas().get(mCollectionPosition).setIsCollection(isAdd ? 1 : 0);
         mResourceBookListAdapter.notifyItemChanged(mCollectionPosition);
+
+        if (!isAdd) {
+            EventBus.getDefault().post(new CollectionEvent().setEventType(CollectionEvent.CANCEL_COLLECTION));
+        }
     }
 
     @Override
     public void collectionCodeField() {
 
     }
+
+
 }

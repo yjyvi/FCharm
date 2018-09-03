@@ -100,6 +100,9 @@ public class AllCommentActivity extends BaseActivity implements GetCommentPresen
             mOrganizationCommentAdapter.setDataArray(datas);
         }
         mOrganizationCommentAdapter.notifyDataSetChanged();
+
+        showEmpty(mOrganizationCommentAdapter, mVsEmpty);
+
         isShowDialog(false);
     }
 

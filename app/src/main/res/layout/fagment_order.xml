@@ -5,6 +5,36 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/ll_filter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_35"
+        android:layout_marginBottom="@dimen/dm_15"
+        android:layout_marginLeft="@dimen/dm_50"
+        android:layout_marginRight="@dimen/dm_50"
+        android:layout_marginTop="@dimen/dm_15"
+        android:background="@drawable/shape_search_bg"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dm_5">
+
+        <TextView
+            android:id="@+id/tv_type_name"
+            android:textSize="@dimen/dm_12"
+            android:layout_marginLeft="@dimen/dm_10"
+            android:layout_width="wrap_content"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="全部"/>
+
+        <ImageView
+            android:layout_marginRight="@dimen/dm_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_pay_year_select"/>
+
+    </LinearLayout>
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
@@ -20,34 +50,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/ll_filter"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dm_35"
-                    android:layout_marginBottom="@dimen/dm_15"
-                    android:layout_marginLeft="@dimen/dm_50"
-                    android:layout_marginRight="@dimen/dm_50"
-                    android:layout_marginTop="@dimen/dm_15"
-                    android:background="@drawable/shape_search_bg"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/dm_5">
 
-                    <TextView
-                        android:textSize="@dimen/dm_12"
-                        android:layout_marginLeft="@dimen/dm_10"
-                        android:layout_width="wrap_content"
-                        android:textColor="@color/black"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="全部"/>
-
-                    <ImageView
-                        android:layout_marginRight="@dimen/dm_10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/icon_pay_year_select"/>
-
-                </LinearLayout>
 
                 <ViewStub
                     android:id="@+id/vs_empty"

@@ -36,9 +36,10 @@
         android:gravity="bottom|center">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:maxLength="15"
             android:gravity="bottom"
             android:lines="1"
             android:textColor="#333333"

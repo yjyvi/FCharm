@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -17,14 +18,12 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.AllCommentAdapter;
-import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
 import com.whmnrc.feimei.beans.CommentListBean;
-import com.whmnrc.feimei.beans.ProductTypeBean;
 import com.whmnrc.feimei.presener.GetCommentPresenter;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.CommentActivity;
+import com.whmnrc.feimei.utils.EmptyListUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,10 +41,10 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
 
     private PopHintListener mPopHintListener;
 
-    private List<ProductTypeBean.ResultdataBean> mDataList = new ArrayList<>();
     public GetCommentPresenter mGetCommentPresenter;
     public AllCommentAdapter mAllCommentAdapter;
     public SmartRefreshLayout mRefreshLayout;
+    public ViewStub mViewStub;
 
 
     public PopupWindow getPopupWindow() {
@@ -64,6 +63,7 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
         mGetCommentPresenter = new GetCommentPresenter(this);
 
         View view = LayoutInflater.from(context).inflate(R.layout.pop_read_comment, null);
+        mViewStub = view.findViewById(R.id.vs_empty);
         RecyclerView mRvType = view.findViewById(R.id.rv_list);
         mRefreshLayout = view.findViewById(R.id.refresh);
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -93,20 +93,7 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
         mRvType.setNestedScrollingEnabled(false);
         mAllCommentAdapter = new AllCommentAdapter(context, R.layout.item_organization_comment);
         mRvType.setAdapter(mAllCommentAdapter);
-        mAllCommentAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                mPopHintListener.confirm(mDataList.get(position));
-                if (mPopupWindow != null) {
-                    mPopupWindow.dismiss();
-                }
-            }
 
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
 
         // 设置popwindow弹出大小
         mPopupWindow = new PopupWindow(context);
@@ -115,7 +102,7 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
 
         mPopupWindow.setContentView(view);
         mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setHeight(mContext.getResources().getDimensionPixelSize(R.dimen.dm_300));
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         // 设置允许在外点击消失
         mPopupWindow.setOutsideTouchable(false);
@@ -129,7 +116,13 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
             }
 
             CommentActivity.start(mContext, mReadId);
-            CommentActivity.setCommentListener(() -> mGetCommentPresenter.getComment(mReadId, true));
+            CommentActivity.setCommentListener(() -> {
+                        mGetCommentPresenter.getComment(mReadId, true);
+                        if (mPopHintListener != null) {
+                            mPopHintListener.commentSuccess();
+                        }
+                    }
+            );
         });
     }
 
@@ -153,7 +146,7 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
             mAllCommentAdapter.setDataArray(datas);
         }
         mAllCommentAdapter.notifyDataSetChanged();
-
+        showEmpty();
         if (mPopupWindow != null) {
             PopUtils.setBackgroundAlpha((Activity) mContext, 0.5f);
 
@@ -166,7 +159,6 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
         }
 
 
-
     }
 
     @Override
@@ -176,7 +168,18 @@ public class PopReadComment implements GetCommentPresenter.GetCommentListener {
 
 
     public interface PopHintListener {
-        void confirm(ProductTypeBean.ResultdataBean bean);
+        void commentSuccess();
+    }
+
+
+    public void showEmpty() {
+        if (mAllCommentAdapter != null && mAllCommentAdapter.getDatas().size() == 0) {
+            EmptyListUtils.loadEmpty(true, "没有评论", R.mipmap.icon_no_data, mViewStub);
+        } else {
+            if (mViewStub != null) {
+                mViewStub.setVisibility(View.GONE);
+            }
+        }
     }
 
 }

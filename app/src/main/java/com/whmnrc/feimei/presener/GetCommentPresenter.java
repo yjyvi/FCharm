@@ -36,7 +36,7 @@ public class GetCommentPresenter extends PresenterBase {
 
         conditionJson.put("OtherID", otherId);
 
-        params.put("rows", "5");
+        params.put("rows", "10");
 
         if (isRefresh) {
             page = 1;

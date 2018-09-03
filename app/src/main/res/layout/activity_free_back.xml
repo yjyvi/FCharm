@@ -8,11 +8,12 @@
     <include layout="@layout/common_title"/>
 
     <EditText
-
+        android:id="@+id/et_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="top"
+        android:maxLength="200"
         android:hint="请输入您的意见和建议,我们会及时联系您"
         android:minHeight="@dimen/dm_200"
         android:padding="@dimen/dm_10"
@@ -41,7 +42,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_save"/>
+            android:src="@mipmap/icon_commit"/>
 
         <TextView
 

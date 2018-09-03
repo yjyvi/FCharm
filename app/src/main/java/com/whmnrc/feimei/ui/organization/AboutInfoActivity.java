@@ -15,7 +15,7 @@ import butterknife.BindView;
  * @data 2018/7/26.
  */
 
-public class AboutMeActivity extends BaseActivity {
+public class AboutInfoActivity extends BaseActivity {
 
     @BindView(R.id.tv_name)
     TextView mTvName;
@@ -43,11 +43,11 @@ public class AboutMeActivity extends BaseActivity {
 
     @Override
     protected int setLayoutId() {
-        return R.layout.activity_about_me;
+        return R.layout.activity_about_info;
     }
 
     public static void start(Context context, OrganizationDetailsBean.ResultdataBean.EnterpriseBean enterprise) {
-        Intent starter = new Intent(context, AboutMeActivity.class);
+        Intent starter = new Intent(context, AboutInfoActivity.class);
         starter.putExtra("enterprise",  enterprise);
         context.startActivity(starter);
     }

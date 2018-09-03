@@ -11,15 +11,18 @@ import android.widget.TextView;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.VipTypeAdapter;
+import com.whmnrc.feimei.beans.RuleDescriptionBean;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.UserManager;
-import com.whmnrc.feimei.utils.TestDataUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
 import com.whmnrc.feimei.utils.evntBusBean.UserInfoEvent;
 import com.whmnrc.mylibrary.utils.GlideUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,10 +49,24 @@ public class RuleDescriptionActivity extends BaseActivity {
 
         mRvList.setLayoutManager(new GridLayoutManager(this, 4));
         VipTypeAdapter adapter = new VipTypeAdapter(this, R.layout.item_vip_type_list);
-        adapter.setDataArray(TestDataUtils.initTestData(8));
+        adapter.setDataArray(getRuleDescriptionDataList());
         mRvList.setAdapter(adapter);
 
     }
+
+    /**
+     * VIP权益数据
+     * @return
+     */
+    public static List<RuleDescriptionBean> getRuleDescriptionDataList() {
+        List<RuleDescriptionBean> ruleDescriptionBeans = new ArrayList<>();
+        ruleDescriptionBeans.add(new RuleDescriptionBean(1, R.mipmap.icon_table_organization_chart_select, "企业名录"));
+        ruleDescriptionBeans.add(new RuleDescriptionBean(2, R.mipmap.icon_table_industry_resources_select, "行业资源"));
+        ruleDescriptionBeans.add(new RuleDescriptionBean(3,R.mipmap.icon_table_product_library_select, "行业产品库"));
+        ruleDescriptionBeans.add(new RuleDescriptionBean(4, R.mipmap.icon_table_special_information_select, "特聘信息"));
+        return ruleDescriptionBeans;
+    }
+
 
     private void showUserData() {
         if (UserManager.getUser() != null && UserManager.getUser().getHeadImg() != null && !TextUtils.isEmpty(UserManager.getUser().getHeadImg())) {

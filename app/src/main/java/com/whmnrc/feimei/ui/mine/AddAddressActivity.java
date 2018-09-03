@@ -9,11 +9,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.beans.AddressBean;
 import com.whmnrc.feimei.beans.JsonBean;
+import com.whmnrc.feimei.presener.AddressEditPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.utils.GetCityUtils;
+import com.whmnrc.feimei.utils.KeyboardUtils;
 import com.whmnrc.feimei.utils.ToastUtils;
 import com.whmnrc.feimei.utils.evntBusBean.AddressEvent;
 
@@ -30,7 +34,7 @@ import butterknife.OnClick;
  * @data 2018/5/22.
  */
 
-public class AddAddressActivity extends BaseActivity {
+public class AddAddressActivity extends BaseActivity implements AddressEditPresenter.AddressEditListener {
 
     @BindView(R.id.tv_name)
     TextView mTvName;
@@ -48,19 +52,34 @@ public class AddAddressActivity extends BaseActivity {
     EditText mEtDesAddress;
     @BindView(R.id.iv_is_default)
     ImageView mIvIsDefault;
+
+    String addressId;
     private ArrayList<JsonBean> options1Items = new ArrayList<>();
     private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();
     private OptionsPickerView mPickerView;
+    public AddressEditPresenter mAddressEditPresenter;
 
     @Override
     protected void initViewData() {
+
+        mAddressEditPresenter = new AddressEditPresenter(this);
         int addressSize = getIntent().getIntExtra("addressSize", -1);
         String resultdataBeanJson = getIntent().getStringExtra("resultdataBeanJson");
         if (TextUtils.isEmpty(resultdataBeanJson)) {
             setTitle("新增收货地址");
+            addressId = "";
         } else {
             setTitle("编辑收货地址");
+            AddressBean.ResultdataBean addressBean = JSON.parseObject(resultdataBeanJson, AddressBean.ResultdataBean.class);
+            mEtName.setText(addressBean.getName());
+            mEtTel.setText(addressBean.getMobile());
+            mEtPro.setText(addressBean.getProvice());
+            mEtCity.setText(addressBean.getCity());
+            mEtArea.setText(addressBean.getRegion());
+            mEtDesAddress.setText(addressBean.getDetail());
+            mIvIsDefault.setSelected(addressBean.getIsDefault() == 1);
+            addressId = addressBean.getID();
         }
 
         initJsonData();
@@ -82,8 +101,6 @@ public class AddAddressActivity extends BaseActivity {
         starter.putExtra("addressSize", addressSize);
         context.startActivity(starter);
     }
-
-
 
 
     @Override
@@ -137,18 +154,15 @@ public class AddAddressActivity extends BaseActivity {
     //选择器初始化
     private void initPickerView() {
 
-        mPickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                mEtPro.setText(options1Items.get(options1).getPickerViewText());
-                mEtCity.setText(options2Items.get(options1).get(options2));
-                mEtArea.setText(options3Items.get(options1).get(options2).get(options3));
-            }
+        mPickerView = new OptionsPickerView.Builder(this, (options1, options2, options3, v) -> {
+            mEtPro.setText(options1Items.get(options1).getPickerViewText());
+            mEtCity.setText(options2Items.get(options1).get(options2));
+            mEtArea.setText(options3Items.get(options1).get(options2).get(options3));
         })
                 .setTitleText("城市选择")
                 .setCyclic(false, false, false)
                 .setDividerColor(R.color.normal_gray)
-                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setTextColorCenter(Color.BLACK)
                 .setContentTextSize(20)
                 .build();
 
@@ -170,14 +184,17 @@ public class AddAddressActivity extends BaseActivity {
                     String pro = mEtPro.getText().toString().trim();
                     String city = mEtCity.getText().toString().trim();
                     String area = mEtArea.getText().toString().trim();
+                    String addressDes = mEtDesAddress.getText().toString().trim();
                     int isDefault = mIvIsDefault.isSelected() ? 1 : 0;
-
+                    mAddressEditPresenter.editAddress(addressId, name, pro, city, area, addressDes, String.valueOf(isDefault), tel);
+                    isShowDialog(true);
                 }
 
                 break;
             case R.id.et_pro:
             case R.id.et_city:
             case R.id.et_area:
+                KeyboardUtils.hideKeyBoard(AddAddressActivity.this, mEtArea);
                 mPickerView.show();
                 break;
             default:
@@ -198,7 +215,7 @@ public class AddAddressActivity extends BaseActivity {
             return false;
         }
 
-        if ( TextUtils.isEmpty(mEtTel.getText().toString().trim())) {
+        if (TextUtils.isEmpty(mEtTel.getText().toString().trim())) {
             ToastUtils.showToast(mEtTel.getHint().toString().trim());
             return false;
         }
@@ -209,8 +226,25 @@ public class AddAddressActivity extends BaseActivity {
         }
 
 
+        if (TextUtils.isEmpty(mEtDesAddress.getText().toString().trim())) {
+            ToastUtils.showToast(mEtDesAddress.getHint().toString().trim());
+            return false;
+        }
+
+
         return true;
     }
 
 
+    @Override
+    public void addSuccess() {
+        isShowDialog(false);
+        EventBus.getDefault().post(new AddressEvent().setEventType(AddressEvent.ADD_ADDRESS_SUCCESS));
+        finish();
+    }
+
+    @Override
+    public void addField() {
+        isShowDialog(false);
+    }
 }

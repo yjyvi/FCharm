@@ -8,6 +8,8 @@ import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.CommonAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.ViewHolder;
 import com.whmnrc.feimei.beans.GetRecommendEnterpriseBean;
+import com.whmnrc.feimei.pop.PopRatingRule;
+import com.whmnrc.feimei.presener.GetRatingExplainPresenter;
 import com.whmnrc.feimei.ui.organization.OrganizationDetailsActivity;
 import com.whmnrc.feimei.ui.organization.SearchBusinessMoreActivity;
 import com.whmnrc.feimei.views.RatingBarView;
@@ -18,6 +20,8 @@ import com.whmnrc.feimei.views.RatingBarView;
  */
 
 public class OrganizationChartListAdapter extends CommonAdapter<GetRecommendEnterpriseBean.ResultdataBean> {
+    private PopRatingRule mPopRatingRule;
+
     public OrganizationChartListAdapter(Context context, int layoutId) {
         super(context, layoutId);
     }
@@ -39,14 +43,20 @@ public class OrganizationChartListAdapter extends CommonAdapter<GetRecommendEnte
         holder.setText(R.id.tv_desc, "主营：" + bean.getMainExplain());
         holder.setText(R.id.tv_address, bean.getProvincial() + bean.getCity());
 
-        holder.itemView.setOnClickListener(v -> OrganizationDetailsActivity.start(v.getContext(),bean.getID()));
+        holder.itemView.setOnClickListener(v -> OrganizationDetailsActivity.start(v.getContext(), bean.getID()));
 
+        holder.setOnClickListener(R.id.ll_rating_bar, v -> new GetRatingExplainPresenter(content -> {
+            if (mPopRatingRule == null) {
+                mPopRatingRule = new PopRatingRule(mContext, "评级规则", content);
+            }
+            mPopRatingRule.show();
+        }).getRatingExplain());
 
         holder.setOnClickListener(R.id.tv_more, v -> SearchBusinessMoreActivity.start(v.getContext()));
 
-        if (position == getDatas().size()-1) {
+        if (position == getDatas().size() - 1) {
             holder.getView(R.id.v_line).setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             holder.getView(R.id.v_line).setVisibility(View.VISIBLE);
         }
     }

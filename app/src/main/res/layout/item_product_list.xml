@@ -17,6 +17,7 @@
 
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -61,4 +62,13 @@
             android:textSize="@dimen/dm_12"/>
     </LinearLayout>
 
+
+    <ImageView
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/iv_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dm_10"
+        android:src="@drawable/select_my_collection"/>
 </LinearLayout>

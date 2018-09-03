@@ -9,12 +9,13 @@ import android.widget.TextView;
 
 import com.whmnrc.feimei.CommonConstant;
 import com.whmnrc.feimei.R;
+import com.whmnrc.feimei.pop.PopHintInfo;
 import com.whmnrc.feimei.ui.BaseActivity;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.utils.SPUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
+import com.whmnrc.feimei.utils.VersionUtils;
 import com.whmnrc.feimei.utils.evntBusBean.UserInfoEvent;
-import com.whmnrc.feimei.pop.PopHintInfo;
 import com.whmnrc.mylibrary.utils.GlideUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,13 +39,22 @@ public class MineActivity extends BaseActivity {
     ImageView mIvIsVip;
     @BindView(R.id.tv_vip_time)
     TextView mTvVipTime;
+    @BindView(R.id.tv_all_order_count)
+    TextView mTvAllOrderCount;
+    @BindView(R.id.tv_no_pay_order_count)
+    TextView mTvNoPayOrderCount;
+    @BindView(R.id.tv_pay_order_count)
+    TextView mTvPayOrderCount;
     private PopHintInfo mPopHintInfo;
 
     @Override
     protected void initViewData() {
+        isShowDialog(true);
         UserManager.refresh();
         EventBus.getDefault().register(this);
         showUserInfo();
+
+        VersionUtils.showDownloadPop(this);
     }
 
     @Override
@@ -65,7 +75,7 @@ public class MineActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.rl_all_order,R.id.ll_all_order, R.id.rl_no_pay_order, R.id.rl_pay_order, R.id.ll_collection, R.id.ll_address_manager, R.id.ll_free_back, R.id.ll_setting, R.id.ll_login_out, R.id.iv_is_vip})
+    @OnClick({R.id.rl_all_order, R.id.ll_all_order, R.id.rl_no_pay_order, R.id.rl_pay_order, R.id.ll_collection, R.id.ll_address_manager, R.id.ll_free_back, R.id.ll_setting, R.id.ll_login_out, R.id.iv_is_vip})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_all_order:
@@ -82,7 +92,7 @@ public class MineActivity extends BaseActivity {
                 MyCollectionActivity.start(view.getContext());
                 break;
             case R.id.ll_address_manager:
-                AddressManagerActivity.start(view.getContext(),false);
+                AddressManagerActivity.start(view.getContext(), false);
                 break;
             case R.id.ll_free_back:
                 FreeBackActivity.start(view.getContext());
@@ -95,13 +105,10 @@ public class MineActivity extends BaseActivity {
                     mPopHintInfo = new PopHintInfo(MineActivity.this, "亲，确定退出登录吗？");
                 }
                 mPopHintInfo.show();
-                mPopHintInfo.setPopHintListener(new PopHintInfo.PopHintListener() {
-                    @Override
-                    public void confirm() {
-                        UserManager.clearUser();
-                        SPUtils.put(MineActivity.this, CommonConstant.Common.LAST_LOGIN_ID, "");
-                        finish();
-                    }
+                mPopHintInfo.setPopHintListener(() -> {
+                    UserManager.clearUser();
+                    SPUtils.put(MineActivity.this, CommonConstant.Common.LAST_LOGIN_ID, "");
+                    finish();
                 });
                 break;
             case R.id.iv_is_vip:
@@ -116,7 +123,7 @@ public class MineActivity extends BaseActivity {
     public void userChangeEvent(UserInfoEvent userInfoEvent) {
         if (userInfoEvent.getEventType() == UserInfoEvent.LOGIN_OUT) {
             finish();
-        }else  if (userInfoEvent.getEventType() == UserInfoEvent.UPDATE_USER_INFO) {
+        } else if (userInfoEvent.getEventType() == UserInfoEvent.UPDATE_USER_INFO) {
             showUserInfo();
         }
 
@@ -138,6 +145,31 @@ public class MineActivity extends BaseActivity {
 
         if (UserManager.getUser() != null && UserManager.getUser().getNickName() != null && !TextUtils.isEmpty(UserManager.getUser().getNickName())) {
             mTvNickname.setText(UserManager.getUser().getNickName());
+
+
+            if (UserManager.getUser().getAllOrder() > 0) {
+                mTvAllOrderCount.setVisibility(View.VISIBLE);
+                mTvAllOrderCount.setText(String.valueOf(UserManager.getUser().getAllOrder()));
+            } else {
+                mTvAllOrderCount.setVisibility(View.GONE);
+            }
+
+            if (UserManager.getUser().getNoPayOrder() > 0) {
+                mTvNoPayOrderCount.setVisibility(View.VISIBLE);
+                mTvNoPayOrderCount.setText(String.valueOf(UserManager.getUser().getNoPayOrder()));
+            } else {
+                mTvNoPayOrderCount.setVisibility(View.GONE);
+            }
+
+            if (UserManager.getUser().getPayOrder() > 0) {
+                mTvPayOrderCount.setVisibility(View.VISIBLE);
+                mTvPayOrderCount.setText(String.valueOf(UserManager.getUser().getPayOrder()));
+            } else {
+                mTvPayOrderCount.setVisibility(View.GONE);
+            }
         }
+
+        isShowDialog(false);
     }
+
 }

@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -152,6 +153,8 @@ public class PopCity {
 //                if (oneSelect != 0)
                 cityListener.onSelect(position, 0);
                 oneAdapter.notifyDataSetChanged();
+
+                scroll(position, oneAdapter, view);
             }
 
             @Override
@@ -164,6 +167,7 @@ public class PopCity {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 cityListener.onSelect(position, 1);
+
             }
 
             @Override
@@ -183,7 +187,6 @@ public class PopCity {
     private int ce = 0;
     //实际列表是否超出屏幕
     private boolean isOut = true;
-    private View lastLineView;
 
     /**
      * 将选择的目录滑动到中间
@@ -199,56 +202,46 @@ public class PopCity {
             return;
         }
 
-        //改变选中状态
-        if (!view.isSelected()) {
-            //去除上一次控件的状态
-            if (lastLineView != null) {
-                lastLineView.setSelected(false);
-            }
-            lastLineView = view;
-
-            view.setSelected(true);
-        }
-
 
         if (visibleCount == 0) {
             visibleCount = oneRv.getChildCount();
             if (visibleCount == adapter1.getDatas().size()) {
                 isOut = false;
             } else {
-                ce = visibleCount / 2;
+                ce = (visibleCount / 2) - 1;
             }
         }
 
         RecyclerView.LayoutManager layoutManager = oneRv.getLayoutManager();
         if (layoutManager instanceof LinearLayoutManager) {
             LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+
             //上移
-            if (position <= (linearManager.findFirstVisibleItemPosition() + ce)) {
-                oneRv.smoothScrollToPosition(position - ce);
+            int firstVisibleItemPosition = linearManager.findFirstVisibleItemPosition();
+            if (position <= (firstVisibleItemPosition + ce+1)) {
+                int position1 = position - ce;
+                if (position1 < 0) {
+                    position1 = 0;
+                }
+                Log.e("PopCity", "上移position1:" + position1);
+                oneRv.smoothScrollToPosition(position1);
             } else {
                 //下移
-                if ((linearManager.findLastVisibleItemPosition() + ce + 1) <= adapter1.getItemCount()) {
-                    oneRv.smoothScrollToPosition(position + ce);
-                } else {
-                    oneRv.smoothScrollToPosition(adapter1.getItemCount() - 1);
-                }
+//                int lastVisibleItemPosition = linearManager.findLastVisibleItemPosition();
+//                if ((firstVisibleItemPosition + ce + 1) <= adapter1.getItemCount()) {
+                Log.e("PopCity", "下移:position1:" + (position + ce));
+                oneRv.smoothScrollToPosition( (position + ce) );
+//                } else {
+//                    oneRv.smoothScrollToPosition(adapter1.getItemCount() - 1);
+//                }
             }
-            lastPosition = position;
         }
 
     }
 
 
-    public void show() {
-        mPopupWindow.showAsDropDown(showView);
-//        if (cityListener == null) {
-//            return;
-//        }
-//        //默认选择第一个
-//        if (twoList == null || twoList.size() == 0) {
-//            cityListener.onSelect(0, 0);
-//        }
+    public void show(View view) {
+        mPopupWindow.showAsDropDown(view);
     }
 
     public void dissmiss() {

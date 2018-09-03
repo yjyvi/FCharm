@@ -66,6 +66,9 @@ public class ResourceNewsAdapter extends CommonAdapter<NewsListBean.ResultdataBe
                 holder.setText(R.id.tv_news_type, "技术文章");
                 break;
             case 3:
+                holder.setText(R.id.tv_news_type, "行业视频");
+                break;
+            case 4:
                 holder.setText(R.id.tv_news_type, "其它");
                 break;
             default:

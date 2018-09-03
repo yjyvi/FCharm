@@ -67,11 +67,9 @@ public class SettingActivity extends BaseActivity implements LoginOutPresenter.L
         if (UserManager.getUser() != null && UserManager.getUser().getHeadImg() != null && !TextUtils.isEmpty(UserManager.getUser().getHeadImg())) {
             GlideUtils.LoadImage(this, UserManager.getUser().getHeadImg(), mIvUserImg);
         }
-        if (UserManager.getUser() != null && UserManager.getUser().getVIP() != null && !TextUtils.isEmpty(UserManager.getUser().getVIP())) {
-
+        if (UserManager.getUser() != null && UserManager.getUser().getVIP() != null && !TextUtils.isEmpty(UserManager.getUser().getVIP()) && UserManager.getUserIsVip()) {
             long milSecond = Long.parseLong(UserManager.getUser().getVIP());
-            String time = TimeUtils.getDateToString(milSecond);
-            mTvVipTime.setText(time);
+            mTvVipTime.setText(String.format("会员至：%s", TimeUtils.getDateToString(milSecond)));
         }
 
 
@@ -129,20 +127,20 @@ public class SettingActivity extends BaseActivity implements LoginOutPresenter.L
         if (resultCode == RESULT_OK) {
             List<LocalMedia> mediaList = PictureSelector.obtainMultipleResult(data);
             if (!mediaList.isEmpty())
-                headFile = new File(mediaList.get(0).getCompressPath());
+                headFile = new File(mediaList.get(0).getCutPath());
             else {
                 return;
             }
 
             GlideUtils.LoadImage(SettingActivity.this, headFile, mIvUserImg);
-
+            mediaList.get(0).setCompressPath(mediaList.get(0).getCutPath());
             isShowDialog(true);
             mUpdateImgFilePresenter.uploadImg(mediaList, 0);
         }
     }
 
 
-    @OnClick({R.id.tv_edit_header_img, R.id.ll_notification_pwd, R.id.ll_edit_nickname, R.id.ll_un_register})
+    @OnClick({R.id.tv_edit_header_img, R.id.ll_notification_pwd, R.id.ll_edit_nickname, R.id.ll_un_register, R.id.ll_about_us})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_edit_header_img:
@@ -152,6 +150,9 @@ public class SettingActivity extends BaseActivity implements LoginOutPresenter.L
                 FindPwdActivity.start(view.getContext(), "修改密码");
                 break;
             case R.id.ll_edit_nickname:
+                break;
+            case R.id.ll_about_us:
+                AboutUsActivity.start(view.getContext());
                 break;
             case R.id.ll_un_register:
                 if (mPopHintInfo == null) {

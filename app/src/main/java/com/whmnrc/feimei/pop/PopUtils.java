@@ -52,9 +52,8 @@ public class PopUtils {
      * 下载更新提示弹窗
      *
      * @param context
-     * @param contentView
      */
-    public static void showVersionNotify(final Activity context, View contentView, String msg, String commitContent, final NormalNotifyPopListener clickListener) {
+    public static void showVersionNotify(final Activity context, String msg, String commitContent, final NormalNotifyPopListener clickListener) {
 
         View layoutView = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.item_normal_notify, null);
         final PopupWindow sharePopupWindow = new PopupWindow(layoutView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -65,7 +64,9 @@ public class PopUtils {
         tv_commit.setText(commitContent);
 
         tv_commit.setOnClickListener(view -> clickListener.commitClick());
-        sharePopupWindow.showAtLocation(contentView, Gravity.CENTER, 0, 0);
+
+        sharePopupWindow.showAtLocation(context.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
     }
 
 

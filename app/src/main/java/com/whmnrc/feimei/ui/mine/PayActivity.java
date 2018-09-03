@@ -3,6 +3,7 @@ package com.whmnrc.feimei.ui.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -17,13 +18,19 @@ import com.whmnrc.feimei.beans.ProductDetailsBean;
 import com.whmnrc.feimei.beans.ReadDetailsBean;
 import com.whmnrc.feimei.beans.ResourcesFileBean;
 import com.whmnrc.feimei.network.OKHttpManager;
+import com.whmnrc.feimei.presener.CreateOrderPresenter;
 import com.whmnrc.feimei.ui.BaseActivity;
+import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.utils.CodeTimeUtils;
 import com.whmnrc.feimei.utils.TextSpannableUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
 import com.whmnrc.feimei.utils.ToastUtils;
+import com.whmnrc.feimei.utils.evntBusBean.PayEvent;
 import com.whmnrc.feimei.utils.pay.PayUtils;
 import com.whmnrc.mylibrary.utils.GlideUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,13 +41,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @data 2018/7/27.
  */
 
-public class PayActivity extends BaseActivity {
+public class PayActivity extends BaseActivity implements CreateOrderPresenter.CreateOrderListener {
     @BindView(R.id.iv_back)
     ImageView mIvBack;
     @BindView(R.id.common_title_back)
     RelativeLayout mCommonTitleBack;
-    @BindView(R.id.title)
-    TextView mTitle;
     @BindView(R.id.common_title)
     RelativeLayout mCommonTitle;
     @BindView(R.id.iv_right)
@@ -53,16 +58,12 @@ public class PayActivity extends BaseActivity {
     RelativeLayout mRlRightTitle;
     @BindView(R.id.fl_title_bar)
     FrameLayout mFlTitleBar;
-    //    @BindView(R.id.tv_name)
-//    TextView mTvName;
     @BindView(R.id.tv_money)
     TextView mTvMoney;
     @BindView(R.id.rl_one_pay)
     RelativeLayout mRlOnePay;
     @BindView(R.id.tv_product_end_time)
     TextView mTvProductEndTime;
-    //    @BindView(R.id.tv_product_name)
-//    TextView mTvProductName;
     @BindView(R.id.tv_money2)
     TextView mTvMoney2;
     @BindView(R.id.tv_product_desc)
@@ -85,6 +86,8 @@ public class PayActivity extends BaseActivity {
     LinearLayout mLlOrgInfo;
     @BindView(R.id.iv_video_img)
     ImageView mIvVideoImg;
+    @BindView(R.id.rl_video)
+    RelativeLayout mRlVideo;
     @BindView(R.id.tv_desc)
     TextView mTvDesc;
     @BindView(R.id.tv_time)
@@ -114,11 +117,11 @@ public class PayActivity extends BaseActivity {
     /**
      * 单次支付 ---赞赏
      */
-    public static final int ONE_PAY = 1;
+    public static final int ONE_PAY = 2;
     /**
      * 产品库支付
      */
-    public static final int PRODUCT_PAY = 2;
+    public static final int PRODUCT_PAY = 0;
     /**
      * 企业名录支付
      */
@@ -126,23 +129,34 @@ public class PayActivity extends BaseActivity {
     /**
      * 行业资源支付
      */
-    public static final int RESOURCE_PAY = 4;
+    public static final int RESOURCE_PAY = 5;
     /**
      * 专栏支付
      */
-    public static final int COLUMN_PAY = 5;
+    public static final int COLUMN_PAY = 4;
+
     public int mProductType;
-    public OrganizationDetailsBean.ResultdataBean.EnterpriseBean mEnterpriseBean;
-    public ProductDetailsBean.ResultdataBean.CommodityBean mCommodityBean;
-    public ReadDetailsBean.ResultdataBean.ReadBean mReadBean;
-    public ResourcesFileBean.ResultdataBean.LibrarysBean mLibrarysBean;
+
     private PayUtils mPayUtils;
-    private int payType;
+    private int payType = CommonConstant.Common.PAY_METHOD_WX;
     private String totalPrice;
+    private CreateOrderPresenter mCreateOrderPresenter;
+    private int mProductCount = 1;
+    public String mAddressId;
+    private String mOtherId;
+    private String mRemark;
+    private String mOrderId;
 
     @Override
     protected void initViewData() {
-        mPayUtils = new PayUtils(this);
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
+        mCreateOrderPresenter = new CreateOrderPresenter(this);
+
+        mPayUtils = new PayUtils();
         mProductType = getIntent().getIntExtra("productType", -1);
         setTitle("付费");
         selectedView(mIvSelectWx);
@@ -151,6 +165,8 @@ public class PayActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        mPayUtils = null;
         CodeTimeUtils.cancelTimer();
         super.onDestroy();
     }
@@ -167,7 +183,11 @@ public class PayActivity extends BaseActivity {
                 mRlOrderInfo.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
                 totalPrice = getIntent().getStringExtra("totalPrice");
-                TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length() + 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                mOtherId = getIntent().getStringExtra("otherId");
+                mRemark = getIntent().getStringExtra("remark");
+                mOrderId = getIntent().getStringExtra("orderId");
+                String onePrice = String.format("支付￥%s", totalPrice);
+                TextSpannableUtils.changeTextSize(mTvMoney, onePrice, 3, onePrice.length(), getResources().getDimensionPixelSize(R.dimen.dm_24));
                 break;
             case PRODUCT_PAY:
                 mRlProductPay.setVisibility(View.VISIBLE);
@@ -176,16 +196,21 @@ public class PayActivity extends BaseActivity {
                 mRlOrderInfo.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
 
-                mCommodityBean = getIntent().getParcelableExtra("payData");
+                ProductDetailsBean.ResultdataBean.CommodityBean mCommodityBean = getIntent().getParcelableExtra("payData");
+                mProductCount = getIntent().getIntExtra("number", 1);
                 totalPrice = getIntent().getStringExtra("totalPrice");
+                mAddressId = getIntent().getStringExtra("addressId");
+                mRemark = getIntent().getStringExtra("remark");
                 if (mCommodityBean != null) {
-                    CodeTimeUtils.payOrderTime(mTvProductEndTime, () -> {
+                    mOtherId = mCommodityBean.getID();
+                    CodeTimeUtils.payOrderTime(mTvProductEndTime, 0, () -> {
                         ToastUtils.showToast("支付超时");
                         mLlCommit.setEnabled(false);
                         mLlCommit.setBackgroundColor(ContextCompat.getColor(this, R.color.normal_gray));
                     });
                     mTvMoney2.setText(totalPrice);
-                    TextSpannableUtils.changeTextSize(mTvMoney2, String.format("￥%s", totalPrice), 1, totalPrice.length() + 1, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                    String ProductPrice = String.format("￥%s", totalPrice);
+                    TextSpannableUtils.changeTextSize(mTvMoney2, ProductPrice, 1, ProductPrice.length(), getResources().getDimensionPixelSize(R.dimen.dm_24));
                     mTvProductDesc.setText(mCommodityBean.getName());
                     mTvPay.setText(String.format("确认支付￥%s", totalPrice));
                 }
@@ -197,12 +222,13 @@ public class PayActivity extends BaseActivity {
                 mRlOrderInfo.setVisibility(View.VISIBLE);
                 mRlProductPay.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
-                mEnterpriseBean = getIntent().getParcelableExtra("payData");
+                OrganizationDetailsBean.ResultdataBean.EnterpriseBean mEnterpriseBean = getIntent().getParcelableExtra("payData");
                 if (mEnterpriseBean != null) {
-                    TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", mEnterpriseBean.getPrice()), 3, String.valueOf(mEnterpriseBean.getPrice()).length()
-                            + 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                    mOtherId = mEnterpriseBean.getID();
+                    String orgPrice = String.format("支付￥%2.2f", mEnterpriseBean.getPrice());
+                    TextSpannableUtils.changeTextSize(mTvMoney, orgPrice, 3, orgPrice.length(), getResources().getDimensionPixelSize(R.dimen.dm_24));
                     mTvOrgTitle.setText(mEnterpriseBean.getName());
-                    mTvOrgDesc.setText(mEnterpriseBean.getExplain());
+                    mTvOrgDesc.setText(mEnterpriseBean.getSubtitle());
                     mIvImg.setVisibility(View.GONE);
                     mTvOrgTime.setText(TimeUtils.getDateToString(mEnterpriseBean.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
                 }
@@ -213,31 +239,39 @@ public class PayActivity extends BaseActivity {
                 mRlOrderInfo.setVisibility(View.VISIBLE);
                 mRlProductPay.setVisibility(View.GONE);
                 mLlResourcePay.setVisibility(View.GONE);
-                mReadBean = getIntent().getParcelableExtra("payData");
+                ReadDetailsBean.ResultdataBean.ReadBean mReadBean = getIntent().getParcelableExtra("payData");
                 if (mReadBean != null) {
+                    mOtherId = mReadBean.getID();
                     mTvOrgTitle.setText(mReadBean.getTitle());
                     mTvOrgDesc.setText(mReadBean.getSubtitle());
                     mIvImg.setVisibility(View.VISIBLE);
                     GlideUtils.LoadImage(this, mReadBean.getImg(), mIvImg);
                     mTvOrgTime.setText(TimeUtils.getDateToString(mReadBean.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
-
-                    totalPrice = String.valueOf(mReadBean.getPrice());
-                    TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length() + 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                    String columnPrice = String.format("支付￥%2.2f", mReadBean.getPrice());
+                    TextSpannableUtils.changeTextSize(mTvMoney, columnPrice, 3, columnPrice.length(), getResources().getDimensionPixelSize(R.dimen.dm_24));
 
                 }
                 break;
             case RESOURCE_PAY:
-                mLibrarysBean = getIntent().getParcelableExtra("payData");
+                ResourcesFileBean.ResultdataBean.LibrarysBean mLibrarysBean = getIntent().getParcelableExtra("payData");
                 if (mLibrarysBean != null) {
+                    mOtherId = mLibrarysBean.getID();
                     mTvDesc.setText(mLibrarysBean.getSubtitle());
-                    mIvImg.setVisibility(View.VISIBLE);
-                    GlideUtils.LoadImage(this, mLibrarysBean.getFilePath(), mIvVideoImg);
+
+                    if (mLibrarysBean.getType() == 4) {
+                        mRlVideo.setVisibility(View.VISIBLE);
+                        GlideUtils.LoadImage(this, mLibrarysBean.getImg(), mIvVideoImg);
+                    } else {
+                        mRlVideo.setVisibility(View.GONE);
+                    }
+
                     mTvTime.setText(TimeUtils.getDateToString(mLibrarysBean.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
                     mTvDownloadCount.setText(String.format("%s次下载", mLibrarysBean.getDownloadNumber()));
-                    mTvPrice.setText(String.format("￥%s", mLibrarysBean.getPrice()));
+                    String resourcePrice = String.format("支付：￥%2.2f", mLibrarysBean.getPrice());
+                    mTvPrice.setText(resourcePrice);
 
                     totalPrice = String.valueOf(mLibrarysBean.getPrice());
-                    TextSpannableUtils.changeTextSize(mTvMoney, String.format("支付￥%s", totalPrice), 3, totalPrice.length() + 3, getResources().getDimensionPixelSize(R.dimen.dm_24));
+                    TextSpannableUtils.changeTextSize(mTvMoney, resourcePrice, 4, resourcePrice.length(), getResources().getDimensionPixelSize(R.dimen.dm_24));
 
                 }
                 mLlResourcePay.setVisibility(View.VISIBLE);
@@ -277,10 +311,13 @@ public class PayActivity extends BaseActivity {
      * @param productType
      * @param bean
      */
-    public static void startProduct(Context context, int productType, ProductDetailsBean.ResultdataBean.CommodityBean bean, String totalPrice) {
+    public static void startProduct(Context context, int productType, ProductDetailsBean.ResultdataBean.CommodityBean bean, String totalPrice, int number, String addressId, String remark) {
         Intent starter = new Intent(context, PayActivity.class);
         starter.putExtra("productType", productType);
         starter.putExtra("totalPrice", totalPrice);
+        starter.putExtra("number", number);
+        starter.putExtra("addressId", addressId);
+        starter.putExtra("remark", remark);
         starter.putExtra("payData", bean);
         context.startActivity(starter);
     }
@@ -313,10 +350,38 @@ public class PayActivity extends BaseActivity {
         context.startActivity(starter);
     }
 
-    public static void start(Context context, int productType, String totalPrice) {
+
+    /**
+     * 赞赏支付
+     *
+     * @param context
+     * @param productType
+     * @param totalPrice
+     * @param otherId
+     * @param remark
+     */
+    public static void start(Context context, int productType, String totalPrice, String otherId, String remark) {
         Intent starter = new Intent(context, PayActivity.class);
         starter.putExtra("productType", productType);
         starter.putExtra("totalPrice", totalPrice);
+        starter.putExtra("otherId", otherId);
+        starter.putExtra("remark", remark);
+        context.startActivity(starter);
+    }
+
+    /**
+     * 订单支付
+     *
+     * @param context
+     * @param productType
+     * @param totalPrice
+     * @param orderId
+     */
+    public static void startOrderPay(Context context, int productType, String totalPrice, String orderId) {
+        Intent starter = new Intent(context, PayActivity.class);
+        starter.putExtra("productType", productType);
+        starter.putExtra("totalPrice", totalPrice);
+        starter.putExtra("orderId", orderId);
         context.startActivity(starter);
     }
 
@@ -350,8 +415,17 @@ public class PayActivity extends BaseActivity {
                 break;
             case R.id.ll_commit:
 
-                payResult(payType, "123123");
+                if (!UserManager.getIsLogin(this)) {
+                    return;
+                }
 
+                mLlCommit.setEnabled(false);
+                if (TextUtils.isEmpty(mOrderId)) {
+                    isShowDialog(true);
+                    mCreateOrderPresenter.createOrder(mProductCount, mAddressId, mProductType, mOtherId, mRemark);
+                } else {
+                    payResult(payType, mOrderId);
+                }
                 break;
             default:
                 break;
@@ -370,20 +444,49 @@ public class PayActivity extends BaseActivity {
         if (mPayUtils == null) {
             return;
         }
-        mPayUtils.playPay(payType, order, new OKHttpManager.ObjectCallback() {
+        mPayUtils.playPay(this, payType, order, new OKHttpManager.ObjectCallback() {
             @Override
             public void onSuccess(String st) {
+                mLlCommit.setEnabled(true);
                 ToastUtils.showToast(st);
-                PayResultActivity.start(PayActivity.this, order, false);
+                if (TextUtils.isEmpty(mRemark)) {
+                    PayResultActivity.start(PayActivity.this, order, false);
+                }
+
+                UserManager.refresh();
+
+                EventBus.getDefault().post(new PayEvent().setEventType(PayEvent.PAY_SUCCESS));
                 finish();
             }
 
             @Override
             public void onFailure(int code, String errorMsg) {
                 ToastUtils.showToast(errorMsg);
+                mLlCommit.setEnabled(true);
                 finish();
             }
         });
+
+        isShowDialog(false);
+    }
+
+
+    @Override
+    public void createOrderSuccess(String orderId) {
+        payResult(payType, orderId);
+        isShowDialog(false);
+    }
+
+    @Override
+    public void createOrderField() {
+        isShowDialog(false);
+        mLlCommit.setEnabled(true);
+    }
+
+
+    @Subscribe
+    public void payEvent(PayEvent payEvent) {
+
     }
 
 

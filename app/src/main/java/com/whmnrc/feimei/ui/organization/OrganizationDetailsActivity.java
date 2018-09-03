@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +15,7 @@ import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.OrganizationCommentAdapter;
 import com.whmnrc.feimei.adapter.OtherInfoAdapter;
 import com.whmnrc.feimei.beans.OrganizationDetailsBean;
+import com.whmnrc.feimei.pop.PopHintInfo;
 import com.whmnrc.feimei.pop.PopRatingRule;
 import com.whmnrc.feimei.pop.PopShare;
 import com.whmnrc.feimei.presener.GetRatingExplainPresenter;
@@ -27,7 +27,11 @@ import com.whmnrc.feimei.ui.mine.CommentActivity;
 import com.whmnrc.feimei.ui.mine.PayActivity;
 import com.whmnrc.feimei.utils.TextSpannableUtils;
 import com.whmnrc.feimei.utils.TimeUtils;
+import com.whmnrc.feimei.utils.evntBusBean.PayEvent;
 import com.whmnrc.feimei.views.RatingBarView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -103,7 +107,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
     @BindView(R.id.ll_all_comment)
     LinearLayout mLlAllComment;
     @BindView(R.id.et_content)
-    EditText mEtContent;
+    TextView mEtContent;
     @BindView(R.id.tv_send)
     TextView mTvSend;
     @BindView(R.id.tv_shareholder_count)
@@ -124,10 +128,15 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
     public OrganizationCommentAdapter mOrganizationCommentAdapter;
     private OrganizationDetailsBean.ResultdataBean mOrganizationDetailsBean;
     public GetRatingExplainPresenter mGetRatingExplainPresenter;
+    private PopHintInfo mPopHintInfo;
 
     @Override
     protected void initViewData() {
         showEmpty(true, mVsEmpty);
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
         mIndustryID = getIntent().getStringExtra("industryID");
         mOrganizationDetailsPresenter = new OrganizationDetailsPresenter(this);
@@ -146,6 +155,8 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
         mRvCommentList.setLayoutManager(new LinearLayoutManager(this));
         mOrganizationCommentAdapter = new OrganizationCommentAdapter(this, R.layout.item_organization_comment);
         mRvCommentList.setAdapter(mOrganizationCommentAdapter);
+
+        mVsEmpty.setOnInflateListener((stub, inflated) -> finish());
     }
 
     @Override
@@ -165,27 +176,39 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
             R.id.ll_link_more, R.id.ll_other_more, R.id.tv_intellectual_property,
             R.id.tv_major_client, R.id.tv_shareholder_information,
             R.id.tv_associated_position, R.id.ll_all_comment,
-            R.id.tv_send, R.id.iv_back, R.id.iv_share, R.id.ll_name
+            R.id.tv_send, R.id.et_content, R.id.iv_back, R.id.iv_share, R.id.ll_name
     })
     public void onClick(View view) {
+
+        if (mOrganizationDetailsBean == null) {
+            finish();
+            return;
+        }
+
         switch (view.getId()) {
             //关于我们
             case R.id.ll_account:
                 if (mOrganizationDetailsBean == null) {
                     return;
                 }
-                if ( mOrganizationDetailsBean.getEnterprise().getPrice() > 0) {
+                if (mOrganizationDetailsBean.getEnterprise().getPrice() > 0.00d) {
                     if (!UserManager.getIsLogin(view.getContext())) {
                         return;
                     }
 
                     if (UserManager.getUserIsVip() || mOrganizationDetailsBean.getIsPay() == 1) {
-                        AboutMeActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise());
+                        AboutInfoActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise());
                     } else {
-                        PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
+                        if (mPopHintInfo == null) {
+                            mPopHintInfo = new PopHintInfo(OrganizationDetailsActivity.this, "查看更多信息需要付费\n请问是否继续？");
+                        }
+                        mPopHintInfo.show();
+                        mPopHintInfo.setPopHintListener(() -> {
+                            PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
+                        });
                     }
                 } else {
-                    AboutMeActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise());
+                    AboutInfoActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise());
                 }
                 break;
             //主营业务
@@ -207,22 +230,24 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 if (mOrganizationDetailsBean == null) {
                     return;
                 }
-                if (mOrganizationDetailsBean.getEnterprise().getPrice() > 0) {
+                if (mOrganizationDetailsBean.getEnterprise().getPrice() > 0.00d) {
                     if (!UserManager.getIsLogin(view.getContext())) {
                         return;
                     }
 
                     if (UserManager.getUserIsVip() || mOrganizationDetailsBean.getIsPay() == 1) {
-                        if (mOrganizationDetailsBean.getRelation().size() > 0) {
-                            BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "关联企业", 0);
-                        }
+                        BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "关联企业", 0);
                     } else {
-                        PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
+                        if (mPopHintInfo == null) {
+                            mPopHintInfo = new PopHintInfo(OrganizationDetailsActivity.this, "查看更多信息需要付费\n请问是否继续？");
+                        }
+                        mPopHintInfo.show();
+                        mPopHintInfo.setPopHintListener(() -> {
+                            PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
+                        });
                     }
                 } else {
-                    if (mOrganizationDetailsBean.getRelation().size() > 0) {
-                        BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "关联企业", 0);
-                    }
+                    BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "关联企业", 0);
                 }
                 break;
             //其它信息
@@ -231,18 +256,14 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                     return;
                 }
 
-                if (mOrganizationDetailsBean.getEnterpriseOther().size() > 0) {
-                    OtherInfoActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterpriseOther());
-                }
+                OtherInfoActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterpriseOther());
                 break;
             //知识产权
             case R.id.tv_intellectual_property:
                 if (mOrganizationDetailsBean == null) {
                     return;
                 }
-                if (mOrganizationDetailsBean.getCertificate().size() > 0) {
-                    IntellectualPropertyActivity.start(view.getContext(), mOrganizationDetailsBean.getCertificate());
-                }
+                IntellectualPropertyActivity.start(view.getContext(), mOrganizationDetailsBean.getCertificate());
                 break;
             //主要客户
             case R.id.tv_major_client:
@@ -251,23 +272,25 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                     return;
                 }
 
-                if (mOrganizationDetailsBean.getEnterprise().getPrice() > 0) {
+                if (mOrganizationDetailsBean.getEnterprise().getPrice() > 0.00d) {
                     if (!UserManager.getIsLogin(view.getContext())) {
                         return;
                     }
 
                     if (UserManager.getUserIsVip() || mOrganizationDetailsBean.getIsPay() == 1) {
-                        if (mOrganizationDetailsBean.getRelation().size() > 0) {
-                            BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "主要客户", 1);
-                        }
+                        BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "主要客户", 1);
                     } else {
-                        PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
+                        if (mPopHintInfo == null) {
+                            mPopHintInfo = new PopHintInfo(OrganizationDetailsActivity.this, "查看更多信息需要付费\n请问是否继续？");
+                        }
+                        mPopHintInfo.show();
+                        mPopHintInfo.setPopHintListener(() -> {
+                            PayActivity.startOrg(view.getContext(), PayActivity.ORG_PAY, mOrganizationDetailsBean.getEnterprise());
+                        });
                     }
 
                 } else {
-                    if (mOrganizationDetailsBean.getRelation().size() > 0) {
-                        BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "主要客户", 1);
-                    }
+                    BusinessMoreActivity.start(view.getContext(), mOrganizationDetailsBean.getRelation(), "主要客户", 1);
                 }
 
 
@@ -278,9 +301,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                     return;
                 }
 
-                if (mOrganizationDetailsBean.getShareholder().size() > 0) {
-                    ShareholderInformationActivity.start(view.getContext(), mOrganizationDetailsBean.getShareholder());
-                }
+                ShareholderInformationActivity.start(view.getContext(), mOrganizationDetailsBean.getShareholder());
                 break;
             //关联岗位
             case R.id.tv_associated_position:
@@ -294,11 +315,10 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 if (mOrganizationDetailsBean == null) {
                     return;
                 }
-                if (mOrganizationDetailsBean.getComment().size() > 0) {
-                    AllCommentActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise().getID());
-                }
+                AllCommentActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise().getID());
                 break;
             case R.id.tv_send:
+            case R.id.et_content:
                 if (!UserManager.getIsLogin(view.getContext())) {
                     return;
                 }
@@ -307,7 +327,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                     return;
                 }
 
-                CommentActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise().getID());
+                CommentActivity.start(view.getContext(), mOrganizationDetailsBean.getEnterprise().getID(), mEtContent.getText().toString().trim());
                 CommentActivity.setCommentListener(() -> mOrganizationDetailsPresenter.getOrganizationDetails(mIndustryID));
                 break;
             case R.id.iv_back:
@@ -317,7 +337,7 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
                 mGetRatingExplainPresenter.getRatingExplain();
                 break;
             case R.id.iv_share:
-                mPopShare = new PopShare(OrganizationDetailsActivity.this, "1", "1", "1", "1");
+                mPopShare = new PopShare(OrganizationDetailsActivity.this, mOrganizationDetailsBean.getEnterprise().getName(), "", "", mOrganizationDetailsBean.getEnterprise().getSubtitle());
                 mPopShare.show();
                 break;
             default:
@@ -337,7 +357,17 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
         mTvLegalPerson.setText(String.format("法定代表人：%s", enterprise.getLegalPerson()));
         mTvCrateTime.setText(String.format("成立日期：%s", TimeUtils.getDateToString(Long.parseLong(enterprise.getCreateTime()))));
         mTvRegisterPrice.setText(String.format("注册资金：%s", enterprise.getRegisteredCapital()));
+
+        if (enterprise.getIsRed() == 0) {
+            mTvRegisterStateContent.setTextColor(ContextCompat.getColor(this, R.color.normal_blue_text_color));
+            mTvRegisterStateContent.setBackgroundResource(R.drawable.shape_organiztion_state_blue);
+        } else {
+            mTvRegisterStateContent.setTextColor(ContextCompat.getColor(this, R.color.normal_red));
+            mTvRegisterStateContent.setBackgroundResource(R.drawable.shape_red_order_refund);
+        }
+
         mTvRegisterStateContent.setText(enterprise.getRegistrationState());
+
         mTvBusinessContent.setText(enterprise.getMainExplain());
         mTvOverviewContent.setText(enterprise.getIntroduction());
         if (beans.getRecruitCount() > 0) {
@@ -358,11 +388,11 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
         List<OrganizationDetailsBean.ResultdataBean.RelationBean> relation = beans.getRelation();
         String relationSt = "";
         for (int i = 0; i < relation.size(); i++) {
-            if (i == 3) {
-                break;
-            }
             if (relation.get(i).getType() == 0) {
-                if (relation.size() < 3 && i == relation.size() - 1 || i == 2) {
+                if (relationSt.split(",").length == 3) {
+                    break;
+                }
+                if (i == relation.size() - 1 || i == 2) {
                     relationSt += relation.get(i).getName();
                 } else {
                     relationSt += relation.get(i).getName() + "\n";
@@ -392,5 +422,19 @@ public class OrganizationDetailsActivity extends BaseActivity implements Organiz
         }
         mPopRatingRule.show();
     }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscribe
+    public void payEvent(PayEvent payEvent) {
+        if (payEvent.getEventType() == PayEvent.PAY_SUCCESS) {
+            mOrganizationDetailsPresenter.getOrganizationDetails(mIndustryID);
+        }
+    }
+
 
 }

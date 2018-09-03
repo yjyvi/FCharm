@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
 import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.TableViewPagerAdapter;
@@ -69,13 +68,13 @@ public class OrderListActivity extends BaseActivity {
         for (int i = 0; i < titles.length; i++) {
             switch (i) {
                 case 0:
-                    fragments.add(OrderFragment.newInstance(1));
+                    fragments.add(OrderFragment.newInstance(-1));
                     break;
                 case 1:
-                    fragments.add(OrderFragment.newInstance(2));
+                    fragments.add(OrderFragment.newInstance(0));
                     break;
                 case 2:
-                    fragments.add(OrderFragment.newInstance(3));
+                    fragments.add(OrderFragment.newInstance(1));
                     break;
                 default:
                     break;
@@ -119,12 +118,7 @@ public class OrderListActivity extends BaseActivity {
                 colorTransitionPagerTitleView.setSelectedColor(ContextCompat.getColor(context, R.color.normal_red));
                 colorTransitionPagerTitleView.setTextSize(ColorTransitionPagerTitleView.AUTO_SIZE_TEXT_TYPE_NONE, getResources().getDimensionPixelSize(R.dimen.dm_14));
                 colorTransitionPagerTitleView.setText(titles[index]);
-                colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mVpOrder.setCurrentItem(index);
-                    }
-                });
+                colorTransitionPagerTitleView.setOnClickListener(view -> mVpOrder.setCurrentItem(index));
                 return colorTransitionPagerTitleView;
             }
 
@@ -153,6 +147,8 @@ public class OrderListActivity extends BaseActivity {
 
     @Override
     public void onDestroy() {
+        titles=null;
+        fragments = null;
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
@@ -160,13 +156,13 @@ public class OrderListActivity extends BaseActivity {
     private void changeTable(int index) {
         switch (index) {
             case 0:
-//                EventBus.getDefault().post(new OrderListEvent().setEventType(OrderListEvent.UNPAID));
+                EventBus.getDefault().post(new OrderListEvent().setEventType(OrderListEvent.ALL));
                 break;
             case 1:
-//                EventBus.getDefault().post(new OrderListEvent().setEventType(OrderListEvent.UNSHIPPED));
+                EventBus.getDefault().post(new OrderListEvent().setEventType(OrderListEvent.ORDER_NO_PAY));
                 break;
             case 2:
-//                EventBus.getDefault().post(new OrderListEvent().setEventType(OrderListEvent.RECEIPT));
+                EventBus.getDefault().post(new OrderListEvent().setEventType(OrderListEvent.ORDER_PAY));
                 break;
             default:
                 break;

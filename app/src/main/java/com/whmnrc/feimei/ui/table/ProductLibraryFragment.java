@@ -1,5 +1,6 @@
 package com.whmnrc.feimei.ui.table;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -7,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
@@ -20,20 +22,22 @@ import com.whmnrc.feimei.R;
 import com.whmnrc.feimei.adapter.ProductLibraryListAdapter;
 import com.whmnrc.feimei.adapter.ProductLibraryTypeAdapter;
 import com.whmnrc.feimei.adapter.recycleViewBaseAdapter.MultiItemTypeAdapter;
+import com.whmnrc.feimei.beans.BannerListBean;
 import com.whmnrc.feimei.beans.ProductListBean;
 import com.whmnrc.feimei.beans.ProductTypeBean;
+import com.whmnrc.feimei.presener.GetBannerPresenter;
 import com.whmnrc.feimei.presener.GetProductListPresenter;
 import com.whmnrc.feimei.presener.GetProductTypePresenter;
 import com.whmnrc.feimei.ui.LazyLoadFragment;
 import com.whmnrc.feimei.ui.UserManager;
 import com.whmnrc.feimei.ui.mine.MineActivity;
 import com.whmnrc.feimei.ui.product.SearchProductMoreActivity;
-import com.whmnrc.feimei.utils.ViewRoUtils;
-import com.whmnrc.feimei.utils.evntBusBean.BaseEvent;
+import com.whmnrc.mylibrary.utils.GlideUtils;
 import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.loader.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +51,7 @@ import butterknife.OnClick;
  * 行业产品库
  */
 
-public class ProductLibraryFragment extends LazyLoadFragment implements OnRefreshLoadMoreListener, GetProductListPresenter.GetProductListListener, GetProductTypePresenter.GetProductTypeListener {
+public class ProductLibraryFragment extends LazyLoadFragment implements OnRefreshLoadMoreListener, GetProductListPresenter.GetProductListListener, GetProductTypePresenter.GetProductTypeListener, GetBannerPresenter.GetBannerListener {
     @BindView(R.id.rv_type)
     RecyclerView mRvType;
     @BindView(R.id.rv_product_list)
@@ -76,9 +80,9 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
     public GetProductListPresenter mGetProductListPresenter;
     private boolean isShowAllType;
     public ProductLibraryListAdapter mProductLibraryListAdapter;
-    private String mPrice = "";
     private String mName = "";
     private String mCommodityClassId = "";
+    private GetBannerPresenter mGetBannerPresenter;
 
 
     /**
@@ -98,6 +102,8 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
 
         initProductList();
 
+        mGetBannerPresenter = new GetBannerPresenter(this);
+        mGetBannerPresenter.getBanner(1);
 
         mGetProductTypePresenter = new GetProductTypePresenter(this);
         mGetProductTypePresenter.getProductType();
@@ -105,9 +111,6 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
         mGetProductListPresenter = new GetProductListPresenter(this);
         mGetProductListPresenter.getProductList(mName, mCommodityClassId);
 
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
 
         mRefresh.setOnRefreshLoadMoreListener(this);
 
@@ -188,17 +191,6 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
     }
 
 
-    /**
-     * 修改货币显示
-     *
-     * @param goodsCommentEvent
-     */
-    @Subscribe
-    public void changePrice(BaseEvent goodsCommentEvent) {
-
-    }
-
-
     @OnClick({R.id.iv_back, R.id.tv_search, R.id.iv_user_info, R.id.ll_is_show_all})
     public void onClick(View v) {
         switch (v.getId()) {
@@ -216,12 +208,12 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
             case R.id.ll_is_show_all:
                 if (!mIvMore.isSelected()) {
                     mTvMore.setText("收起");
-                    ViewRoUtils.roView(mIvMore, 180f);
+                    mIvMore.setRotation(180);
                     mIvMore.setSelected(true);
                     isShowAllType = true;
                 } else {
                     mTvMore.setText("展开全部");
-                    ViewRoUtils.roView(mIvMore, -180f);
+                    mIvMore.setRotation(0);
                     mIvMore.setSelected(false);
                     isShowAllType = false;
                 }
@@ -244,6 +236,7 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
             List<ProductListBean.ResultdataBean.EnterpriseBean> datas = mProductLibraryListAdapter.getDatas();
             if (bean.getPagination().getRecords() == datas.size()) {
                 mRefresh.setEnableLoadMore(false);
+                return;
             }
 
             datas.addAll(bean.getEnterprise());
@@ -268,27 +261,77 @@ public class ProductLibraryFragment extends LazyLoadFragment implements OnRefres
         if (isShowAllType) {
             mProductLibraryTypeAdapter.setDataArray(bean);
         } else {
-            List<ProductTypeBean.ResultdataBean> datas = mProductLibraryTypeAdapter.getDatas();
-            if (datas == null) {
-                datas = new ArrayList<>();
-            }
-            if (datas.size() > 0) {
-                datas.clear();
-            }
-            for (int i = 0; i < bean.size(); i++) {
-                if (i >= 8) {
-                    break;
+            if (bean.size() != 0) {
+                List<ProductTypeBean.ResultdataBean> datas = mProductLibraryTypeAdapter.getDatas();
+                if (datas == null) {
+                    datas = new ArrayList<>();
                 }
+                if (datas.size() > 0) {
+                    datas.clear();
+                }
+                for (int i = 0; i < bean.size(); i++) {
+                    if (i >= 8) {
+                        break;
+                    }
 
-                datas.add(bean.get(i));
+                    datas.add(bean.get(i));
+                }
+                mProductLibraryTypeAdapter.setDataArray(datas);
             }
-            mProductLibraryTypeAdapter.setDataArray(datas);
         }
+
         mProductLibraryTypeAdapter.notifyDataSetChanged();
+
+    }
+
+
+    @Override
+    public void getBannerSuccess(List<BannerListBean.ResultdataBean> bean) {
+        initBanner(bean);
+    }
+
+
+    /**
+     * 轮播图
+     */
+    private void initBanner(List<BannerListBean.ResultdataBean> bannerList) {
+        if (mBanner != null) {
+            mBanner.setDelayTime(3000);
+            mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+            mBanner.setIndicatorGravity(BannerConfig.CENTER);
+            mBanner.offsetLeftAndRight(10);
+            mBanner.setImages(bannerList).setImageLoader(new ImageLoader() {
+                @Override
+                public void displayImage(Context context, Object path, ImageView imageView) {
+                    final BannerListBean.ResultdataBean resultdataBeans = (BannerListBean.ResultdataBean) path;
+                    String bannerUrl = resultdataBeans.getBanner_Url();
+                    if (TextUtils.isEmpty(bannerUrl)) {
+                        if (!bannerUrl.startsWith("http")) {
+                            bannerUrl = getResources().getString(R.string.service_host_address) + bannerUrl;
+                        }
+                    }
+                    GlideUtils.LoadImage(imageView.getContext(), bannerUrl, imageView);
+                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                }
+            }).start();
+        }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mBanner != null) {
+            mBanner.startAutoPlay();
+        }
     }
 
     @Override
-    public void getProductTypeField() {
-
+    public void onStop() {
+        super.onStop();
+        if (mBanner != null) {
+            mBanner.stopAutoPlay();
+        }
     }
+
 }

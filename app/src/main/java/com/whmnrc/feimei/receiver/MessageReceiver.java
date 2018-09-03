@@ -107,8 +107,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     public void onNotifactionClickedResult(Context context,
                                            XGPushClickedResult message) {
         Log.e("LC", "+++++++++++++++ 通知被点击 跳转到指定页面。");
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
         if (context == null || message == null) {
             return;
@@ -124,8 +123,8 @@ public class MessageReceiver extends XGPushBaseReceiver {
             // APP自己处理通知被清除后的相关动作
             text = "通知被清除 :" + message;
         }
-        Toast.makeText(context, "广播接收到通知被点击:" + message.toString(),
-                Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "广播接收到通知被点击:" + message.toString(),
+//                Toast.LENGTH_SHORT).show();
         // 获取自定义key-value
         String customContent = message.getCustomContent();
         if (customContent != null && customContent.length() != 0) {

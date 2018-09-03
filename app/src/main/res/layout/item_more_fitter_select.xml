@@ -8,7 +8,6 @@
           android:textSize="@dimen/dm_12"
           android:background="@drawable/select_shape_more_fitter"
           android:textColor="@drawable/select_more_fitter_text"
-          android:orientation="vertical"
-          android:text="所有">
+          android:orientation="vertical">
 
 </TextView>

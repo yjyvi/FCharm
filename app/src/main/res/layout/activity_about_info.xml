@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dm_110"
-        android:text="威海天力电源有限公司"
         android:textColor="@color/black"
         android:textSize="@dimen/dm_15"/>
 
@@ -30,12 +29,12 @@
 
 
         <TextView
+            android:layout_marginLeft="@dimen/dm_3"
             android:drawablePadding="@dimen/dm_10"
             android:id="@+id/tv_tel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@mipmap/icon_about_2"
-            android:text="电话：15926318604"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
@@ -49,11 +48,10 @@
 
         <TextView
             android:drawablePadding="@dimen/dm_10"
-            android:drawableLeft="@mipmap/icon_about_1"
+            android:drawableLeft="@mipmap/icon_ie"
             android:id="@+id/tv_qq"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="QQ：277485259"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
@@ -70,7 +68,6 @@
             android:id="@+id/tv_mail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="邮箱：opcitvfen@126.com"
             android:textColor="@color/black"
             android:textSize="@dimen/dm_13"/>
 
@@ -100,7 +97,6 @@
                 android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="武汉市万科城市花园上东景园三区A6栋2单元1602室"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dm_13"/>
 

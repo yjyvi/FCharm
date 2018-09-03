@@ -67,6 +67,15 @@ public class ProductDetailsBean {
         private CommodityBean Commodity;
         private int CommentCount;
         private List<CommentBean> Comment;
+        private int IsCollection;
+
+        public int getIsCollection() {
+            return IsCollection;
+        }
+
+        public void setIsCollection(int isCollection) {
+            IsCollection = isCollection;
+        }
 
         public CommodityBean getCommodity() {
             return Commodity;
@@ -119,7 +128,7 @@ public class ProductDetailsBean {
             private String Name;
             private int Sales;
             private int ClickNumber;
-            private int Price;
+            private double Price;
             private String Img;
             private String Salesman;
             private String Mail;
@@ -136,7 +145,7 @@ public class ProductDetailsBean {
                 Name = in.readString();
                 Sales = in.readInt();
                 ClickNumber = in.readInt();
-                Price = in.readInt();
+                Price = in.readDouble();
                 Img = in.readString();
                 Salesman = in.readString();
                 Mail = in.readString();
@@ -193,11 +202,11 @@ public class ProductDetailsBean {
                 this.ClickNumber = ClickNumber;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return Price;
             }
 
-            public void setPrice(int Price) {
+            public void setPrice(double Price) {
                 this.Price = Price;
             }
 
@@ -292,7 +301,7 @@ public class ProductDetailsBean {
                 dest.writeString(Name);
                 dest.writeInt(Sales);
                 dest.writeInt(ClickNumber);
-                dest.writeInt(Price);
+                dest.writeDouble(Price);
                 dest.writeString(Img);
                 dest.writeString(Salesman);
                 dest.writeString(Mail);

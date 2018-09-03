@@ -130,6 +130,12 @@ public class SearchProductMoreActivity extends BaseActivity implements GetProduc
         mRvBusinessList.setNestedScrollingEnabled(false);
         mProductLibraryListAdapter = new ProductLibraryListAdapter(this, R.layout.item_product_list);
         mRvBusinessList.setAdapter(mProductLibraryListAdapter);
+
+        mProductLibraryListAdapter.setGoToDetailsListener(position -> {
+            ProductListBean.ResultdataBean.EnterpriseBean enterpriseBean = mProductLibraryListAdapter.getDatas().get(position);
+            enterpriseBean.setClickNumber(enterpriseBean.getClickNumber() + 1);
+            mProductLibraryListAdapter.notifyItemChanged(position);
+        });
     }
 
     @Override
@@ -216,7 +222,8 @@ public class SearchProductMoreActivity extends BaseActivity implements GetProduc
             mPopProductType = new PopProductType(this, mVLine, bean);
         }
 
-        mPopProductType.show();
+        mVLine.post(() -> mPopProductType.show());
+
         ViewRoUtils.roView(mIvType, 360f);
         mPopProductType.setPopHintListener((ProductTypeBean.ResultdataBean bean1) -> {
             mCommodityClassId = bean1.getID();
@@ -233,8 +240,10 @@ public class SearchProductMoreActivity extends BaseActivity implements GetProduc
         });
     }
 
-    @Override
-    public void getProductTypeField() {
 
+    @Override
+    protected void onDestroy() {
+        mPopProductType = null;
+        super.onDestroy();
     }
 }
